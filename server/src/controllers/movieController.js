@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const movieModel = require('../models/moviesModel')(mongoose)
+const movieModel = require('../models/dbModel')(mongoose)
 
 exports.list_movies =  (req,res)=>{
     movieModel.find().exec((err,doc)=>{
