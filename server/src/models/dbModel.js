@@ -22,6 +22,10 @@ module.exports =  (mongoose)=>{
                 type: String,
                 required: true
             },
+            fileSystem: {
+                type: Object,
+                required: true
+            },
             documents: {            //documents of the user
                 _id:{
                     type: String,
@@ -29,10 +33,6 @@ module.exports =  (mongoose)=>{
                     unique: true
                 },
                 title:{
-                    type: String,
-                    required: true
-                },
-                localpath:{
                     type: String,
                     required: true
                 },
