@@ -1,5 +1,7 @@
-module.exports =  (mongoose)=>{
-    const vordSchema = new mongoose.Schema({
+const bcrypt = require('bcryptjs')
+const mongoose = require('mongoose')
+
+    let vordSchema = new mongoose.Schema({
         users:{
             email:{
                 type: String,
@@ -97,5 +99,16 @@ module.exports =  (mongoose)=>{
             }
         }
     })
-    return mongoose.model('DB',vordSchema)
-}
+
+    vordSchema.pre("save", function(next) {
+        let schema = this
+        bcrypt.hash(schema.users.password, conf.passwordSalt, function(err, hash) {
+            if (err) {
+                return next(err)
+            }
+            schema.users.password = hash
+            next()
+        })
+    })
+
+    module.exports = mongoose.model('DB', vordSchema)
