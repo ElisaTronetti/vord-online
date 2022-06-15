@@ -19,7 +19,7 @@ let UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    fileSystem: Object,
+    fileSystem: Object,     //TODO required when we find out an empty file system is
     documents: {            //documents of the user
         _id: {
             type: String,
