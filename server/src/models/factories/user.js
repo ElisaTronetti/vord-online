@@ -6,6 +6,7 @@ function createUser(email, name, surname, password) {
         name: name,
         surname: surname,
         password: password,
+        fileSystem: []
     })
 }
 

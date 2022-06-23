@@ -20,26 +20,18 @@ let UserSchema = new mongoose.Schema({
         required: true
     },
     fileSystem: Object,     //TODO required when we find out an empty file system is
-    documents: {            //documents of the user
-        _id: {
-            type: String,
-            unique: true
-        },
+    documents: [{            //documents of the user
         title: String,
         time: Number,
         blocks: Object,
         version: String
-    },
-    sharedWithUser: {
-        _id: {
-            type: String,
-            unique: true
-        },
+    }],
+    sharedWithUser:[{
         title: String,
         author: String,
         role: Number,
         localPath: String
-    }
+    }]
 })
 
 //hash password before saving it in the db
