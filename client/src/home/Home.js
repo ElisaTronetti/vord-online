@@ -1,6 +1,6 @@
-import { FullFileBrowser } from 'chonky';
+import { FullFileBrowser } from 'chonky'
 
-function Home() {
+export default function Home() {
   const files = [
     { id: 'lht', name: 'Projects', isDir: true },
     {
@@ -9,12 +9,10 @@ function Home() {
       thumbnailUrl: 'https://chonky.io/chonky-sphere-v2.png',
     },
   ];
-  const folderChain = [{ id: 'xcv', name: 'Demo', isDir: true }];
+  const folderChain = [{ id: 'xcv', name: 'Demo', isDir: true }]
   return (
     <div style={{ height: 300 }}>
       <FullFileBrowser files={files} folderChain={folderChain} />
     </div>
-  );
+  )
 }
-
-export default Home;
