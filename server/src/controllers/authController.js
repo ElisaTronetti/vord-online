@@ -1,5 +1,4 @@
 require("dotenv").config();
-var crypto = require("crypto");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcryptjs')
@@ -17,13 +16,12 @@ async function signup(req, res) {
                 Users.find({email: newUser.email}).select('_id email token').then(user => {
                     const email = user.email;
                     // Create token
-                    const randomKey = crypto.randomBytes(20).toString('hex');
                     const token = jwt.sign(
                         { user_id: user._id, email },
-                         randomKey,
+                        process.env.TOKEN_KEY,
                         {
                           algorithm: "HS512", 
-                          expiresIn: "2h"
+                          expiresIn: 3
                         }
                       );
                     // save user token
@@ -54,14 +52,13 @@ async function login(req, res) {
       const user = await Users.findOne({ email });
   
       if (user && (await bcrypt.compare(password, user.password))) {
-        const randomKey = crypto.randomBytes(20).toString('hex');
         // Create token
         const token = jwt.sign(
           { user_id: user._id, email },
-           randomKey,
+          process.env.TOKEN_KEY,
           {
             algorithm: "HS512", 
-            expiresIn: "2h"
+            expiresIn: '2h'
           }
         );
   
