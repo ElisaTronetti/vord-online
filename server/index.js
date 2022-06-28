@@ -12,7 +12,7 @@ const authRoutes = require('./src/routes/authRoutes');
 const fileSystemRoutes =  require('./src/routes/fileSystemRoutes');
 
 app.use(authRoutes);
-//app.use(fileSystemRoutes);
+app.use(fileSystemRoutes);
 
 app.listen(3000, ()=>{
     console.log('Listening on port 3000')
