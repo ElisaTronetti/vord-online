@@ -19,22 +19,26 @@ export default function Login() {
                 <Form className="mt-1 mb-3">
                     <h1 className="d-flex justify-content-center">Login</h1>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label
-                            onChange={input => setInputEmail(input)}
-                            onEnter={tryLogin}>
+                        <Form.Label>
                             Email address
                         </Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" />
+                        <Form.Control
+                            type="email"
+                            onChange={input => setInputEmail(input.target.value)}
+                            onEnter={tryLogin}
+                            placeholder="Enter email" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label
-                            onChange={input => setInputPassword(input)}
-                            onEnter={tryLogin}>
+                        <Form.Label>
                             Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" />
+                        <Form.Control
+                            type="password"
+                            onChange={input => setInputPassword(input.target.value)}
+                            onEnter={tryLogin}
+                            placeholder="Password" />
                     </Form.Group>
                     <div class="text-center">
-                        <Button variant="primary" type="submit" onClick={tryLogin}>Login</Button>
+                        <Button variant="primary" onClick={tryLogin}>Login</Button>
                         <p>Not a member? <a href="/signup">Register</a></p>
                     </div>
                 </Form>
