@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
@@ -6,6 +7,8 @@ import Button from 'react-bootstrap/Button'
 import userSignup from './userSignup'
 
 export default function Signup() {
+    const dispatch = useDispatch()
+
     const [inputName, setInputName] = useState("")
     const [inputSurname, setInputSurname] = useState("")
     const [inputEmail, setInputEmail] = useState("")
@@ -13,7 +16,7 @@ export default function Signup() {
     const [inputPasswordConfirm, setInputPasswordConfirm] = useState("")
 
     function trySignup() {
-        userSignup(inputName, inputSurname, inputEmail, inputPassword, inputPasswordConfirm)
+        userSignup(inputName, inputSurname, inputEmail, inputPassword, inputPasswordConfirm, dispatch)
     }
 
     return (
@@ -22,27 +25,21 @@ export default function Signup() {
                 <Form className="mt-1 mb-3">
                     <h1 className="d-flex justify-content-center">Signup</h1>
                     <Form.Group className="mb-3" controlId="formBasicName">
-                        <Form.Label>
-                            Name
-                        </Form.Label>
+                        <Form.Label>Name</Form.Label>
                         <Form.Control
                             onChange={input => setInputName(input.target.value)}
                             onEnter={trySignup}
                             placeholder="Enter name" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasiSurname">
-                        <Form.Label>
-                            Surname
-                        </Form.Label>
+                        <Form.Label>Surname</Form.Label>
                         <Form.Control
                             onChange={input => setInputSurname(input.target.value)}
                             onEnter={trySignup}
                             placeholder="Enter surname" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>
-                            Email address
-                        </Form.Label>
+                        <Form.Label>Email address</Form.Label>
                         <Form.Control
                             type="email"
                             onChange={input => setInputEmail(input.target.value)}
@@ -50,9 +47,7 @@ export default function Signup() {
                             placeholder="Enter email" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>
-                            Password
-                        </Form.Label>
+                        <Form.Label>Password</Form.Label>
                         <Form.Control
                             type="password"
                             onChange={input => setInputPassword(input.target.value)}
@@ -60,9 +55,7 @@ export default function Signup() {
                             placeholder="Password" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formConfirmBasicPassword">
-                        <Form.Label>
-                            Confirm Password
-                        </Form.Label>
+                        <Form.Label>Confirm Password</Form.Label>
                         <Form.Control
                             type="password"
                             onChange={input => setInputPasswordConfirm(input.target.value)}

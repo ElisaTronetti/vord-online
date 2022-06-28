@@ -22,9 +22,7 @@ export default function Login() {
                 <Form className="mt-1 mb-3">
                     <h1 className="d-flex justify-content-center">Login</h1>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>
-                            Email address
-                        </Form.Label>
+                        <Form.Label>Email address</Form.Label>
                         <Form.Control
                             type="email"
                             onChange={input => setInputEmail(input.target.value)}
@@ -32,8 +30,7 @@ export default function Login() {
                             placeholder="Enter email" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>
-                            Password</Form.Label>
+                        <Form.Label>Password</Form.Label>
                         <Form.Control
                             type="password"
                             onChange={input => setInputPassword(input.target.value)}
