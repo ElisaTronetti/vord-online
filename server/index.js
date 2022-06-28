@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser')
 const express = require('express');
 const app = express();
 app.use(express.json());
@@ -14,6 +15,8 @@ const fileSystemRoutes =  require('./src/routes/fileSystemRoutes');
 app.use(authRoutes);
 app.use(fileSystemRoutes);
 
-app.listen(3000, ()=>{
-    console.log('Listening on port 3000')
+app.use(bodyParser.json())
+
+app.listen(3001, ()=>{
+    console.log('Listening on port 3001')
 })
