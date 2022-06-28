@@ -1,30 +1,27 @@
 import $ from 'jquery'
 import { server } from '../conf'
+import { setToken } from "../redux/userData/actions"
 
-export default function userLogin(email, password){
-    if(email !== '' && password !== ''){
+export default function userLogin(email, password, dispatch) {
+    if (email !== '' && password !== '') {
         $.ajaxSetup({
             contentType: "application/json; charset=utf-8"
         })
-        $.get(server + "auth/login", createParams(email, password))
+        $.post(server + "auth/login", createParams(email, password))
             .done(function (result) {
                 console.log(result)
+                let token = result.token
+                dispatch(setToken(token))
             })
             .fail(function (result) {
-                if(result.status === 401){
-                    alert.error("Invalid credentials")
-                } else {
-                    alert.error("Error contacting server")
-                }
+                console.log(result)
             })
-    } /*else {
-        alert.error("Email and/or password cannot be empty")
-    }*/
+    }
 }
 
 function createParams(email, password) {
-    return {
-        email: email.trim(),
-        password: password.trim()
-    }
+    return JSON.stringify({
+        email: email,
+        password: password
+    })
 }
