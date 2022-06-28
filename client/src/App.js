@@ -9,6 +9,7 @@ import allReducers from './redux'
 
 import Home from './home/Home'
 import Login from './login/Login'
+import Signup from './signup/Signup'
 
 setChonkyDefaults({ iconComponent: ChonkyIconFA })
 
@@ -23,6 +24,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Login/>}/>
+          <Route path='/signup' element={<Signup/>}/>
           <Route path='/home' element={<Home/>}/>
         </Routes>
       </BrowserRouter>
