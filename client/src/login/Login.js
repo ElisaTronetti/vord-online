@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
@@ -6,11 +7,13 @@ import Button from 'react-bootstrap/Button'
 import userLogin from './userLogin'
 
 export default function Login() {
+    const dispatch = useDispatch()
+
     const [inputEmail, setInputEmail] = useState(undefined)
     const [inputPassword, setInputPassword] = useState(undefined)
 
     function tryLogin() {
-        userLogin(inputEmail, inputPassword)
+        userLogin(inputEmail, inputPassword, dispatch)
     }
 
     return (
