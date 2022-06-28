@@ -1,13 +1,32 @@
-const dbModel = require('../models/userModel')
+require("dotenv").config();
+
+const jwt = require("jsonwebtoken");
+const bcrypt = require('bcryptjs')
+
+const auth = require("../middleware/auth");
+const Users = require('../models/userModel')
 const UserFactory = require('../models/factories/user')
 const Responces = require('./responces/responce')
-const bcrypt = require('bcryptjs')
+
 
 async function signup(req, res) {
     let newUser = UserFactory.createUser(req.body.email, req.body.name, req.body.surname, req.body.password);
-    await dbModel.findOne({email: newUser["username"]}).then(async profile => {
+    await Users.findOne({email: newUser["username"]}).then(async profile => {
         if(!profile) {
             newUser.save().then(() => {
+                Users.find({email: newUser.email}).select('_id email token').then(user => {
+                    const email = user.email;
+                    // Create token
+                    const token = jwt.sign(
+                        { user_id: user._id, email },
+                        process.env.TOKEN_KEY,
+                        {
+                        expiresIn: "2h",
+                        }
+                    );
+                    // save user token
+                    user.token = token;
+                })
                 Responces.OkResponce(res, newUser);
             }).catch(err => {
                 Responces.ServerError(res, {message: err.stack});
@@ -21,18 +40,37 @@ async function signup(req, res) {
 }
 
 async function login(req, res) {
-    const body = req.body;
-    const user = await dbModel.findOne({ email: body.email });
-    if (user) {
-      // check user password with hashed password stored in the database
-      const validPassword = await bcrypt.compare(body.password, user.password);
-      if (validPassword) {
-        res.status(200).json({ message: "Valid password" });
-      } else {
-        res.status(400).json({ error: "Invalid Password" });
+    try {
+      // Get user input
+      const { email, password } = req.body;
+  
+      // Validate user input
+      if (!(email && password)) {
+        res.status(400).send("All input is required");
       }
-    } else {
-      res.status(401).json({ error: "User does not exist" });
+      // Validate if user exist in our database
+      const user = await Users.findOne({ email });
+  
+      if (user && (await bcrypt.compare(password, user.password))) {
+        // Create token
+        const token = jwt.sign(
+          { user_id: user._id, email },
+          process.env.TOKEN_KEY,
+          {
+            expiresIn: "2h",
+          }
+        );
+  
+        // save user token
+        user.token = token;
+  
+        // user
+        res.status(200).json(user);
+      } else {
+        res.status(400).send("Invalid Credentials");
+      }
+    } catch (err) {
+      console.log(err);
     }
 }
 

@@ -19,6 +19,7 @@ let UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    token: String,
     fileSystem: [],     //TODO required when we find out an empty file system is
     documents: [{            //documents of the user
         title: String,
