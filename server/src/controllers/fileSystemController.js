@@ -62,9 +62,9 @@ async function createNewDocument(req, res){
                                 title: req.body.title, 
                                 time: req.body.time, 
                                 blocks: [], 
-                                version: req.body.version}
+                                version: 0}
         const updateUsers = { $push: { documents: newDocument }}
-        Users.findOneAndUpdate(filter, updateUsers).save();
+        Users.findOneAndUpdate(filter, updateUsers)
 
         const newFile = {   _id: newId,
                             name: req.body.title,
@@ -73,7 +73,7 @@ async function createNewDocument(req, res){
                             childrenCount: 0,
                             parendId: req.body.parent}
         const updateFiles = {$push : { fileMap: newFile }}
-        FileSystems.findOneAndUpdate(filter, updateFiles).save();
+        FileSystems.findOneAndUpdate(filter, updateFiles)
 
         Responces.OkResponce(res, newId)
     } catch (err) {
