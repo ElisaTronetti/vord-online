@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 
 let fileSystemSchema = new mongoose.Schema({
-    _id: String,
+    _id: { type: mongoose.Types.ObjectId, auto: true },
+    rootFolderId: { type: mongoose.Types.ObjectId, auto: true },
     fileMap:
         {type: Map, of:{ 
             _id: { type: mongoose.Types.ObjectId, auto: true },
