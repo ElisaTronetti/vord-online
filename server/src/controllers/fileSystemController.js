@@ -17,11 +17,11 @@ async function getFileSystem(fsId) {
   }
 
 async function getUserFileSystem(req, res){
-    if(req.body._id === undefined){
+    if(req.query._id === undefined){
         res.status(406).json({err: "missing user id"})
     } else {
         try{
-                const result =  await getFileSystem(req.body._id);
+                const result =  await getFileSystem(req.query._id);
                 if(result !== null){
                     res.status(200).json({
                         result: result
