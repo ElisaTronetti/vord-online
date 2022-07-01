@@ -21,7 +21,7 @@ async function getUserFileSystem(req, res){
         res.status(406).json({err: "missing user id"})
     } else {
         try{
-                const result =  await getFileSystem(req.body.id);
+                const result =  await getFileSystem(req.body._id);
                 if(result !== null){
                     res.status(200).json({
                         result: result
