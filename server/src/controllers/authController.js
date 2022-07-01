@@ -43,8 +43,9 @@ async function signup(req, res) {
                                                         }
                                                       });
                     newFileSystem.save();
+                    Responces.OkResponce(res, user);
                 })
-                Responces.OkResponce(res, newUser);
+                
             }).catch(err => {
                 Responces.ServerError(res, {message: err.stack});
             })

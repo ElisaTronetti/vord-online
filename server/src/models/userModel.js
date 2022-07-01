@@ -19,7 +19,9 @@ let UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    token: String,
+    token:{
+        type:String
+    },
     documents: [{            //documents of the user
         title: String,
         time: Number,
