@@ -7,6 +7,7 @@ const Users = require('../models/userModel')
 const FileSystem = require('../models/fileSystemModel')
 const UserFactory = require('../models/factories/user')
 const Responces = require('./responces/responce')
+const ObjectId = require('mongoose').Types.ObjectId
 
 
 async function signup(req, res) {
@@ -15,9 +16,8 @@ async function signup(req, res) {
         if(!profile) {
             newUser.save().then(() => {
                 Users.findOne({email: newUser.email}).then(user =>{
-                    const email = user.email;
-                    console.log(user._id)
                     // Create token
+                    const email = user.email;
                     const token = jwt.sign(
                         { user_id: user._id, email },
                         process.env.TOKEN_KEY,
@@ -26,11 +26,22 @@ async function signup(req, res) {
                           expiresIn: 3
                         }
                     );
-                    // save user token
-                    user.token = token;
+                    user.token = token; // save user token
                     
                     //create empty file system
-                    let newFileSystem = new FileSystem({_id: mongoose.Types.ObjectId(user._id)});
+                    const rootFolderId = ObjectId();
+                    let newFileSystem = new FileSystem({_id: ObjectId(user._id),
+                                                        rootFolderId: rootFolderId,
+                                                        fileMap: {
+                                                          [rootFolderId]:{
+                                                            _id:rootFolderId,
+                                                            isDir:true,
+                                                            name:"/",
+                                                            childrenIds:[],
+                                                            childrenCount:0
+                                                          }
+                                                        }
+                                                      });
                     newFileSystem.save();
                 })
                 Responces.OkResponce(res, newUser);

@@ -72,7 +72,9 @@ async function createNewDocument(req, res){
                             childrenIds: [],
                             childrenCount: 0,
                             parendId: req.body.parent}
-        const updateFiles = {$push : { "fileMap": newFile }}
+        const updateFiles = { $set: {
+            [`fileMap.${newId}`]: newFile,
+          }}
         await FileSystems.findOneAndUpdate(filter, updateFiles)
 
         Responces.OkResponce(res, newId)
