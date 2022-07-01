@@ -6,7 +6,7 @@ const Users = require('../models/userModel')
 
 async function getFileSystem(fsId) {
     try {
-        fsId = mongoose.Types.ObjectId(fsId)
+        //fsId = mongoose.Types.ObjectId(fsId)
         const fileSystem = await FileSystems
                                 .findById(fsId)
                                 .exec();
