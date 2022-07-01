@@ -13,7 +13,7 @@ const userDataReducer = (state = initialState, action) => {
             id: action.payload
         })
         case 'SET_TOKEN': return Object.assign({}, state, {
-            token : action.payload
+            token: action.payload
         })
         default: return state;
     }

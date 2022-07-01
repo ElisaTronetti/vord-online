@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import { server } from '../conf'
-import { setToken } from "../redux/userData/actions"
+import { setToken, setId } from "../redux/userData/actions"
 
 export default function userLogin(email, password, dispatch) {
     if (email !== '' && password !== '') {
@@ -12,6 +12,9 @@ export default function userLogin(email, password, dispatch) {
                 console.log(result)
                 let token = result.token
                 dispatch(setToken(token))
+
+                let id = result._id
+                dispatch(setId(id))
             })
             .fail(function (result) {
                 console.log(result)
