@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require('bcryptjs')
 
 const Users = require('../models/userModel')
+const FileSystem = require('../models/fileSystemModel')
 const UserFactory = require('../models/factories/user')
 const Responces = require('./responces/responce')
 
@@ -13,8 +14,9 @@ async function signup(req, res) {
     await Users.findOne({email: newUser["username"]}).then(async profile => {
         if(!profile) {
             newUser.save().then(() => {
-                Users.find({email: newUser.email}).select('_id email token').then(user => {
+                Users.findOne({email: newUser.email}).then(user =>{
                     const email = user.email;
+                    console.log(user._id)
                     // Create token
                     const token = jwt.sign(
                         { user_id: user._id, email },
@@ -23,9 +25,13 @@ async function signup(req, res) {
                           algorithm: "HS512", 
                           expiresIn: 3
                         }
-                      );
+                    );
                     // save user token
                     user.token = token;
+                    
+                    //create empty file system
+                    let newFileSystem = new FileSystem({_id: mongoose.Types.ObjectId(user._id)});
+                    newFileSystem.save();
                 })
                 Responces.OkResponce(res, newUser);
             }).catch(err => {

@@ -1,13 +1,14 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Responces = require("./responces/responce")
+const FileSystems = require('../models/fileSystemModel')
 const Users = require('../models/userModel')
 
 
-async function getFileSystem(userId) {
+async function getFileSystem(fsId) {
     try {
-        const fileSystem = await Users
-                                .findOne({email : userId})
-                                .select('fileSystem')
+        fsId = mongoose.Types.ObjectId(fsId)
+        const fileSystem = await FileSystems
+                                .findById(fsId)
                                 .exec();
         return fileSystem;
     } catch (err) {
@@ -16,11 +17,11 @@ async function getFileSystem(userId) {
   }
 
 async function getUserFileSystem(req, res){
-    if(req.query.id === undefined){
+    if(req.body._id === undefined){
         res.status(406).json({err: "missing user id"})
     } else {
         try{
-                const result =  await getFileSystem(req.query.id);
+                const result =  await getFileSystem(req.body.id);
                 if(result !== null){
                     res.status(200).json({
                         result: result
@@ -36,14 +37,14 @@ async function getUserFileSystem(req, res){
 }
 
 async function updateUserFileSystem(req, res){
-    if(req.query.id === undefined){
+    if(req.body._id === undefined){
         res.status(406).json({err: "missing user id"})
     } else {
-        Users
-        .find({email : req.query.id})
-        .updateOne({ fileSystem: req.body.fileSystem })
+        FileSystems
+        .findById(req.body._id)
+        .updateOne({ fileMap: req.body.fileMap })
         .then(() => {
-            Responces.OkResponce(res, req.body.fileSystem);
+            Responces.OkResponce(res, req.body.fileMap);
         })
         .catch(err => {
             Responces.ServerError(res, {message: err.message});
@@ -51,9 +52,39 @@ async function updateUserFileSystem(req, res){
     }
 }
 
+async function createNewDocument(req, res){
+
+    try {
+        const newId = ObjectId()
+        const filter = { _id: req.body._id }
+
+        const newDocument = {   _id: newId,
+                                title: req.body.title, 
+                                time: req.body.time, 
+                                blocks: [], 
+                                version: req.body.version}
+        const updateUsers = { $push: { documents: newDocument }}
+        Users.findOneAndUpdate(filter, updateUsers).save();
+
+        const newFile = {   _id: newId,
+                            name: req.body.title,
+                            isDir: false,
+                            childrenIds: [],
+                            childrenCount: 0,
+                            parendId: req.body.parent}
+        const updateFiles = {$push : { fileMap: newFile }}
+        FileSystems.findOneAndUpdate(filter, updateFiles).save();
+
+        Responces.OkResponce(res, newId)
+    } catch (err) {
+        Responces.ServerError(res, {message: err.message});
+    }
+}
+
 
 
 module.exports = {
     getUserFileSystem,
-    updateUserFileSystem
+    updateUserFileSystem,
+    createNewDocument
 }

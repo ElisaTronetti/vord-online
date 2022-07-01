@@ -33,4 +33,4 @@ let sharedDocumentsSchema = new mongoose.Schema({
     }
 }
 )
-module.exports = mongoose.model('sharedDocumentsDB', sharedDocumentsSchema)
+module.exports = mongoose.model('sharedDocument', sharedDocumentsSchema)
