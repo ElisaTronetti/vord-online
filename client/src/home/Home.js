@@ -1,18 +1,16 @@
 import { FullFileBrowser } from 'chonky'
+import { useState } from 'react'
+
+import { useFiles, useFileActionHandler, useFolderChain } from './fileSystemNavigator'
 
 export default function Home() {
-  const files = [
-    { id: 'lht', name: 'Projects', isDir: true },
-    {
-      id: 'mcd',
-      name: 'chonky-sphere-v2.png',
-      thumbnailUrl: 'https://chonky.io/chonky-sphere-v2.png',
-    },
-  ];
-  const folderChain = [{ id: 'xcv', name: 'Demo', isDir: true }]
+  const [currentFolderId, setCurrentFolderId] = useState("qwerty123456")
+  const files = useFiles(currentFolderId)
+  const handleFileAction = useFileActionHandler(setCurrentFolderId)
+  const folderChain = useFolderChain(currentFolderId)
   return (
     <div style={{ height: 300 }}>
-      <FullFileBrowser files={files} folderChain={folderChain} />
+      <FullFileBrowser files={files} onFileAction={handleFileAction} folderChain={folderChain} />
     </div>
   )
 }
