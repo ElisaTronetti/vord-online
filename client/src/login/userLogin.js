@@ -1,5 +1,4 @@
 import $ from 'jquery'
-import { server } from '../conf'
 import { setToken, setId } from "../redux/userData/actions"
 
 export default function userLogin(email, password, dispatch) {
@@ -7,7 +6,7 @@ export default function userLogin(email, password, dispatch) {
         $.ajaxSetup({
             contentType: "application/json; charset=utf-8"
         })
-        $.post(server + "auth/login", createParams(email, password))
+        $.post(process.env.REACT_APP_SERVER + "auth/login", createParams(email, password))
             .done(function (result) {
                 console.log(result)
                 let token = result.token

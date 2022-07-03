@@ -1,9 +1,7 @@
 import $ from 'jquery'
-import { server } from '../conf'
 import { setToken, setId } from "../redux/userData/actions"
 
 export default function userSignup(name, surname, email, password, passwordConfirm, dispatch) {
-    console.log(name, surname, email, password, passwordConfirm)
     if (emptyParams(name, surname, email, password, passwordConfirm)) {
         console.log("Empty fields")
     } else if (password.trim() !== passwordConfirm.trim()) {
@@ -12,7 +10,7 @@ export default function userSignup(name, surname, email, password, passwordConfi
         $.ajaxSetup({
             contentType: "application/json; charset=utf-8"
         })
-        $.post(server + "auth/signup", createParams(name, surname, email, password))
+        $.post(process.env.REACT_APP_SERVER + "auth/signup", createParams(name, surname, email, password))
             .done(function (result) {
                 console.log(result)
 
