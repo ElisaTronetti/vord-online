@@ -9,7 +9,7 @@ async function getFileSystem(fsId) {
         //fsId = mongoose.Types.ObjectId(fsId)
         const fileSystem = await FileSystems
                                 .findById(fsId)
-                                .exec();
+                                
         return fileSystem;
     } catch (err) {
        throw err;
@@ -21,14 +21,15 @@ async function getUserFileSystem(req, res){
         res.status(406).json({err: "missing user id"})
     } else {
         try{
-                const result =  await getFileSystem(req.query._id);
-                if(result !== null){
-                    res.status(200).json({
-                        result: result
-                    })
-                } else {
-                    res.status(404).json({err: "not found"})
-                }
+                /*const result =  await getFileSystem(req.query._id);
+                if(result !== null){*/
+                FileSystems
+                .findById(req.query._id)
+                .lean()
+                .exec(function (err, fileSystem) {
+                        return res.end(JSON.stringify(fileSystem));
+                    });
+               
             
         } catch(err){
             res.status(500).json({err: err.toString()})
