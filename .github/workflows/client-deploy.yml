@@ -3,8 +3,9 @@ name: Deploy Client on Heroku
 on:
   push:
     branches: [ 'develop' ]
-  pull_request:
-    branches: [ 'develop' ]
+
+env:
+  REACT_APP_SERVER: ${{ secrets.SERVER }}
 
 jobs:
   build:

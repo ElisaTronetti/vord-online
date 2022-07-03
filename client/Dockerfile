@@ -1,6 +1,9 @@
 FROM node:alpine
 COPY package.json .
 COPY package-lock.json .
+RUN npm install -g serve
 RUN	npm install --silent
 COPY . .
-CMD npm start
+RUN npm run build
+
+CMD ["serve", "-s", "build"]
