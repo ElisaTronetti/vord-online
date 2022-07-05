@@ -8,7 +8,6 @@ export default function userLogin(email, password, dispatch) {
         })
         $.post(process.env.REACT_APP_SERVER + "auth/login", createParams(email, password))
             .done(function (result) {
-                console.log(result)
                 let token = result.token
                 dispatch(setToken(token))
 
