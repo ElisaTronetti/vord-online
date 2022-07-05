@@ -1,17 +1,17 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useMemo, useCallback } from 'react'
-import Data from './data.json'
 
-var fileMap = Data.fileMap
-
-export const useFiles = (currentFolderId) => {
+export const useFiles = (fileMap, currentFolderId) => {
     return useMemo(() => {
-        const currentFolder = fileMap[currentFolderId]
-        const files = currentFolder.childrenIds
+        if (fileMap !== null && currentFolderId !== null) {
+            const currentFolder = fileMap[currentFolderId]
+            const files = currentFolder.childrenIds
             ? currentFolder.childrenIds.map((fileId) => fileMap[fileId] ?? null)
             : []
         return files
-    }, [currentFolderId])
+        }
+        return []
+    }, [fileMap, currentFolderId])
 }
 
 export const useFileActionHandler = (setCurrentFolderId) => {
@@ -31,20 +31,23 @@ export const useFileActionHandler = (setCurrentFolderId) => {
     )
 }
 
-export const useFolderChain = (currentFolderId) => {
+export const useFolderChain = (fileMap, currentFolderId) => {
     return useMemo(() => {
-        const currentFolder = fileMap[currentFolderId];
-        const folderChain = [currentFolder];
-        let parentId = currentFolder.parentId;
-        while (parentId) {
-            const parentFile = fileMap[parentId];
-            if (parentFile) {
-                folderChain.unshift(parentFile);
-                parentId = parentFile.parentId;
-            } else {
-                parentId = null;
+        if (fileMap !== null && currentFolderId !== null) {
+            const currentFolder = fileMap[currentFolderId]
+            const folderChain = [currentFolder]
+            let parentId = currentFolder.parentId
+            while (parentId) {
+                const parentFile = fileMap[parentId]
+                if (parentFile) {
+                    folderChain.unshift(parentFile)
+                    parentId = parentFile.parentId
+                } else {
+                    parentId = null;
+                }
             }
+            return folderChain;
         }
-        return folderChain;
-    }, [currentFolderId]);
-};
+        return []
+    }, [fileMap, currentFolderId])
+}
