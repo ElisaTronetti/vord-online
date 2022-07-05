@@ -5,13 +5,13 @@ let fileSystemSchema = new mongoose.Schema({
     rootFolderId: { type: mongoose.Types.ObjectId, auto: true },
     fileMap:
         {type: Map, of:{ 
-            _id: { type: mongoose.Types.ObjectId, auto: true },
+            id: { type: mongoose.Types.ObjectId, auto: true },
             name: String,
             thubnail: String,
             isDir:Boolean,
             parent: String,
             childrenIds:[{
-                _id: { type: mongoose.Types.ObjectId, auto: true }
+                id: { type: mongoose.Types.ObjectId, auto: true }
             }],
             childrenCount: Number
         }
