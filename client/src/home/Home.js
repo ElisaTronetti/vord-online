@@ -9,7 +9,7 @@ export default function Home() {
   const handleFileAction = useFileActionHandler(setCurrentFolderId)
   const folderChain = useFolderChain(currentFolderId)
   return (
-    <div style={{ height: 300 }}>
+    <div style={{ height: '100vh' }}>
       <FullFileBrowser files={files} onFileAction={handleFileAction} folderChain={folderChain} />
     </div>
   )
