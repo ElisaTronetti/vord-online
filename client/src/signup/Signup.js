@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Navigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button'
 import userSignup from './userSignup'
 
 export default function Signup() {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const [inputName, setInputName] = useState("")
@@ -22,7 +23,7 @@ export default function Signup() {
 
     let token = useSelector(state => state.userData.token)
     if (token !== null) {
-        return <Link to={'/home'}><Navigate to={'/home'}/></Link>
+        navigate('/home')
     } else {
         return (
             <Row className="d-flex justify-content-center">

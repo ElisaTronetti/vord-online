@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button'
 import userLogin from './userLogin'
 
 export default function Login() {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     const dispatch = useDispatch()
     const [inputEmail, setInputEmail] = useState(undefined)
