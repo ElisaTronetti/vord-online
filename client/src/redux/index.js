@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux'
 
-import counterReducer from './counter/reducer'
+import fileSystemReducer from './fileSystem/reducer'
 import userDataReducer from './userData/reducer'
 
 const allReducers = combineReducers({
-    counter: counterReducer,
     userData: userDataReducer,
+    fileSystemData: fileSystemReducer
 })
 
 export default allReducers
