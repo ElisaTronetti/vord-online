@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: server
+    ports:
+      - 3001:3001
+    networks:
+      - internal
+  mongodb:
+    image: mongo
+    ports:
+      - 27017-27019:27017-27019
+    networks:
+      - internal
+    volumes:
+      - mongodb_data:/data/db
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: client
+    ports:
+      - 3000:3000
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+    driver_opts:
+       com.docker.network.bridge.name: "brinterna"
+       
+volumes:
+  mongodb_data:
