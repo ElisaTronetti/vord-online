@@ -32,7 +32,7 @@ export default function Login() {
                             <Form.Control
                                 type="email"
                                 onChange={input => setInputEmail(input.target.value)}
-                                onEnter={tryLogin}
+                                onKeyPress={event => { if (event.key === "Enter") tryLogin()}}
                                 placeholder="Enter email" />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -40,7 +40,7 @@ export default function Login() {
                             <Form.Control
                                 type="password"
                                 onChange={input => setInputPassword(input.target.value)}
-                                onEnter={tryLogin}
+                                onKeyPress={event => { if (event.key === "Enter") tryLogin()}}
                                 placeholder="Password" />
                         </Form.Group>
                         <div class="text-center">

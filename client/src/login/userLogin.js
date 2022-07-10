@@ -17,6 +17,8 @@ export default function userLogin(email, password, dispatch) {
             .fail(function (result) {
                 console.log(result)
             })
+    } else {
+        console.log('Missing data')
     }
 }
 
