@@ -34,14 +34,14 @@ export default function Signup() {
                             <Form.Label>Name</Form.Label>
                             <Form.Control
                                 onChange={input => setInputName(input.target.value)}
-                                onEnter={trySignup}
+                                onKeyPress={event => { if (event.key === "Enter") trySignup()}}
                                 placeholder="Enter name" />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasiSurname">
                             <Form.Label>Surname</Form.Label>
                             <Form.Control
                                 onChange={input => setInputSurname(input.target.value)}
-                                onEnter={trySignup}
+                                onKeyPress={event => { if (event.key === "Enter") trySignup()}}
                                 placeholder="Enter surname" />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -49,7 +49,7 @@ export default function Signup() {
                             <Form.Control
                                 type="email"
                                 onChange={input => setInputEmail(input.target.value)}
-                                onEnter={trySignup}
+                                onKeyPress={event => { if (event.key === "Enter") trySignup()}}
                                 placeholder="Enter email" />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -57,7 +57,7 @@ export default function Signup() {
                             <Form.Control
                                 type="password"
                                 onChange={input => setInputPassword(input.target.value)}
-                                onEnter={trySignup}
+                                onKeyPress={event => { if (event.key === "Enter") trySignup()}}
                                 placeholder="Password" />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formConfirmBasicPassword">
@@ -65,7 +65,7 @@ export default function Signup() {
                             <Form.Control
                                 type="password"
                                 onChange={input => setInputPasswordConfirm(input.target.value)}
-                                onEnter={trySignup}
+                                onKeyPress={event => { if (event.key === "Enter") trySignup()}}
                                 placeholder="Confirm password" />
                         </Form.Group>
                         <div class="text-center">
