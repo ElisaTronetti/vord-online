@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import Data from './data.json'
 
-import { useFiles, useFileActionHandler, useFolderChain, deleteFiles } from './fileSystemNavigator'
+import { useFiles, useFileActionHandler, useFolderChain, deleteFiles, moveFiles } from './fileSystemNavigator'
 import getFileSystem from './fileSystem'
 
 export default function Home() {
@@ -20,10 +20,9 @@ export default function Home() {
   }, [id, token, setCurrentFolderId, setFileMap])*/
 
   const files = useFiles(fileMap, currentFolderId)
-  const handleFileAction = useFileActionHandler(fileMap, setCurrentFolderId, setFileMap, deleteFiles)
+  const handleFileAction = useFileActionHandler(fileMap, setCurrentFolderId, setFileMap, deleteFiles, moveFiles)
   const folderChain = useFolderChain(fileMap, currentFolderId)
 
-  console.log(fileMap)
   const fileActions = useMemo(
     () => [ChonkyActions.DeleteFiles],
     []
@@ -31,7 +30,7 @@ export default function Home() {
 
   return (
     <div style={{ height: '100vh' }}>
-      <FullFileBrowser files={files} fileActions={fileActions} onFileAction={handleFileAction} folderChain={folderChain} />
+      <FullFileBrowser files={files} fileActions={fileActions} onFileAction={handleFileAction} folderChain={folderChain}/>
     </div>
   )
 }

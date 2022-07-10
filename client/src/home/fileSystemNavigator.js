@@ -6,14 +6,14 @@ export const useFiles = (fileMap, currentFolderId) => {
         if (fileMap !== null && currentFolderId !== null) {
             const currentFolder = fileMap[currentFolderId]
             const childrenIds = currentFolder.childrenIds
-            const files = childrenIds.map(function (fileId) { return fileMap[fileId]; });
+            const files = childrenIds.map(function (fileId) { return fileMap[fileId] })
             return files
         }
         return []
     }, [currentFolderId, fileMap])
 }
 
-export const useFileActionHandler = (fileMap, setCurrentFolderId, setFileMap, deleteFiles) => {
+export const useFileActionHandler = (fileMap, setCurrentFolderId, setFileMap, deleteFiles, moveFiles) => {
     return useCallback(
         data => {
             console.log()
@@ -26,6 +26,15 @@ export const useFileActionHandler = (fileMap, setCurrentFolderId, setFileMap, de
                 }
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 deleteFiles(fileMap, data.state.selectedFilesForAction, setFileMap)
+                return
+            } else if (data.id === ChonkyActions.MoveFiles.id) {
+                moveFiles(
+                    fileMap,
+                    data.payload.files,
+                    data.payload.source,
+                    data.payload.destination,
+                    setFileMap
+                )
                 return
             }
         },
@@ -44,10 +53,10 @@ export const useFolderChain = (fileMap, currentFolderId) => {
                 folderChain.unshift(parentFile)
                 parentId = parentFile.parentId
             } else {
-                parentId = null;
+                parentId = null
             }
         }
-        return folderChain;
+        return folderChain
     }, [currentFolderId, fileMap])
 }
 
@@ -60,7 +69,7 @@ export const deleteFiles = (fileMap, files, setFileMap) => {
         // Update the parent folder to make sure it doesn't try to load the file just deleted
         if (file.parentId && newFileMap[file.parentId !== null]) {
             const parent = newFileMap[file.parentId]
-            var newChildrenIds = parent.childrenIds.filter(function (id) { return id !== file.id; })
+            var newChildrenIds = parent.childrenIds.filter(function (id) { return id !== file.id })
             newFileMap[file.parentId] = {
                 ...parent,
                 childrenIds: newChildrenIds,
@@ -69,4 +78,43 @@ export const deleteFiles = (fileMap, files, setFileMap) => {
         }
         setFileMap(newFileMap)
     })
+}
+
+export const moveFiles = (fileMap, files, source, destination, setFileMap) => {
+    const newFileMap = { ...fileMap }
+    const moveFileIds = new Set(files.map((f) => f.id))
+    // Delete files from their source folder
+    var newSourceChildrenIds = source.childrenIds.filter(function (id) { return !moveFileIds.has(id) })
+    newFileMap[source.id] = __assign(__assign({}, source), { childrenIds: newSourceChildrenIds, childrenCount: newSourceChildrenIds.length })
+    // Add the files to their destination folder
+    var newDestinationChildrenIds = __spreadArray(__spreadArray([], destination.childrenIds, true), files.map(function (f) { return f.id }), true)
+    newFileMap[destination.id] = __assign(__assign({}, destination), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
+    // Finally, update the parent folder ID on the files from source folder
+    // ID to the destination folder ID.
+    files.forEach(function (file) {
+        newFileMap[file.id] = __assign(__assign({}, file), { parentId: destination.id })
+    })
+    setFileMap(newFileMap)
+}
+
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i]
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p]
+        }
+        return t
+    }
+    return __assign.apply(this, arguments)
+}
+
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i)
+            ar[i] = from[i]
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from))
 }
