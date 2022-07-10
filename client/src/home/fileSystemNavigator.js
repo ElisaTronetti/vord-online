@@ -38,7 +38,7 @@ export const useFileActionHandler = (fileMap, setCurrentFolderId, setFileMap, de
                 return
             }
         },
-        [fileMap, deleteFiles, setCurrentFolderId, setFileMap]
+        [fileMap, deleteFiles, setCurrentFolderId, setFileMap, moveFiles]
     )
 }
 
