@@ -8,6 +8,7 @@ export default function userLogin(email, password, dispatch) {
         })
         $.post(process.env.REACT_APP_SERVER + "auth/login", createParams(email, password))
             .done(function (result) {
+
                 let token = result.token
                 dispatch(setToken(token))
 
@@ -17,6 +18,8 @@ export default function userLogin(email, password, dispatch) {
             .fail(function (result) {
                 console.log(result)
             })
+    } else {
+        console.log('Missing data')
     }
 }
 

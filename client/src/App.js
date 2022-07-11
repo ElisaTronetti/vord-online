@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
 import { setChonkyDefaults } from 'chonky'
 import { ChonkyIconFA } from 'chonky-icon-fontawesome'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import allReducers from './redux'
+import userDataReducer from './redux/userData/reducer'
 
 import Home from './home/Home'
 import Login from './login/Login'
@@ -13,10 +13,12 @@ import Signup from './signup/Signup'
 
 setChonkyDefaults({ iconComponent: ChonkyIconFA })
 
-const store = createStore(
-  allReducers,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-)
+const store = configureStore({
+  reducer: {
+    // Define a top-level state field named `userData`, handled by `userDataReducer`
+    userData: userDataReducer,
+  }
+})
 
 function App() {
   return (
