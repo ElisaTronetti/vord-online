@@ -5,7 +5,8 @@ function createUser(email, name, surname, password) {
         email: email,
         name: name,
         surname: surname,
-        password: password
+        password: password,
+        fileSystem: undefined
     })
 }
 

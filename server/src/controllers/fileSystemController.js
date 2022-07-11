@@ -1,16 +1,17 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Responces = require("./responces/responce")
-const FileSystems = require('../models/fileSystemModel')
 const Users = require('../models/userModel')
 
-
-async function getFileSystem(fsId) {
+async function updateFileSystem(req) {
     try {
-        //fsId = mongoose.Types.ObjectId(fsId)
-        const fileSystem = await FileSystems
-                                .findById(fsId)
-                                
-        return fileSystem;
+        const filter = { _id: new ObjectId(req.body._id) } //userId
+        const update = {fileSystem: req.body.fileSystem}
+
+        let result = await Users.findOneAndUpdate(filter, update, {
+            new: true
+        });
+
+        return result
     } catch (err) {
        throw err;
     }
@@ -23,16 +24,17 @@ async function getUserFileSystem(req, res){
         try{
                 /*const result =  await getFileSystem(req.query._id);
                 if(result !== null){*/
-                FileSystems
+                Users
                 .findById(req.query._id)
+                .select("fileSystem")
                 .lean()
                 .exec(function (err, fileSystem) {
-                        return res.end(JSON.stringify(fileSystem));
+                        Responces.OkResponce(res, fileSystem);//res.end(JSON.stringify(fileSystem));
                     });
                
             
         } catch(err){
-            res.status(500).json({err: err.toString()})
+            Responces.ServerError(res, {message: err.message});
         }
     }
 }
@@ -41,23 +43,21 @@ async function updateUserFileSystem(req, res){
     if(req.body._id === undefined){
         res.status(406).json({err: "missing user id"})
     } else {
-        FileSystems
-        .findById(req.body._id)
-        .updateOne({ fileMap: req.body.fileMap })
-        .then(() => {
-            Responces.OkResponce(res, req.body.fileMap);
-        })
-        .catch(err => {
+        try {
+            let updatedFS = await updateFileSystem(req)
+    
+            Responces.OkResponce(res, updatedFS.fileSystem)
+        } catch (err) {
             Responces.ServerError(res, {message: err.message});
-        })
+        }
     }
 }
 
 async function createNewDocument(req, res){
 
     try {
-        const newId = ObjectId()
-        const filter = { _id: new ObjectId(req.body._id) }
+        const newId = req.body.newDocumentId
+        const filter = { _id: new ObjectId(req.body._id) } //userId
 
         const newDocument = {   _id: newId,
                                 title: req.body.title, 
@@ -67,18 +67,9 @@ async function createNewDocument(req, res){
         const updateUsers = { $push: { "documents": newDocument }}
         await Users.findOneAndUpdate(filter, updateUsers)
 
-        const newFile = {   _id: newId,
-                            name: req.body.title,
-                            isDir: false,
-                            childrenIds: [],
-                            childrenCount: 0,
-                            parendId: req.body.parent}
-        const updateFiles = { $set: {
-            [`fileMap.${newId}`]: newFile,
-          }}
-        await FileSystems.findOneAndUpdate(filter, updateFiles)
+        let updatedFS = await updateFileSystem(req)
 
-        Responces.OkResponce(res, newId)
+        Responces.OkResponce(res, updatedFS.fileSystem)
     } catch (err) {
         Responces.ServerError(res, {message: err.message});
     }

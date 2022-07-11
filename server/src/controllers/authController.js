@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require('bcryptjs')
 
 const Users = require('../models/userModel')
-const FileSystem = require('../models/fileSystemModel')
 const UserFactory = require('../models/factories/user')
 const Responces = require('./responces/responce')
 const ObjectId = require('mongoose').Types.ObjectId
@@ -21,26 +20,10 @@ async function signup(req, res) {
                         process.env.TOKEN_KEY,
                         {
                           algorithm: "HS512", 
-                          expiresIn: 3
+                          expiresIn: '2h'
                         }
                     );
                     user.token = token; // save user token
-                    
-                    //create empty file system
-                    const rootFolderId = ObjectId();
-                    let newFileSystem = new FileSystem({_id: ObjectId(user._id),
-                                                        rootFolderId: rootFolderId,
-                                                        fileMap: {
-                                                          [rootFolderId]:{
-                                                            _id:rootFolderId,
-                                                            isDir:true,
-                                                            name:"/",
-                                                            childrenIds:[],
-                                                            childrenCount:0
-                                                          }
-                                                        }
-                                                      });
-                    newFileSystem.save();
                     Responces.OkResponce(res, user);
                 })
                 

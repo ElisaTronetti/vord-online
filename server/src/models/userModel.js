@@ -28,6 +28,7 @@ let UserSchema = new mongoose.Schema({
         blocks: Object,
         version: String
     }],
+    fileSystem: Object,
     sharedWithUser:[{
         title: String,
         author: String,
