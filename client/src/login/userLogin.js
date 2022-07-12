@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import { setToken, setId } from "../redux/userData/actions"
+import { setRootFolderId, setFileMap} from '../redux/fileSystemData/actions'
 
 export default function userLogin(email, password, dispatch) {
     if (email !== '' && password !== '') {
@@ -14,6 +15,14 @@ export default function userLogin(email, password, dispatch) {
 
                 let id = result._id
                 dispatch(setId(id))
+                
+                if (result.fileSystem !== undefined) {
+                    let fileSystem = result.fileSystem
+                    console.log('A file system exists ' + fileSystem)
+                    dispatch(setRootFolderId(fileSystem.rootFolderId))
+                    dispatch(setFileMap(fileSystem.fileMap))
+                }
+
             })
             .fail(function (result) {
                 console.log(result)
