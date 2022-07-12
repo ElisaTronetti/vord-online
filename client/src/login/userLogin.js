@@ -18,7 +18,7 @@ export default function userLogin(email, password, dispatch) {
                 
                 if (result.fileSystem !== undefined) {
                     let fileSystem = result.fileSystem
-                    console.log('A file system exists ' + fileSystem)
+                    console.log('A file system exists ' + JSON.stringify(fileSystem))
                     dispatch(setRootFolderId(fileSystem.rootFolderId))
                     dispatch(setFileMap(fileSystem.fileMap))
                 }
