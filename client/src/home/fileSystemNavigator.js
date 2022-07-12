@@ -17,7 +17,6 @@ export const useFiles = (fileMap, currentFolderId) => {
 export const useFileActionHandler = (fileMap, setCurrentFolderId, deleteFiles, moveFiles, dispatch) => {
     return useCallback(
         data => {
-            console.log()
             if (data.id === ChonkyActions.OpenFiles.id) {
                 const { targetFile, files } = data.payload
                 const fileToOpen = targetFile ?? files[0]
@@ -39,7 +38,7 @@ export const useFileActionHandler = (fileMap, setCurrentFolderId, deleteFiles, m
                 return
             }
         },
-        [fileMap, deleteFiles, setCurrentFolderId, moveFiles]
+        [fileMap, deleteFiles, setCurrentFolderId, moveFiles, dispatch]
     )
 }
 
@@ -68,7 +67,7 @@ export const deleteFiles = (fileMap, files, dispatch) => {
         // Delete file from the file map
         delete newFileMap[file.id]
         // Update the parent folder to make sure it doesn't try to load the file just deleted
-        if (file.parentId && newFileMap[file.parentId !== null]) {
+        if (file.parentId && newFileMap[file.parentId] !== null) {
             const parent = newFileMap[file.parentId]
             var newChildrenIds = parent.childrenIds.filter(function (id) { return id !== file.id })
             newFileMap[file.parentId] = {
