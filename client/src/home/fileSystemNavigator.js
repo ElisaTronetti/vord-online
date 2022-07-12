@@ -1,5 +1,6 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useMemo, useCallback } from 'react'
+import { setFileMap } from '../redux/fileSystemData/actions'
 
 export const useFiles = (fileMap, currentFolderId) => {
     return useMemo(() => {
@@ -13,7 +14,7 @@ export const useFiles = (fileMap, currentFolderId) => {
     }, [currentFolderId, fileMap])
 }
 
-export const useFileActionHandler = (fileMap, setCurrentFolderId, setFileMap, deleteFiles, moveFiles) => {
+export const useFileActionHandler = (fileMap, setCurrentFolderId, deleteFiles, moveFiles, dispatch) => {
     return useCallback(
         data => {
             console.log()
@@ -25,7 +26,7 @@ export const useFileActionHandler = (fileMap, setCurrentFolderId, setFileMap, de
                     return
                 }
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
-                deleteFiles(fileMap, data.state.selectedFilesForAction, setFileMap)
+                deleteFiles(fileMap, data.state.selectedFilesForAction, dispatch)
                 return
             } else if (data.id === ChonkyActions.MoveFiles.id) {
                 moveFiles(
@@ -33,12 +34,12 @@ export const useFileActionHandler = (fileMap, setCurrentFolderId, setFileMap, de
                     data.payload.files,
                     data.payload.source,
                     data.payload.destination,
-                    setFileMap
+                    dispatch
                 )
                 return
             }
         },
-        [fileMap, deleteFiles, setCurrentFolderId, setFileMap, moveFiles]
+        [fileMap, deleteFiles, setCurrentFolderId, moveFiles]
     )
 }
 
@@ -60,7 +61,7 @@ export const useFolderChain = (fileMap, currentFolderId) => {
     }, [currentFolderId, fileMap])
 }
 
-export const deleteFiles = (fileMap, files, setFileMap) => {
+export const deleteFiles = (fileMap, files, dispatch) => {
     // Create a copy of the file map to make sure we don't mutate it
     const newFileMap = { ...fileMap }
     files.forEach((file) => {
@@ -76,11 +77,11 @@ export const deleteFiles = (fileMap, files, setFileMap) => {
                 childrenCount: newChildrenIds.length,
             }
         }
-        setFileMap(newFileMap)
+        dispatch(setFileMap(newFileMap))
     })
 }
 
-export const moveFiles = (fileMap, files, source, destination, setFileMap) => {
+export const moveFiles = (fileMap, files, source, destination, dispatch) => {
     const newFileMap = { ...fileMap }
     const moveFileIds = new Set(files.map((f) => f.id))
     // Delete files from their source folder
@@ -94,7 +95,7 @@ export const moveFiles = (fileMap, files, source, destination, setFileMap) => {
     files.forEach(function (file) {
         newFileMap[file.id] = __assign(__assign({}, file), { parentId: destination.id })
     })
-    setFileMap(newFileMap)
+    dispatch(setFileMap(newFileMap))
 }
 
 var __assign = (this && this.__assign) || function () {
