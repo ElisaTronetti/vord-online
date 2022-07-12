@@ -1,17 +1,11 @@
 import $ from 'jquery'
 
-export default function getFileSystem(id, token, setCurrentFolderId, setFileMap) {
+export function getFileSystem(id, token) {
    $.ajax({
         contentType: 'application/json',
         headers: {"token": token},
-        dataType: 'json',
         success: function (result) {
             console.log(result)
-            let id = result.rootFolderId
-            setCurrentFolderId(id)
-
-            let fileMap = result.fileMap
-            setFileMap(fileMap)
         },
         error: function () {
             console.log('error')
@@ -19,5 +13,29 @@ export default function getFileSystem(id, token, setCurrentFolderId, setFileMap)
         processData: false,
         type: 'GET',
         url: process.env.REACT_APP_SERVER + "fileSystem/getUserFileSystem?_id=" + id
+    })
+}
+
+export function updateFileSystem(id, token, fileSystem) {
+    $.ajax({
+         contentType: 'application/json',
+         headers: {"token": token},
+         dataType: 'json',
+         data: createParams(id, fileSystem),
+         success: function (result) {
+             console.log("AA" + result)
+         },
+         error: function () {
+             console.log('error')
+         },
+         type: 'POST',
+         url: process.env.REACT_APP_SERVER + "fileSystem/updateUserFileSystem"
+     })
+ }
+
+ function createParams(id, fileSystem) {
+    return JSON.stringify({
+        _id: id,
+        fileSystem: fileSystem
     })
 }
