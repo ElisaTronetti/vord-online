@@ -21,11 +21,11 @@ export default function Home() {
 
   const dispatch = useDispatch()
   const files = useFiles(fileMap, currentFolderId)
-  const handleFileAction = useFileActionHandler(fileMap, setCurrentFolderId, dispatch)
+  const handleFileAction = useFileActionHandler(fileMap, setCurrentFolderId, currentFolderId, dispatch)
   const folderChain = useFolderChain(fileMap, currentFolderId)
 
   const fileActions = useMemo(
-    () => [ChonkyActions.DeleteFiles],
+    () => [ChonkyActions.DeleteFiles, ChonkyActions.CreateFolder],
     []
   )
 

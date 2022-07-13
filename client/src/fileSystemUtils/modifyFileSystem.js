@@ -1,5 +1,6 @@
 import { setFileMap } from '../redux/fileSystemData/actions'
 import { __assign, __spreadArray } from './dataStructureUtils'
+import { v4 as uuidv4 } from 'uuid'
 
 export const deleteFiles = (fileMap, files, dispatch) => {
     // Create a copy of the file map to make sure we don't mutate it
@@ -35,5 +36,26 @@ export const moveFiles = (fileMap, files, source, destination, dispatch) => {
     files.forEach(function (file) {
         newFileMap[file.id] = __assign(__assign({}, file), { parentId: destination.id })
     })
+    dispatch(setFileMap(newFileMap))
+}
+
+export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => {
+    // Create a copy of fileMap
+    const newFileMap = { ...fileMap }
+    // Create the new folder
+    let folderUUID = uuidv4();
+    newFileMap[folderUUID] = {
+        id: folderUUID,
+        name: folderName,
+        isDir: true,
+        parentId: currentFolderId,
+        childrenIds: [],
+        childrenCount: 0,
+    }
+    // Update parent folder to reference the new folder
+    var parent = newFileMap[currentFolderId]
+    console.log(parent)
+    newFileMap[currentFolderId] = __assign(__assign({}, parent), { childrenIds: __spreadArray(__spreadArray([], parent.childrenIds, true), [folderUUID], false) })
+    // Update fileMap
     dispatch(setFileMap(newFileMap))
 }

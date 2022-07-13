@@ -1,6 +1,6 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useMemo, useCallback } from 'react'
-import { deleteFiles, moveFiles } from './modifyFileSystem'
+import { deleteFiles, moveFiles, createFolder } from './modifyFileSystem'
 
 export const useFiles = (fileMap, currentFolderId) => {
     return useMemo(() => {
@@ -14,7 +14,7 @@ export const useFiles = (fileMap, currentFolderId) => {
     }, [currentFolderId, fileMap])
 }
 
-export const useFileActionHandler = (fileMap, setCurrentFolderId, dispatch) => {
+export const useFileActionHandler = (fileMap, setCurrentFolderId, currentFolderId, dispatch) => {
     return useCallback(
         data => {
             if (data.id === ChonkyActions.OpenFiles.id) {
@@ -22,11 +22,9 @@ export const useFileActionHandler = (fileMap, setCurrentFolderId, dispatch) => {
                 const fileToOpen = targetFile ?? files[0]
                 if (fileToOpen && FileHelper.isDirectory(fileToOpen)) {
                     setCurrentFolderId(fileToOpen.id)
-                    return
                 }
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 deleteFiles(fileMap, data.state.selectedFilesForAction, dispatch)
-                return
             } else if (data.id === ChonkyActions.MoveFiles.id) {
                 moveFiles(
                     fileMap,
@@ -35,10 +33,12 @@ export const useFileActionHandler = (fileMap, setCurrentFolderId, dispatch) => {
                     data.payload.destination,
                     dispatch
                 )
-                return
+            } else if (data.id === ChonkyActions.CreateFolder.id) {
+                const folderName = prompt('Provide the name for your new folder:');
+                if (folderName) createFolder(fileMap, currentFolderId, folderName, dispatch);
             }
         },
-        [fileMap, setCurrentFolderId, dispatch]
+        [fileMap, setCurrentFolderId, dispatch, currentFolderId]
     )
 }
 
