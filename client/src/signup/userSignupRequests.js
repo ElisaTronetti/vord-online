@@ -25,18 +25,18 @@ export default function userSignup(name, surname, email, password, passwordConfi
                 createErrorToast('Error: enable to signup')
             },
             type: 'POST',
-            url: process.env.REACT_APP_SERVER + "auth/signup"
+            url: process.env.REACT_APP_SERVER + 'auth/signup'
         })
     }
 }
 
 // Checks if there are empty params
 function emptyParams(name, surname, email, password, passwordConfirm) {
-    return name === "" &&
-        surname === "" &&
-        email === "" &&
-        password === "" &&
-        passwordConfirm === ""
+    return name === '' &&
+        surname === '' &&
+        email === '' &&
+        password === '' &&
+        passwordConfirm === ''
 }
 
 // Create body params

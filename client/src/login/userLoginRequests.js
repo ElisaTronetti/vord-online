@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { setToken, setId } from "../redux/userData/actions"
+import { setToken, setId } from '../redux/userData/actions'
 import { setRootFolderId, setFileMap } from '../redux/fileSystemData/actions'
 import { createSuccessToast, createErrorToast, createWarningToast } from '../toast/createToast'
 
@@ -28,7 +28,7 @@ export default function userLogin(email, password, dispatch) {
                 createErrorToast('Error: enable to login')
             },
             type: 'POST',
-            url: process.env.REACT_APP_SERVER + "auth/login"
+            url: process.env.REACT_APP_SERVER + 'auth/login'
         })
     } else {
         createWarningToast('Missing required data')
