@@ -2,13 +2,15 @@ import { setFileMap } from '../redux/fileSystemData/actions'
 import { __assign, __spreadArray } from './dataStructureUtils'
 import { v4 as uuidv4 } from 'uuid'
 
+import { createSuccessToast } from '../toast/createToast'
+
 export const deleteFiles = (fileMap, files, dispatch) => {
-    // Create a copy of the file map to make sure we don't mutate it
+    // Create a copy of fileMap
     const newFileMap = { ...fileMap }
     files.forEach((file) => {
         // Delete file from the file map
         delete newFileMap[file.id]
-        // Update the parent folder to make sure it doesn't try to load the file just deleted
+        // Update the parent folder to make sure it does not try to load the file just deleted
         if (file.parentId && newFileMap[file.parentId] !== null) {
             const parent = newFileMap[file.parentId]
             var newChildrenIds = parent.childrenIds.filter(function (id) { return id !== file.id })
@@ -18,11 +20,14 @@ export const deleteFiles = (fileMap, files, dispatch) => {
                 childrenCount: newChildrenIds.length,
             }
         }
+        // Update the fileMap in redux
         dispatch(setFileMap(newFileMap))
+        createSuccessToast('Element deleted correctly')
     })
 }
 
 export const moveFiles = (fileMap, files, source, destination, dispatch) => {
+    // Create a copy of fileMap
     const newFileMap = { ...fileMap }
     const moveFileIds = new Set(files.map((f) => f.id))
     // Delete files from their source folder
@@ -31,12 +36,13 @@ export const moveFiles = (fileMap, files, source, destination, dispatch) => {
     // Add the files to their destination folder
     var newDestinationChildrenIds = __spreadArray(__spreadArray([], destination.childrenIds, true), files.map(function (f) { return f.id }), true)
     newFileMap[destination.id] = __assign(__assign({}, destination), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
-    // Finally, update the parent folder ID on the files from source folder
-    // ID to the destination folder ID.
+    // Update the parent folder ID on the files from source folder ID to the destination folder ID.
     files.forEach(function (file) {
         newFileMap[file.id] = __assign(__assign({}, file), { parentId: destination.id })
     })
+    // Update the fileMap in redux
     dispatch(setFileMap(newFileMap))
+    createSuccessToast('Element moved correctly')
 }
 
 export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => {
@@ -54,8 +60,12 @@ export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => 
     }
     // Update parent folder to reference the new folder
     var parent = newFileMap[currentFolderId]
-    console.log(parent)
     newFileMap[currentFolderId] = __assign(__assign({}, parent), { childrenIds: __spreadArray(__spreadArray([], parent.childrenIds, true), [folderUUID], false) })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
+    createSuccessToast('Folder created correctly')
+}
+
+export const createDocument = () => {
+    createSuccessToast('Create document')
 }

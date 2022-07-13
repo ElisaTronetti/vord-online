@@ -7,14 +7,13 @@ import { updateFileSystem } from './fileSystemRequests'
 import { useFiles, useFileActionHandler, useFolderChain } from '../fileSystemUtils/fileSystemNavigator'
 
 export default function Home() {
-  const dispatch = useDispatch()
-
-  const [currentFolderId, setCurrentFolderId] = useState(rootFolderId)
-
   let id = useSelector(state => state.userData.id)
   let token = useSelector(state => state.userData.token)
   let rootFolderId = useSelector(state => state.fileSystemData.rootFolderId)
   let fileMap = useSelector(state => state.fileSystemData.fileMap)
+
+  const dispatch = useDispatch()
+  const [currentFolderId, setCurrentFolderId] = useState(rootFolderId)
 
   // Trigger used to update the file system on the server when something changes
   useEffect(() => {
