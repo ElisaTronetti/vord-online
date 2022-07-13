@@ -38,7 +38,7 @@ export default function userLogin(email, password, dispatch) {
 // Create body params
 function createParams(email, password) {
     return JSON.stringify({
-        email: email,
+        email: email.trim(),
         password: password
     })
 }
