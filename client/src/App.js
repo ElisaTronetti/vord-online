@@ -5,21 +5,16 @@ import { setChonkyDefaults } from 'chonky'
 import { ChonkyIconFA } from 'chonky-icon-fontawesome'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import userDataReducer from './redux/userData/reducer'
-import fileSystemReducer from './redux/fileSystemData/reducer'
-
+import allReducers from './redux'
 import Home from './home/Home'
 import Login from './login/Login'
 import Signup from './signup/Signup'
 
 setChonkyDefaults({ iconComponent: ChonkyIconFA })
 
+//configure reedux store and its reducers
 const store = configureStore({
-  reducer: {
-    // Define a top-level state field named `userData`, handled by `userDataReducer`
-    userData: userDataReducer,
-    fileSystemData: fileSystemReducer
-  }
+  reducer: allReducers
 })
 
 function App() {
