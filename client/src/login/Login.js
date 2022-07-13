@@ -42,7 +42,7 @@ export default function Login() {
                             onKeyPress={event => { if (event.key === "Enter") tryLogin() }}
                             placeholder="Password" />
                     </Form.Group>
-                    <div class="text-center">
+                    <div className="text-center">
                         <Button variant="primary" onClick={tryLogin}>Login</Button>
                         <p>Not a member? <a href="/signup">Register</a></p>
                     </div>

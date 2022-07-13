@@ -67,7 +67,7 @@ export default function Signup() {
                             onKeyPress={event => { if (event.key === "Enter") trySignup() }}
                             placeholder="Confirm password" />
                     </Form.Group>
-                    <div class="text-center">
+                    <div className="text-center">
                         <Button variant="primary" onClick={trySignup}>Signup</Button>
                         <p className="forgot-password text-right">Already registered <a href="/">login</a></p>
                     </div>
