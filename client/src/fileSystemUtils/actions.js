@@ -1,5 +1,6 @@
 import { defineFileAction, ChonkyIconName } from 'chonky'
 
+// Custom action used to capture the creation of a document from the toolbar
 export const CreateDocument = defineFileAction({
     id: 'create_document',
     button: {
