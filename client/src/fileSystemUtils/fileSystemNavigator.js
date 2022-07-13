@@ -3,6 +3,7 @@ import { useMemo, useCallback } from 'react'
 import { deleteFiles, moveFiles, createFolder, createDocument } from './modifyFileSystem'
 import { CreateDocument } from './actions'
 
+// Configure file for the file system
 export const useFiles = (fileMap, currentFolderId) => {
     return useMemo(() => {
         if (fileMap !== null && currentFolderId !== null) {
@@ -15,6 +16,7 @@ export const useFiles = (fileMap, currentFolderId) => {
     }, [currentFolderId, fileMap])
 }
 
+// Check the action and perform the specified function
 export const useFileActionHandler = (fileMap, setCurrentFolderId, currentFolderId, dispatch) => {
     return useCallback(
         data => {
@@ -23,6 +25,8 @@ export const useFileActionHandler = (fileMap, setCurrentFolderId, currentFolderI
                 const fileToOpen = targetFile ?? files[0]
                 if (fileToOpen && FileHelper.isDirectory(fileToOpen)) {
                     setCurrentFolderId(fileToOpen.id)
+                } else if (fileToOpen) {
+                    console.log('Open document')
                 }
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 deleteFiles(fileMap, data.state.selectedFilesForAction, dispatch)
@@ -45,6 +49,7 @@ export const useFileActionHandler = (fileMap, setCurrentFolderId, currentFolderI
     )
 }
 
+// Handle folder chain
 export const useFolderChain = (fileMap, currentFolderId) => {
     return useMemo(() => {
         const currentFolder = fileMap[currentFolderId]
