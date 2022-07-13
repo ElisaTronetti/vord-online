@@ -15,11 +15,13 @@ export default function Login() {
     const [inputPassword, setInputPassword] = useState(undefined)
 
     function tryLogin() {
+        // HTTP request to try the login
         userLogin(inputEmail, inputPassword, dispatch)
     }
-    
+
+    // Trigger redirect if the token changes and it is not null
     let token = useSelector(state => state.userData.token)
-    useEffect(() => { if (token !== null) navigate('/home') })
+    useEffect(() => { if (token !== null) navigate('/home') }, [token])
 
     return (
         <Row className="d-flex justify-content-center">
@@ -50,5 +52,4 @@ export default function Login() {
             </div>
         </Row>
     )
-
 }

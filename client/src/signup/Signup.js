@@ -18,11 +18,13 @@ export default function Signup() {
     const [inputPasswordConfirm, setInputPasswordConfirm] = useState("")
 
     function trySignup() {
+        // HTTP request to try the signup
         userSignup(inputName, inputSurname, inputEmail, inputPassword, inputPasswordConfirm, dispatch)
     }
 
+    // Trigger redirect if the token changes and it is not null
     let token = useSelector(state => state.userData.token)
-    useEffect(() => { if (token !== null) navigate('/home') })
+    useEffect(() => { if (token !== null) navigate('/home') }, [token])
 
     return (
         <Row className="d-flex justify-content-center">
