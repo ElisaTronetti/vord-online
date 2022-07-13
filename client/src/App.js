@@ -4,6 +4,8 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setChonkyDefaults } from 'chonky'
 import { ChonkyIconFA } from 'chonky-icon-fontawesome'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import allReducers from './redux'
 import Home from './home/Home'
@@ -20,6 +22,7 @@ const store = configureStore({
 function App() {
   return (
     <Provider store={store}>
+      <ToastContainer />
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Login/>}/>

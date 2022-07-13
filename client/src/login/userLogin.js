@@ -1,6 +1,7 @@
 import $ from 'jquery'
 import { setToken, setId } from "../redux/userData/actions"
 import { setRootFolderId, setFileMap} from '../redux/fileSystemData/actions'
+import { createSuccessToast, createErrorToast, createWarningToast } from '../toast/createToast'
 
 export default function userLogin(email, password, dispatch) {
     if (email !== '' && password !== '') {
@@ -22,6 +23,7 @@ export default function userLogin(email, password, dispatch) {
                     dispatch(setRootFolderId(fileSystem.rootFolderId))
                     dispatch(setFileMap(fileSystem.fileMap))
                 }
+                createSuccessToast('Login successful!')
 
             })
             .fail(function (result) {
