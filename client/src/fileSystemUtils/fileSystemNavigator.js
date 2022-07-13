@@ -1,6 +1,7 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useMemo, useCallback } from 'react'
 import { deleteFiles, moveFiles, createFolder } from './modifyFileSystem'
+import { CreateDocument } from './actions'
 
 export const useFiles = (fileMap, currentFolderId) => {
     return useMemo(() => {
@@ -36,6 +37,8 @@ export const useFileActionHandler = (fileMap, setCurrentFolderId, currentFolderI
             } else if (data.id === ChonkyActions.CreateFolder.id) {
                 const folderName = prompt('Provide the name for your new folder:');
                 if (folderName) createFolder(fileMap, currentFolderId, folderName, dispatch);
+            } else if (data.id === CreateDocument.id) {
+                console.log('Create document')
             }
         },
         [fileMap, setCurrentFolderId, dispatch, currentFolderId]

@@ -2,6 +2,7 @@ import { FullFileBrowser, ChonkyActions } from 'chonky'
 import { useState, useMemo, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateFileSystem } from '../home/fileSystem'
+import { CreateDocument } from '../fileSystemUtils/actions'
 
 import { useFiles, useFileActionHandler, useFolderChain } from '../fileSystemUtils/fileSystemNavigator'
 
@@ -25,7 +26,7 @@ export default function Home() {
   const folderChain = useFolderChain(fileMap, currentFolderId)
 
   const fileActions = useMemo(
-    () => [ChonkyActions.DeleteFiles, ChonkyActions.CreateFolder],
+    () => [ChonkyActions.DeleteFiles, ChonkyActions.CreateFolder, CreateDocument],
     []
   )
 
