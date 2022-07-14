@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 
-import userSignup from './userSignup'
+import userSignup from './userSignupRequests'
 
 export default function Signup() {
     const navigate = useNavigate()
@@ -18,11 +18,13 @@ export default function Signup() {
     const [inputPasswordConfirm, setInputPasswordConfirm] = useState("")
 
     function trySignup() {
+        // HTTP request to try the signup
         userSignup(inputName, inputSurname, inputEmail, inputPassword, inputPasswordConfirm, dispatch)
     }
 
+    // Trigger redirect if the token changes and it is not null
     let token = useSelector(state => state.userData.token)
-    useEffect(() => { if (token !== null) navigate('/home') })
+    useEffect(() => { if (token !== null) navigate('/home') }, [token])
 
     return (
         <Row className="d-flex justify-content-center">
@@ -67,7 +69,7 @@ export default function Signup() {
                             onKeyPress={event => { if (event.key === "Enter") trySignup() }}
                             placeholder="Confirm password" />
                     </Form.Group>
-                    <div class="text-center">
+                    <div className="text-center">
                         <Button variant="primary" onClick={trySignup}>Signup</Button>
                         <p className="forgot-password text-right">Already registered <a href="/">login</a></p>
                     </div>

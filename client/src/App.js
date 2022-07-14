@@ -4,9 +4,10 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setChonkyDefaults } from 'chonky'
 import { ChonkyIconFA } from 'chonky-icon-fontawesome'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-import userDataReducer from './redux/userData/reducer'
-
+import allReducers from './redux'
 import Home from './home/Home'
 import Login from './login/Login'
 import Signup from './signup/Signup'
@@ -14,16 +15,15 @@ import MyEditor from './editor/EditorPage'
 
 setChonkyDefaults({ iconComponent: ChonkyIconFA })
 
+//configure reedux store and its reducers
 const store = configureStore({
-  reducer: {
-    // Define a top-level state field named `userData`, handled by `userDataReducer`
-    userData: userDataReducer,
-  }
+  reducer: allReducers
 })
 
 function App() {
   return (
     <Provider store={store}>
+      <ToastContainer />
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<MyEditor/>}/>
