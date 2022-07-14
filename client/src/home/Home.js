@@ -1,6 +1,7 @@
 import { FullFileBrowser, ChonkyActions } from 'chonky'
 import React, { useState, useMemo, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import { CreateDocument } from '../fileSystemUtils/actions'
 import { updateFileSystem } from './fileSystemRequests'
@@ -15,10 +16,15 @@ export default function Home() {
   let rootFolderId = useSelector(state => state.fileSystemData.rootFolderId)
   let fileMap = useSelector(state => state.fileSystemData.fileMap)
 
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentFolderId, setCurrentFolderId] = useState(rootFolderId)
   const [createFolderModalShow, setCreateFolderModalShow] = React.useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = React.useState(false)
+  const [documentId, setDocumentId] = React.useState(undefined)
+
+  // Trigger redirect if a document id is set
+  useEffect(() => { if (documentId !== undefined) navigate('/editor', { state: {documentId: documentId} }) }, [documentId, navigate])
 
   // Trigger used to update the file system on the server when something changes
   useEffect(() => {
@@ -29,7 +35,13 @@ export default function Home() {
 
   // Initialize data for the file system library
   const files = useFiles(fileMap, currentFolderId)
-  const handleFileAction = useFileActionHandler(fileMap, setCreateFolderModalShow, setCreateDocumentModalShow, setCurrentFolderId, dispatch)
+  const handleFileAction = useFileActionHandler(
+    fileMap, 
+    setCreateFolderModalShow,
+    setCreateDocumentModalShow,
+    setCurrentFolderId,
+    setDocumentId,
+    dispatch)
   const folderChain = useFolderChain(fileMap, currentFolderId)
 
   // Initialize actions

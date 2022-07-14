@@ -3,11 +3,12 @@ import { default as React, useEffect, useRef } from 'react'
 import EditorJS from '@editorjs/editorjs'
 import Header from '@editorjs/header' 
 import { getDocument } from './editorRequests' 
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 
 const EDITTOR_HOLDER_ID = 'editorjs'
 
-function Editor (props) {
+function Editor(props) {
 
   /*  EditorJS gets initialized once our component is rendered. 
       So we use the useEffects and useRef React Hooks to initialize this 
@@ -17,10 +18,11 @@ function Editor (props) {
   const [editorData, setEditorData] = React.useState(undefined)
   let userId = useSelector(state => state.userData.id)
   let token = useSelector(state => state.userData.token)
+  const documentId = useLocation().state.documentId
 
   // This will run only once
   useEffect(() => {
-    getDocument("62bf0e459341700d56da9878", token, userId, setEditorData)
+    getDocument(documentId, token, userId, setEditorData)
     if (!ejInstance.current) {
       initEditor()
     }

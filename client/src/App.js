@@ -11,7 +11,7 @@ import allReducers from './redux'
 import Home from './home/Home'
 import Login from './login/Login'
 import Signup from './signup/Signup'
-import MyEditor from './editor/EditorPage'
+import Editor from './editor/Editor'
 
 setChonkyDefaults({ iconComponent: ChonkyIconFA })
 
@@ -29,7 +29,7 @@ function App() {
           <Route path='/' element={<Login/>}/>
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/home' element={<Home/>}/>
-          <Route path='/editor' element={<MyEditor/>}/>
+          <Route path='/editor' element={<Editor/>}/>
         </Routes>
       </BrowserRouter>
     </Provider>

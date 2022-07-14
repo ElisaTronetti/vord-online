@@ -26,7 +26,7 @@ export const useFileActionHandler = (fileMap, setCreateFolderModalShow, setCreat
                 if (fileToOpen && FileHelper.isDirectory(fileToOpen)) {
                     setCurrentFolderId(fileToOpen.id)
                 } else if (fileToOpen) {
-                    console.log('Open document')
+                    setDocumentId(fileToOpen.id)
                 }
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 deleteFiles(fileMap, data.state.selectedFilesForAction, dispatch)
@@ -45,7 +45,7 @@ export const useFileActionHandler = (fileMap, setCreateFolderModalShow, setCreat
                 setCreateDocumentModalShow(true)
             }
         },
-        [fileMap, setCurrentFolderId, setCreateDocumentModalShow, setCreateFolderModalShow, dispatch]
+        [fileMap, setCurrentFolderId, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
     )
 }
 
