@@ -17,7 +17,7 @@ export const useFiles = (fileMap, currentFolderId) => {
 }
 
 // Check the action and perform the specified function
-export const useFileActionHandler = (fileMap, setCreateFolderModalShow, setCreateDocumentModalShow, setCurrentFolderId, dispatch) => {
+export const useFileActionHandler = (fileMap, setCreateFolderModalShow, setCreateDocumentModalShow, setCurrentFolderId, setDocumentId, dispatch) => {
     return useCallback(
         data => {
             if (data.id === ChonkyActions.OpenFiles.id) {
