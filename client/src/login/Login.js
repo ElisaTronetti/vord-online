@@ -21,7 +21,7 @@ export default function Login() {
 
     // Trigger redirect if the token changes and it is not null
     let token = useSelector(state => state.userData.token)
-    useEffect(() => { if (token !== null) navigate('/editor') }, [token])
+    useEffect(() => { if (token !== null) navigate('/home') }, [token])
 
     return (
         <Row className="d-flex justify-content-center">
