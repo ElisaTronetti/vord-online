@@ -1,6 +1,6 @@
 import { setFileMap } from '../redux/fileSystemData/actions'
 import { __assign, __spreadArray } from './dataStructureUtils'
-import { v4 as uuidv4 } from 'uuid'
+import ObjectID  from 'bson-objectid'
 
 import { createSuccessToast } from '../toast/createToast'
 
@@ -49,9 +49,9 @@ export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => 
     // Create a copy of fileMap
     const newFileMap = { ...fileMap }
     // Create the new folder
-    let folderUUID = uuidv4();
-    newFileMap[folderUUID] = {
-        id: folderUUID,
+    let folderId = ObjectID().toHexString()
+    newFileMap[folderId] = {
+        id: folderId,
         name: folderName,
         isDir: true,
         parentId: currentFolderId,
@@ -60,26 +60,25 @@ export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => 
     }
     // Update parent folder to reference the new folder
     var parent = newFileMap[currentFolderId]
-    newFileMap[currentFolderId] = __assign(__assign({}, parent), { childrenIds: __spreadArray(__spreadArray([], parent.childrenIds, true), [folderUUID], false) })
+    newFileMap[currentFolderId] = __assign(__assign({}, parent), { childrenIds: __spreadArray(__spreadArray([], parent.childrenIds, true), [folderId], false) })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
     createSuccessToast('Folder ' + folderName + ' created correctly')
 }
 
-export const createDocument = (fileMap, currentFolderId, documentName, dispatch) => {
+export const createDocument = (fileMap, currentFolderId, documentId, documentName, dispatch) => {
     // Create a copy of fileMap
     const newFileMap = { ...fileMap }
     // Create the new folder
-    let documentUUID = uuidv4();
-    newFileMap[documentUUID] = {
-        id: documentUUID,
+    newFileMap[documentId] = {
+        id: documentId,
         name: documentName,
         parentId: currentFolderId,
         ext: '.txt',
     }
     // Update parent folder to reference the new folder
     var parent = newFileMap[currentFolderId]
-    newFileMap[currentFolderId] = __assign(__assign({}, parent), { childrenIds: __spreadArray(__spreadArray([], parent.childrenIds, true), [documentUUID], false) })
+    newFileMap[currentFolderId] = __assign(__assign({}, parent), { childrenIds: __spreadArray(__spreadArray([], parent.childrenIds, true), [documentId], false) })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
     createSuccessToast('Document ' + documentName + ' created correctly')
