@@ -56,7 +56,7 @@ async function updateUserFileSystem(req, res){
 async function createNewDocument(req, res){
 
     try {
-        const newId = req.body.newDocumentId
+        const newId = new ObjectId(req.body.newDocumentId)
         const filter = { _id: new ObjectId(req.body._id) } //userId
 
         const newDocument = {   _id: newId,
@@ -64,14 +64,31 @@ async function createNewDocument(req, res){
                                 time: req.body.time, 
                                 blocks: [], 
                                 version: 0}
-        const updateUsers = { $push: { "documents": newDocument }}
-        await Users.findOneAndUpdate(filter, updateUsers)
+        const update = { $push: { "documents": newDocument }}
+        
+        await Users.findOneAndUpdate(filter, update)
 
         Responces.OkResponce(res, "");
     } catch (err) {
         Responces.ServerError(res, {message: err.message});
     }
 }
+
+async function deleteDocument(req, res){
+    try{
+        Users
+        .updateOne({ _id: req.body.userId }, {
+            $pullAll: {
+                documents: [{_id: req.body.documentId}],
+            },
+        })
+        .exec(function(req, res){
+            Responces.OkResponce(res, "")
+        });
+    } catch (err) {
+        Responces.ServerError(res, {message: err.message});
+    }
+} 
 
 async function getDocument(req, res){
     try{
@@ -87,9 +104,14 @@ async function getDocument(req, res){
     }
 }
 
+async function saveDocument(req, res){
+
+}
+
 module.exports = {
     getUserFileSystem,
     updateUserFileSystem,
     createNewDocument,
+    deleteDocument,
     getDocument
 }
