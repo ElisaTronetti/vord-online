@@ -26,12 +26,12 @@ function createFileSystemParams(id, fileSystem) {
     })
 }
 
-export function createNewDocument(id, token, documentId, title, time) {
+export function createNewDocument(id, token, documentId, title) {
     $.ajax({
         contentType: 'application/json',
         headers: { 'token': token },
         dataType: 'json',
-        data: createDocumentParams(id, documentId, title, time),
+        data: createDocumentParams(id, documentId, title),
         success: function () {
             console.log("Create new document file system")
         },
@@ -39,16 +39,16 @@ export function createNewDocument(id, token, documentId, title, time) {
             createErrorToast('Error: impossible to create a new document')
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + '/fileSystem/createNewDocument'
+        url: process.env.REACT_APP_SERVER + 'fileSystem/createNewDocument'
     })
 }
 
 // Create body params for file system
-function createDocumentParams(id, documentId, title, time) {
+function createDocumentParams(id, documentId, title) {
     return JSON.stringify({
         _id: id,
         newDocumentId: documentId,
         title: title,
-        time: time
+        time: new Date().getTime(),
     })
 }
