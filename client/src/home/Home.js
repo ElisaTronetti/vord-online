@@ -7,6 +7,7 @@ import { updateFileSystem } from './fileSystemRequests'
 import { useFiles, useFileActionHandler, useFolderChain } from '../fileSystemUtils/fileSystemNavigator'
 
 import CreateFolderModal from './CreateFolderModal'
+import CreateDocumentModal from './CreateDocumentModal'
 
 export default function Home() {
   let id = useSelector(state => state.userData.id)
@@ -16,7 +17,8 @@ export default function Home() {
 
   const dispatch = useDispatch()
   const [currentFolderId, setCurrentFolderId] = useState(rootFolderId)
-  const [createFoldermodalShow, setCreateFolderModalShow] = React.useState(false)
+  const [createFolderModalShow, setCreateFolderModalShow] = React.useState(false)
+  const [createDocumentModalShow, setCreateDocumentModalShow] = React.useState(false)
 
   // Trigger used to update the file system on the server when something changes
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function Home() {
 
   // Initialize data for the file system library
   const files = useFiles(fileMap, currentFolderId)
-  const handleFileAction = useFileActionHandler(fileMap, setCreateFolderModalShow, setCurrentFolderId, dispatch)
+  const handleFileAction = useFileActionHandler(fileMap, setCreateFolderModalShow, setCreateDocumentModalShow, setCurrentFolderId, dispatch)
   const folderChain = useFolderChain(fileMap, currentFolderId)
 
   // Initialize actions
@@ -39,7 +41,8 @@ export default function Home() {
   return (
     <div style={{ height: '100vh' }}>
       <FullFileBrowser files={files} fileActions={fileActions} onFileAction={handleFileAction} folderChain={folderChain} />
-      <CreateFolderModal show={createFoldermodalShow} onHide={() => setCreateFolderModalShow(false)} currentFolderId={currentFolderId} />
+      <CreateFolderModal show={createFolderModalShow} onHide={() => setCreateFolderModalShow(false)} currentFolderId={currentFolderId} />
+      <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
     </div>
   )
 }
