@@ -105,7 +105,22 @@ async function getDocument(req, res){
 }
 
 async function saveDocument(req, res){
-
+    try{
+        
+        Users.updateOne(
+            { _id: req.body.userId, "documents._id": req.body.documentId },
+            {
+                $set: {
+                    "documents.$.blocks": req.body.blocks,
+                    "documents.$.time": req.body.time,
+                }
+            })
+        .exec(function (err, result) {
+            Responces.OkResponce(res, "");
+        });
+    } catch (err) {
+        Responces.ServerError(res, {message: err.message});
+    }
 }
 
 module.exports = {
@@ -113,5 +128,6 @@ module.exports = {
     updateUserFileSystem,
     createNewDocument,
     deleteDocument,
-    getDocument
+    getDocument,
+    saveDocument
 }

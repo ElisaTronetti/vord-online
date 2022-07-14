@@ -17,4 +17,6 @@ router.post("/fileSystem/deleteDocument", auth, (req, res) => controller.deleteD
 
 router.get("/fileSystem/getDocument", auth, (req, res) => controller.getDocument(req,res));
 
+router.post("/fileSystem/saveDocument", auth, (req, res) => controller.saveDocument(req, res));
+
 module.exports = router;

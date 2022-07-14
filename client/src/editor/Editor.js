@@ -2,7 +2,7 @@
 import { default as React, useEffect, useRef } from 'react'
 import EditorJS from '@editorjs/editorjs'
 import Header from '@editorjs/header' 
-import { getDocument } from './editorRequests' 
+import { getDocument, saveDocument } from './editorRequests' 
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
@@ -41,10 +41,14 @@ function Editor(props) {
       onReady: () => {
         ejInstance.current = editor;
       },
+      
       onChange: async () => {
-        //let content = await this.editorjs.saver.save()
-        console.log("attempting save")
-        //setEditorData(content)
+        let content = await editor.saver.save();
+        // Put your logic here to save this data to your DB
+        saveDocument(userId, documentId, token, content.blocks)
+        //console.log("attempting save")
+        
+        setEditorData(content)
       },
       autofocus: true,
       tools: { 
