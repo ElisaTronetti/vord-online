@@ -67,18 +67,29 @@ async function createNewDocument(req, res){
         const updateUsers = { $push: { "documents": newDocument }}
         await Users.findOneAndUpdate(filter, updateUsers)
 
-        let updatedFS = await updateFileSystem(req)
-
-        Responces.OkResponce(res, updatedFS.fileSystem)
+        Responces.OkResponce(res, "");
     } catch (err) {
         Responces.ServerError(res, {message: err.message});
     }
 }
 
-
+async function getDocument(req, res){
+    try{
+        Users
+        .findOne({id: req.body.userId})
+        .select({ documents: {$elemMatch: {_id: req.query._id}}})
+        .exec(function (err, result) {
+            Responces.OkResponce(res, result.documents[0]);
+        });
+        
+    } catch (err) {
+        Responces.ServerError(res, {message: err.message});
+    }
+}
 
 module.exports = {
     getUserFileSystem,
     updateUserFileSystem,
-    createNewDocument
+    createNewDocument,
+    getDocument
 }
