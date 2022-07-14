@@ -1,43 +1,32 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { default as React, useEffect, useRef } from 'react';
-import EditorJS from '@editorjs/editorjs';
-import Header from '@editorjs/header'; 
+import { default as React, useEffect, useRef } from 'react'
+import EditorJS from '@editorjs/editorjs'
+import Header from '@editorjs/header' 
+import { getDocument } from './editorRequests' 
+import { useSelector, useDispatch } from 'react-redux'
 
-const DEFAULT_INITIAL_DATA = () => {
-  return {
-    "time": new Date().getTime(),
-    "blocks": [
-      {
-        "type": "header",
-        "data": {
-          "text": "This is my awesome editor!",
-          "level": 1
-        }
-      },
-    ]
-  }
-}
+const EDITTOR_HOLDER_ID = 'editorjs'
 
-const EDITTOR_HOLDER_ID = 'editorjs';
-
-
-const Editor = (props) => {
+function Editor (props) {
 
   /*  EditorJS gets initialized once our component is rendered. 
       So we use the useEffects and useRef React Hooks to initialize this 
       editor just once and destroy it once our component is destroyed.*/
 
-  const ejInstance = useRef();
-  const [editorData, setEditorData] = React.useState(DEFAULT_INITIAL_DATA);
+  const ejInstance = useRef()
+  const [editorData, setEditorData] = React.useState(undefined)
+  let userId = useSelector(state => state.userData.id)
+  let token = useSelector(state => state.userData.token)
 
   // This will run only once
   useEffect(() => {
+    getDocument("62bf0e459341700d56da9878", token, userId, setEditorData)
     if (!ejInstance.current) {
-      initEditor();
+      initEditor()
     }
     return () => {
-      ejInstance.current.destroy();
-      ejInstance.current = null;
+      ejInstance.current.destroy()
+      ejInstance.current = null
     }
   }, []);
 
@@ -51,9 +40,9 @@ const Editor = (props) => {
         ejInstance.current = editor;
       },
       onChange: async () => {
-        let content = await this.editorjs.saver.save();
-        // Put your logic here to save this data to your DB
-        setEditorData(content);
+        //let content = await this.editorjs.saver.save()
+        console.log("attempting save")
+        //setEditorData(content)
       },
       autofocus: true,
       tools: { 
@@ -69,4 +58,4 @@ const Editor = (props) => {
   );
 }
 
-export default Editor;
+export default Editor
