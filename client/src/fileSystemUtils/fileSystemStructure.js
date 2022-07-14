@@ -1,12 +1,12 @@
-import { v4 as uuidv4 } from 'uuid'
+import ObjectID  from 'bson-objectid'
 
-let uuid = uuidv4()
+let id = ObjectID().toHexString()
 
 let emptyFileSystem = '{'+
-    '"rootFolderId":"' + uuid +'",'+
+    '"rootFolderId":"' + id +'",'+
     '"fileMap":{'+
-       '"' + uuid +'":{'+
-          '"id":"' + uuid +'",'+
+       '"' + id +'":{'+
+          '"id":"' + id +'",'+
           '"name":"Home",'+
           '"isDir":true,'+
           '"childrenIds":[],'+
