@@ -67,5 +67,20 @@ export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => 
 }
 
 export const createDocument = (fileMap, currentFolderId, documentName, dispatch) => {
+    // Create a copy of fileMap
+    const newFileMap = { ...fileMap }
+    // Create the new folder
+    let documentUUID = uuidv4();
+    newFileMap[documentUUID] = {
+        id: documentUUID,
+        name: documentName,
+        parentId: currentFolderId,
+        ext: '.txt',
+    }
+    // Update parent folder to reference the new folder
+    var parent = newFileMap[currentFolderId]
+    newFileMap[currentFolderId] = __assign(__assign({}, parent), { childrenIds: __spreadArray(__spreadArray([], parent.childrenIds, true), [documentUUID], false) })
+    // Update fileMap
+    dispatch(setFileMap(newFileMap))
     createSuccessToast('Document ' + documentName + ' created correctly')
 }
