@@ -12,6 +12,7 @@ import Home from './home/Home'
 import Login from './login/Login'
 import Signup from './signup/Signup'
 import Editor from './editor/Editor'
+import CustomNavbar from './commonComponents/CustomNavbar'
 
 setChonkyDefaults({ iconComponent: ChonkyIconFA })
 
@@ -22,17 +23,20 @@ const store = configureStore({
 
 function App() {
   return (
-    <Provider store={store}>
-      <ToastContainer />
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Login/>}/>
-          <Route path='/signup' element={<Signup/>}/>
-          <Route path='/home' element={<Home/>}/>
-          <Route path='/editor' element={<Editor/>}/>
-        </Routes>
-      </BrowserRouter>
-    </Provider>
+    <div>
+      <CustomNavbar />
+      <Provider store={store}>
+        <ToastContainer />
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Login />} />
+            <Route path='/signup' element={<Signup />} />
+            <Route path='/home' element={<Home />} />
+            <Route path='/editor' element={<Editor />} />
+          </Routes>
+        </BrowserRouter>
+      </Provider>
+    </div>
   )
 }
 

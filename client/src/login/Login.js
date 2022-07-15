@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
+import Container from 'react-bootstrap/Container'
 
 import userLogin from './userLoginRequests'
 
@@ -24,32 +25,34 @@ export default function Login() {
     useEffect(() => { if (token !== null) navigate('/home') }, [token, navigate])
 
     return (
-        <Row className="d-flex justify-content-center">
-            <div className="my-5 container col-lg-3 col-9 border border-success rounded trnsp">
-                <Form className="mt-1 mb-3">
-                    <h1 className="d-flex justify-content-center">Login</h1>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control
-                            type="email"
-                            onChange={input => setInputEmail(input.target.value)}
-                            onKeyPress={event => { if (event.key === "Enter") tryLogin() }}
-                            placeholder="Enter email" />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            type="password"
-                            onChange={input => setInputPassword(input.target.value)}
-                            onKeyPress={event => { if (event.key === "Enter") tryLogin() }}
-                            placeholder="Password" />
-                    </Form.Group>
-                    <div className="text-center">
-                        <Button variant="primary" onClick={tryLogin}>Login</Button>
-                        <p>Not a member? <a href="/signup">Register</a></p>
-                    </div>
-                </Form>
-            </div>
-        </Row>
+        <Container>
+            <Row className="d-flex justify-content-center">
+                <div className="my-5 container col-lg-3 col-9 border border-success rounded trnsp">
+                    <Form className="mt-1 mb-3">
+                        <h1 className="d-flex justify-content-center">Login</h1>
+                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control
+                                type="email"
+                                onChange={input => setInputEmail(input.target.value)}
+                                onKeyPress={event => { if (event.key === "Enter") tryLogin() }}
+                                placeholder="Enter email" />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control
+                                type="password"
+                                onChange={input => setInputPassword(input.target.value)}
+                                onKeyPress={event => { if (event.key === "Enter") tryLogin() }}
+                                placeholder="Password" />
+                        </Form.Group>
+                        <div className="text-center">
+                            <Button variant="primary" onClick={tryLogin}>Login</Button>
+                            <p>Not a member? <a href="/signup">Register</a></p>
+                        </div>
+                    </Form>
+                </div>
+            </Row>
+        </Container>
     )
 }
