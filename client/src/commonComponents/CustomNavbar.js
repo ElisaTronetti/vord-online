@@ -9,9 +9,12 @@ export default function CustomNavbar() {
 
       <Navbar bg="dark" variant="dark">
         <Container fluid >
-          <Navbar.Brand className="mr-0 navBrand">
-            <img width="70" height="70" className="d-inline-block align-top" alt="logo" src='/logo512.png' />{' '}
+          <div>
+          <Navbar.Brand>
+            <img width="30%" height="30%" className="align-center" alt="logo" src='/full_logo.png' />{' '}  
           </Navbar.Brand>
+          </div>
+          
         </Container>
       </Navbar>
 
