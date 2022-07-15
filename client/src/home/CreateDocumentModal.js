@@ -16,7 +16,7 @@ export default function CreateDocumentModal(props) {
     let fileMap = useSelector(state => state.fileSystemData.fileMap)
 
     function tryCreateDocument() {
-        if (inputDocumentName) {
+        if (inputDocumentName !== "") {
             let documentId = ObjectID().toHexString()
             // Create document in the file system
             createDocument(fileMap, props.currentFolderId, documentId, inputDocumentName, dispatch)

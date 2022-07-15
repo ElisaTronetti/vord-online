@@ -12,7 +12,7 @@ export default function CreateFolderModal(props) {
     let fileMap = useSelector(state => state.fileSystemData.fileMap)
 
     function tryCreateFolder() {
-        if (inputFolderName) {
+        if (inputFolderName !== "") {
             createFolder(fileMap, props.currentFolderId, inputFolderName, dispatch)
             props.onHide()
         }
