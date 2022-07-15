@@ -24,8 +24,8 @@ const store = configureStore({
 function App() {
   return (
     <div>
-      <CustomNavbar />
       <Provider store={store}>
+        <CustomNavbar />
         <ToastContainer />
         <BrowserRouter>
           <Routes>
