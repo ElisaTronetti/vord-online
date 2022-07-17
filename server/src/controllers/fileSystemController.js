@@ -63,7 +63,7 @@ async function createNewDocument(req, res){
                                 title: req.body.title, 
                                 time: req.body.time, 
                                 blocks: [], 
-                                version: 0}
+                                version: "2.25.0"}
         const update = { $push: { "documents": newDocument }}
         
         await Users.findOneAndUpdate(filter, update)
