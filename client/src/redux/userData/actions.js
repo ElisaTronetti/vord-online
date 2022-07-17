@@ -18,3 +18,9 @@ export const setToken = (token) => {
         payload: token
     }
 }
+
+export const resetUser = () => {
+    return {
+        type: "RESET_USER"
+    }
+}

@@ -15,6 +15,7 @@ const userDataReducer = (state = initialState, action) => {
         case 'SET_TOKEN': return Object.assign({}, state, {
             token: action.payload
         })
+        case 'RESET_USER': return initialState
         default: return state
     }
 }

@@ -11,3 +11,9 @@ export const setFileMap = (fileMap) => {
         payload: fileMap
     }
 }
+
+export const resetFileSystem = () => {
+    return {
+        type: "RESET_FILE_SYSTEM"
+    }
+}

@@ -13,6 +13,7 @@ const fileSystemReducer = (state = initialState, action) => {
         case 'SET_FILE_MAP': return Object.assign({}, state, {
             fileMap: action.payload
         })
+        case 'RESET_FILE_SYSTEM': return initialState
         default: return state
     }
 }
