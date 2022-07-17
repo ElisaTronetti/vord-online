@@ -2,7 +2,7 @@
 import { default as React, useEffect } from 'react'
 import EditorJS from '@editorjs/editorjs'
 import Header from '@editorjs/header'
-import { getDocument, saveDocument } from './editorRequests' 
+import { getDocument, saveDocument } from './editorRequests'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
@@ -13,7 +13,7 @@ function Editor() {
   let userId = useSelector(state => state.userData.id)
   let token = useSelector(state => state.userData.token)
   const documentId = useLocation().state.documentId
-  
+
   if (editorData === undefined) getDocument(documentId, token, userId, setEditorData)
   useEffect(() => {
     if (editorData !== undefined) initEditor()
@@ -31,21 +31,21 @@ function Editor() {
         saveDocument(userId, documentId, token, content.blocks)
       },
       autofocus: true,
-      tools: { 
-        header: Header, 
+      tools: {
+        header: Header,
       }
     })
 
     editor.isReady
-    .then(() => {
-      if (editorData.blocks.length) { 
-        // If there is data to render, call render 
-        editor.render(editorData)
-      }    
-    })
-    .catch((reason) => {
+      .then(() => {
+        if (editorData.blocks.length) {
+          // If there is data to render, call render 
+          editor.render(editorData)
+        }
+      })
+      .catch((reason) => {
         console.log(`Editor.js initialization failed because of ${reason}`)
-    })
+      })
   }
 
   return (
