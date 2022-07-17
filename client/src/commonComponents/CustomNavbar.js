@@ -2,7 +2,8 @@ import Navbar from "react-bootstrap/Navbar"
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import { useSelector } from 'react-redux'
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
+import { RiHome2Fill } from 'react-icons/ri'
 
 export default function CustomNavbar() {
   let token = useSelector(state => state.userData.token)
@@ -18,10 +19,8 @@ export default function CustomNavbar() {
             <>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse className="justify-content-end">
-                <Nav >
-                    <Nav.Link >
-                      <Link to='/home' style={{ color: 'inherit', textDecoration: 'inherit'}}>Home</Link>
-                    </Nav.Link>         
+                <Nav>
+                  <Link to='/home'><RiHome2Fill size={40} color="white" /></Link>
                 </Nav>
               </Navbar.Collapse>
             </>
