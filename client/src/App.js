@@ -25,14 +25,14 @@ function App() {
   return (
     <div>
       <Provider store={store}>
-        <CustomNavbar />
         <ToastContainer />
         <BrowserRouter>
+        <CustomNavbar />
           <Routes>
-            <Route path='/' element={<Login />} />
-            <Route path='/signup' element={<Signup />} />
-            <Route path='/home' element={<Home />} />
-            <Route path='/editor' element={<Editor />} />
+              <Route path='/' element={<Login />} />
+              <Route path='/signup' element={<Signup />} />
+              <Route path='/home' element={<Home />} />
+              <Route path='/editor' element={<Editor />} />
           </Routes>
         </BrowserRouter>
       </Provider>
