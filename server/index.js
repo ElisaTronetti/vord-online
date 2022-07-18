@@ -14,9 +14,11 @@ mongoose.connect(process.env.DB_CONNECTION_STRING);
 
 const authRoutes = require('./src/routes/authRoutes');
 const fileSystemRoutes =  require('./src/routes/fileSystemRoutes');
+const documentRoutes =  require('./src/routes/documentRoutes');
 
 app.use(authRoutes);
 app.use(fileSystemRoutes);
+app.use(documentRoutes);
 
 app.use(bodyParser.json());
 
