@@ -60,7 +60,8 @@ export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => 
     }
     // Update parent folder to reference the new folder
     var parent = newFileMap[currentFolderId]
-    newFileMap[currentFolderId] = __assign(__assign({}, parent), { childrenIds: __spreadArray(__spreadArray([], parent.childrenIds, true), [folderId], false) })
+    var newDestinationChildrenIds = __spreadArray(__spreadArray([], parent.childrenIds, true), [folderId], false)
+    newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
     createSuccessToast('Folder ' + folderName + ' created correctly')
