@@ -1,10 +1,10 @@
-import { setFileMap } from '../redux/fileSystemData/actions'
+import { setFileMap } from '../../redux/fileSystemData/actions'
 import { __assign, __spreadArray } from './dataStructureUtils'
 import ObjectID from 'bson-objectid'
 import { FileHelper } from 'chonky'
-import { deleteDocument } from '../home/fileSystemRequests'
+import { deleteDocument } from '../fileSystemRequests'
 
-import { createSuccessToast } from '../toast/createToast'
+import { createSuccessToast } from '../../commonComponents/Toast'
 
 export const deleteFiles = (fileMap, files, dispatch) => {
     // Create a copy of fileMap
