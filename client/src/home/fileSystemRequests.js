@@ -39,7 +39,7 @@ export function createNewDocument(id, token, documentId, title) {
             createErrorToast('Error: impossible to create a new document')
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'fileSystem/createNewDocument'
+        url: process.env.REACT_APP_SERVER + 'document/createNewDocument'
     })
 }
 
@@ -54,7 +54,7 @@ function createDocumentParams(id, documentId, title) {
 }
 
 export function deleteDocument(id, token, documentId) {
-    /*
+    
     $.ajax({
         contentType: 'application/json',
         headers: { 'token': token },
@@ -67,8 +67,8 @@ export function deleteDocument(id, token, documentId) {
             createErrorToast('Error: impossible to delete document')
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'fileSystem/deleteDocument'
-    })*/
+        url: process.env.REACT_APP_SERVER + 'document/deleteDocument'
+    })
     console.log('Delete document')
 }
 
