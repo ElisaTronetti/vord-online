@@ -1,6 +1,8 @@
 import { setFileMap } from '../redux/fileSystemData/actions'
 import { __assign, __spreadArray } from './dataStructureUtils'
-import ObjectID  from 'bson-objectid'
+import ObjectID from 'bson-objectid'
+import { FileHelper } from 'chonky'
+import { deleteDocument } from '../home/fileSystemRequests'
 
 import { createSuccessToast } from '../toast/createToast'
 
@@ -23,6 +25,16 @@ export const deleteFiles = (fileMap, files, dispatch) => {
         // Update the fileMap in redux
         dispatch(setFileMap(newFileMap))
         createSuccessToast('Element deleted correctly')
+    })
+}
+
+export const deleteDocuments = (id, token, files) => {
+    files.forEach((file) => {
+        // Check if document
+        if (!FileHelper.isDirectory(file)) {
+            // Delete document from user
+            deleteDocument(id, token, file.id)
+        }
     })
 }
 

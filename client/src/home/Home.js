@@ -36,6 +36,8 @@ export default function Home() {
   // Initialize data for the file system library
   const files = useFiles(fileMap, currentFolderId)
   const handleFileAction = useFileActionHandler(
+    id,
+    token,
     fileMap, 
     setCreateFolderModalShow,
     setCreateDocumentModalShow,
