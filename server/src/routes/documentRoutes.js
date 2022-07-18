@@ -4,7 +4,7 @@ const controller = require('../controllers/documentController');
 const auth = require("../middleware/auth");
 
 //body param: _id (user id), token, title
-router.post("/fileSystem/createNewDocument", auth, (req, res) => controller.createNewDocument(req, res));
+router.post("/document/createNewDocument", auth, (req, res) => controller.createNewDocument(req, res));
 
 //body param: userId, documentId
 router.post("/document/deleteDocument", auth, (req, res) => controller.deleteDocument(req, res));
