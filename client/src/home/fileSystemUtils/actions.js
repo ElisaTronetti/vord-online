@@ -10,3 +10,15 @@ export const CreateDocument = defineFileAction({
         icon: ChonkyIconName.text
     },
 })
+
+export const ShareDocument =  defineFileAction({
+    id: 'share_document',
+    requiresSelection: true,
+    button: {
+        name: 'Share document',
+        toolbar: true,
+        contextMenu: true,
+        group: 'Actions',
+        icon: ChonkyIconName.users,
+    },
+})
