@@ -1,8 +1,10 @@
-import { setFileMap } from '../redux/fileSystemData/actions'
+import { setFileMap } from '../../redux/fileSystemData/actions'
 import { __assign, __spreadArray } from './dataStructureUtils'
-import ObjectID  from 'bson-objectid'
+import ObjectID from 'bson-objectid'
+import { FileHelper } from 'chonky'
+import { deleteDocument } from '../fileSystemRequests'
 
-import { createSuccessToast } from '../toast/createToast'
+import { createSuccessToast } from '../../commonComponents/Toast'
 
 export const deleteFiles = (fileMap, files, dispatch) => {
     // Create a copy of fileMap
@@ -23,6 +25,16 @@ export const deleteFiles = (fileMap, files, dispatch) => {
         // Update the fileMap in redux
         dispatch(setFileMap(newFileMap))
         createSuccessToast('Element deleted correctly')
+    })
+}
+
+export const deleteDocuments = (id, token, files) => {
+    files.forEach((file) => {
+        // Check if document
+        if (!FileHelper.isDirectory(file)) {
+            // Delete document from user
+            deleteDocument(id, token, file.id)
+        }
     })
 }
 
@@ -60,7 +72,8 @@ export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => 
     }
     // Update parent folder to reference the new folder
     var parent = newFileMap[currentFolderId]
-    newFileMap[currentFolderId] = __assign(__assign({}, parent), { childrenIds: __spreadArray(__spreadArray([], parent.childrenIds, true), [folderId], false) })
+    var newDestinationChildrenIds = __spreadArray(__spreadArray([], parent.childrenIds, true), [folderId], false)
+    newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
     createSuccessToast('Folder ' + folderName + ' created correctly')
@@ -72,7 +85,7 @@ export const createDocument = (fileMap, currentFolderId, documentId, documentNam
     // Create the new folder
     newFileMap[documentId] = {
         id: documentId,
-        name: documentName,
+        name: documentName + '.txt',
         parentId: currentFolderId,
         ext: '.txt',
     }

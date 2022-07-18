@@ -1,6 +1,6 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useMemo, useCallback } from 'react'
-import { deleteFiles, moveFiles } from './modifyFileSystem'
+import { deleteFiles, moveFiles, deleteDocuments} from './modifyFileSystem'
 import { CreateDocument } from './actions'
 
 // Configure file for the file system
@@ -17,19 +17,23 @@ export const useFiles = (fileMap, currentFolderId) => {
 }
 
 // Check the action and perform the specified function
-export const useFileActionHandler = (fileMap, setCreateFolderModalShow, setCreateDocumentModalShow, setCurrentFolderId, setDocumentId, dispatch) => {
+export const useFileActionHandler = (id, token, fileMap, setCreateFolderModalShow, setCreateDocumentModalShow, setCurrentFolderId, setDocumentId, dispatch) => {
     return useCallback(
         data => {
             if (data.id === ChonkyActions.OpenFiles.id) {
                 const { targetFile, files } = data.payload
                 const fileToOpen = targetFile ?? files[0]
                 if (fileToOpen && FileHelper.isDirectory(fileToOpen)) {
+                    // Open folder
                     setCurrentFolderId(fileToOpen.id)
-                } else if (fileToOpen) {
+                } else {
+                    // Open file
                     setDocumentId(fileToOpen.id)
                 }
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 deleteFiles(fileMap, data.state.selectedFilesForAction, dispatch)
+                // Delete documents from user
+                deleteDocuments(id, token, data.state.selectedFilesForAction)
             } else if (data.id === ChonkyActions.MoveFiles.id) {
                 moveFiles(
                     fileMap,
@@ -42,6 +46,7 @@ export const useFileActionHandler = (fileMap, setCreateFolderModalShow, setCreat
                 // Show modal to create a new folder
                 setCreateFolderModalShow(true)
             } else if (data.id === CreateDocument.id) {
+                // Show modal to create a new document
                 setCreateDocumentModalShow(true)
             }
         },

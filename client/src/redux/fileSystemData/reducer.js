@@ -1,4 +1,4 @@
-import { emptyFileSystemJson } from '../../fileSystemUtils/fileSystemStructure'
+import { emptyFileSystemJson } from '../../home/fileSystemUtils/fileSystemStructure'
 
 var initialState = {
     rootFolderId: emptyFileSystemJson.rootFolderId,

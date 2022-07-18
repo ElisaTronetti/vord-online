@@ -9,8 +9,8 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import allReducers from './redux'
 import Home from './home/Home'
-import Login from './login/Login'
-import Signup from './signup/Signup'
+import Login from './authentication/Login'
+import Signup from './authentication/Signup'
 import Editor from './editor/Editor'
 import CustomNavbar from './commonComponents/CustomNavbar'
 

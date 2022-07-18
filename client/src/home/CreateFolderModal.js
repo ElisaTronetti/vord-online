@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 
-import { createFolder } from '../fileSystemUtils/modifyFileSystem'
+import { createFolder } from './fileSystemUtils/modifyFileSystem'
 
 export default function CreateFolderModal(props) {
     const [inputFolderName, setInputFolderName] = useState("")

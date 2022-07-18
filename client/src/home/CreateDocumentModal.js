@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import ObjectID  from 'bson-objectid'
 
-import { createDocument } from '../fileSystemUtils/modifyFileSystem'
+import { createDocument } from './fileSystemUtils/modifyFileSystem'
 import { createNewDocument } from './fileSystemRequests'
 
 export default function CreateDocumentModal(props) {

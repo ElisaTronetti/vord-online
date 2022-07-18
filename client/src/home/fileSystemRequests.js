@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast } from '../toast/createToast'
+import { createErrorToast } from '../commonComponents/Toast'
 
 export function updateFileSystem(id, token, fileSystem) {
     $.ajax({
@@ -33,7 +33,7 @@ export function createNewDocument(id, token, documentId, title) {
         dataType: 'json',
         data: createDocumentParams(id, documentId, title),
         success: function () {
-            console.log("Create new document file system")
+            console.log("Created new document")
         },
         error: function () {
             createErrorToast('Error: impossible to create a new document')
@@ -43,12 +43,39 @@ export function createNewDocument(id, token, documentId, title) {
     })
 }
 
-// Create body params for file system
+// Create body params for create document
 function createDocumentParams(id, documentId, title) {
     return JSON.stringify({
         _id: id,
         newDocumentId: documentId,
         title: title,
         time: new Date().getTime(),
+    })
+}
+
+export function deleteDocument(id, token, documentId) {
+    /*
+    $.ajax({
+        contentType: 'application/json',
+        headers: { 'token': token },
+        dataType: 'json',
+        data: createDeleteDocumentParams(id, documentId),
+        success: function () {
+            console.log("Document deleted")
+        },
+        error: function () {
+            createErrorToast('Error: impossible to delete document')
+        },
+        type: 'POST',
+        url: process.env.REACT_APP_SERVER + 'fileSystem/deleteDocument'
+    })*/
+    console.log('Delete document')
+}
+
+// Create body params for delete document
+function createDeleteDocumentParams(id, documentId) {
+    return JSON.stringify({
+        userId: id,
+        documentId: documentId,
     })
 }

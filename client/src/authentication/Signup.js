@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 
-import userSignup from './userSignupRequests'
+import { userSignup } from './authenticationRequests'
 
 export default function Signup() {
     const navigate = useNavigate()
