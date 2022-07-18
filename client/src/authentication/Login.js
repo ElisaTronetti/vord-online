@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 
-import userLogin from './userLoginRequests'
+import { userLogin } from './authenticationRequests'
 
 export default function Login() {
     const navigate = useNavigate()
