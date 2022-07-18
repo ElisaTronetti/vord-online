@@ -85,7 +85,7 @@ export const createDocument = (fileMap, currentFolderId, documentId, documentNam
     // Create the new folder
     newFileMap[documentId] = {
         id: documentId,
-        name: documentName,
+        name: documentName + '.txt',
         parentId: currentFolderId,
         ext: '.txt',
     }
