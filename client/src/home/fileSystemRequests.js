@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast } from '../toast/createToast'
+import { createErrorToast } from '../commonComponents/Toast'
 
 export function updateFileSystem(id, token, fileSystem) {
     $.ajax({

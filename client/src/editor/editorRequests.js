@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast, createSuccessToast } from '../toast/createToast'
+import { createErrorToast, createSuccessToast } from '../commonComponents/Toast'
 
 export function getDocument(documentId, token, userId, setEditorData) {
     $.ajax({

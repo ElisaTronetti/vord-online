@@ -3,9 +3,9 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { CreateDocument } from '../fileSystemUtils/actions'
+import { CreateDocument } from './fileSystemUtils/actions'
 import { updateFileSystem } from './fileSystemRequests'
-import { useFiles, useFileActionHandler, useFolderChain } from '../fileSystemUtils/fileSystemNavigator'
+import { useFiles, useFileActionHandler, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 
 import CreateFolderModal from './CreateFolderModal'
 import CreateDocumentModal from './CreateDocumentModal'
