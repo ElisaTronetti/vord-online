@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { CreateDocument, ShareDocument } from './fileSystemUtils/actions'
 import { updateFileSystem } from './fileSystemRequests'
 import { useFiles, useFileActionHandler, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
+import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
 
 import CreateFolderModal from './CreateFolderModal'
 import CreateDocumentModal from './CreateDocumentModal'
@@ -59,10 +60,4 @@ export default function Home() {
       <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
     </div>
   )
-}
-
-// Used to recreate the file system JSON data structure
-function recreateFileSystem(rootFolderId, fileMap) {
-  return JSON.parse('{"rootFolderId":"' + rootFolderId + '", ' +
-    '"fileMap":' + JSON.stringify(fileMap) + '}')
 }
