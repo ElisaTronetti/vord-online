@@ -1,17 +1,12 @@
 const mongoose = require('mongoose')
 
 let sharedDocumentsSchema = new mongoose.Schema({
-    _id: {        //TODO decidere semantica ID
-        type: String,
-        required: true,
-        unique: true
-    },
     title: {
         type: String,
         required: true
     },
     author: {
-        type: String,
+        type: Object,
         required: true
     },
     time: Number,
