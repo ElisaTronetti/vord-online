@@ -8,8 +8,9 @@ import { updateFileSystem } from './fileSystemRequests'
 import { useFiles, useFileActionHandler, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
 
-import CreateFolderModal from './CreateFolderModal'
-import CreateDocumentModal from './CreateDocumentModal'
+import CreateFolderModal from './modals/CreateFolderModal'
+import CreateDocumentModal from './modals/CreateDocumentModal'
+import ShareDocumentModal from './modals/ShareDocumentModal'
 
 export default function Home() {
   let id = useSelector(state => state.userData.id)
@@ -20,10 +21,11 @@ export default function Home() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentFolderId, setCurrentFolderId] = useState(rootFolderId)
+  const [documentId, setDocumentId] = React.useState(undefined)
   const [createFolderModalShow, setCreateFolderModalShow] = React.useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = React.useState(false)
-  const [documentId, setDocumentId] = React.useState(undefined)
-
+  const [shareDocumentModalShow, setShareDocumentModalShow] = React.useState(false)
+  
   // Trigger redirect if a document id is set
   useEffect(() => { if (documentId !== undefined) navigate('/editor', { state: {documentId: documentId} }) }, [documentId, navigate])
 
@@ -42,6 +44,7 @@ export default function Home() {
     fileMap, 
     setCreateFolderModalShow,
     setCreateDocumentModalShow,
+    setShareDocumentModalShow,
     setCurrentFolderId,
     setDocumentId,
     dispatch)
@@ -58,6 +61,7 @@ export default function Home() {
       <FullFileBrowser files={files} fileActions={fileActions} onFileAction={handleFileAction} folderChain={folderChain} />
       <CreateFolderModal show={createFolderModalShow} onHide={() => setCreateFolderModalShow(false)} currentFolderId={currentFolderId} />
       <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
+      <ShareDocumentModal show={shareDocumentModalShow} onHide={() => setShareDocumentModalShow(false)} />
     </div>
   )
 }

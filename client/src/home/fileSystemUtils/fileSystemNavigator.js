@@ -1,7 +1,7 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useMemo, useCallback } from 'react'
 import { deleteFiles, moveFiles, deleteDocuments} from './modifyFileSystem'
-import { CreateDocument } from './actions'
+import { CreateDocument, ShareDocument } from './actions'
 
 // Configure file for the file system
 export const useFiles = (fileMap, currentFolderId) => {
@@ -17,7 +17,9 @@ export const useFiles = (fileMap, currentFolderId) => {
 }
 
 // Check the action and perform the specified function
-export const useFileActionHandler = (id, token, fileMap, setCreateFolderModalShow, setCreateDocumentModalShow, setCurrentFolderId, setDocumentId, dispatch) => {
+export const useFileActionHandler = (id, token, fileMap,
+    setCreateFolderModalShow, setCreateDocumentModalShow, setShareDocumentModalShow,
+    setCurrentFolderId, setDocumentId, dispatch) => {
     return useCallback(
         data => {
             if (data.id === ChonkyActions.OpenFiles.id) {
@@ -27,7 +29,7 @@ export const useFileActionHandler = (id, token, fileMap, setCreateFolderModalSho
                     // Open folder
                     setCurrentFolderId(fileToOpen.id)
                 } else {
-                    // Open file
+                    // Open document
                     setDocumentId(fileToOpen.id)
                 }
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
@@ -48,9 +50,12 @@ export const useFileActionHandler = (id, token, fileMap, setCreateFolderModalSho
             } else if (data.id === CreateDocument.id) {
                 // Show modal to create a new document
                 setCreateDocumentModalShow(true)
+            } else if (data.id === ShareDocument.id) {
+                // Show modal to share a document
+                setShareDocumentModalShow(true)
             }
         },
-        [fileMap, setCurrentFolderId, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
+        [id, token, fileMap, setCurrentFolderId, setShareDocumentModalShow, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
     )
 }
 
