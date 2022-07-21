@@ -6,14 +6,13 @@ const controller = require('../controllers/shaDocController');
     body params: 
         user:{          //the creator of the local file
             _id,
-            email,
+            email
         },
 
-        sharedWith: {
-            _id,
+        sharedWith: [{  //array of users to which share the file
             email,
             role
-        },
+        }],
 
         documentId
 
