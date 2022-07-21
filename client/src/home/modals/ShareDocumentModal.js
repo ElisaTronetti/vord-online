@@ -11,11 +11,10 @@ import { createSuccessToast, createErrorToast } from '../../commonComponents/Toa
 export default function CreateDocumentModal(props) {
     const [userToShare, setUserToShare] = useState("")
     const [inputRole, setInputRole] = useState("")
-    const document = props.shareDocument[0]
 
     function tryShareDocument() {
         if (userToShare !== "" && inputRole !== "") {
-            createSuccessToast('Document ' + document.name + ' shared to ' + userToShare + ' with role ' + inputRole)
+            createSuccessToast('Document ' + props.shareDocument[0].name + ' shared to ' + userToShare + ' with role ' + inputRole)
             props.onHide()
         } else {
             createErrorToast('Insert all the required data')
