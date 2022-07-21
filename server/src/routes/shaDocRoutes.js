@@ -18,6 +18,6 @@ const controller = require('../controllers/shaDocController');
         documentId
 
 */
-router.post("/auth/shareLocalDocument",(req, res) => controller.shareLocalDocument(req, res));
+router.post("/sharedDocuments/shareLocalDocument",(req, res) => controller.shareLocalDocument(req, res));
 
 module.exports = router;

@@ -1,25 +1,20 @@
-const SharedDocument = require('../sharedDocumentModel')
+const SharedDocument = require('../sharedDocumentsModel')
+const ObjectId = require('mongoose').Types.ObjectId
 
-function createSharedDocument(user, doc, sharedWith) {
+function createSharedDocument(user, doc, sharedGroup) {
+
+    const docId = new ObjectId(doc._id)
+    const authorId = new ObjectId(user._id)
 
     return new SharedDocument({
-        _id: new ObjectId(doc._id),
+        _id: docId,
         title: doc.title,
         blocks: doc.blocks,
         time: doc.time,
         version: doc.version,
-        author: new ObjectId(req.body.user._id),
+        author: authorId,
         alreadyOpen: false,
-        sharedGroup: [{
-            _id: new ObjectId(req.body.user._id),
-            email: req.body.user.email,
-            role: 3
-        },
-        {
-            _id: new ObjectId(req.body.sharedWith._id),
-            email: req.body.sharedWith.email,
-            role: req.body.sharedWith.role
-        }]
+        sharedGroup: sharedGroup
     })
 }
 

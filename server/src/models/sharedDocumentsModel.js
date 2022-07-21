@@ -16,7 +16,7 @@ let sharedDocumentsSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    sharedGroup: {
+    sharedGroup: [{
         email: {
             type: String,
             required: true,
@@ -25,7 +25,7 @@ let sharedDocumentsSchema = new mongoose.Schema({
             type: Number,
             required: true,
         }
-    }
+    }]
 }
 )
 module.exports = mongoose.model('sharedDocument', sharedDocumentsSchema)

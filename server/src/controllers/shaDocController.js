@@ -20,33 +20,86 @@ async function deleteDocument(userId, documentId){
 }
 
 async function getDocument(userId, documentId){
+    const usId = new ObjectId(userId)
+    const docId = new ObjectId(documentId)
     try{
-        Users
-        .findOne({id: userId})
-        .select({ documents: {$elemMatch: {_id: documentId}}})
-        .exec(function (err, result) {
-            return result.documents[0]
-        });
+        const result = await Users
+                            .findOne({id: usId})
+                            .select({ documents: {$elemMatch: {_id: docId}}})
+       
+        return result.documents[0]
         
     } catch (err) {
         throw err
     }
 }
 
+async function getUserId(email){
+    try{
+        const result = await Users.findOne({email: email})
+        return result._id
+    } catch (err) {
+        throw err
+    }
+}
+
+async function generateSharedGroup(sharedGroupArray, owner){
+    let i = 0, id, _id, email, role, result = [], member
+    
+    try{
+        while(sharedGroupArray[i] !== undefined){
+            id = await getUserId(sharedGroupArray[i].email)
+            _id = new ObjectId(id)
+            email = sharedGroupArray[i].email
+            role = sharedGroupArray[i].role
+
+            member = { _id, email, role }
+            result.push(member)
+
+            i = i + 1; 
+        }
+        
+        //adding file owner to share group
+        _id = new ObjectId(owner._id)
+        email = owner.email
+        role = 3
+        member = { _id, email, role }
+        result.push(member)
+
+        return result
+    } catch (err) {
+        throw err
+    }
+   
+}
+
+//share local document, create shared document, delete local document
 async function shareLocalDocument(req, res){
     try{
-        const doc = await getDocument(req.user._id, documentId).then(()=>{
-            if(doc !== undefined){
-                let newShaDoc = SharedDocumentFactory.createSharedDocument(req.user, doc, req.sharedWith)
+        //get local document
+        const doc = await getDocument(req.body.user._id, req.body.documentId)
+        if(doc !== undefined){
+            //get shared group id's and generate shared group array
+            const sharedGroup = await generateSharedGroup(req.body.sharedWith, req.body.user)
 
-                await newShaDoc.save().then(()=>{
-                    await deleteDocument(req.user._id, documentId).then(()=>{
-                        Responces.OkResponce(res, newShaDoc.sharedGroup);
-                    })
-                })
-            }
-        });
+            //generate shared document and save it to the database
+            let newShaDoc = SharedDocumentFactory.createSharedDocument(req.body.user, doc, sharedGroup)
+            await newShaDoc.save()
+
+            //delete local document and send response
+            await deleteDocument(req.body.user._id, req.body.documentId).then(()=>{
+                Responces.OkResponce(res, newShaDoc.sharedGroup);
+            })
+        } else {
+            Responces.ConflictError(res, {message: "404 document not found"});
+        }
+        
     } catch (err) {
         Responces.ServerError(res, {message: err.message});
     }
+}
+
+
+module.exports = {
+    shareLocalDocument
 }
