@@ -3,12 +3,15 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { CreateDocument, ShareDocument } from './fileSystemUtils/actions'
+import { CreateDocument, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
 import { updateFileSystem } from './fileSystemRequests'
-import { useFiles, useFileActionHandler, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
+import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
+import { useActionHandler } from './fileSystemUtils/actionHandler'
+import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
 
-import CreateFolderModal from './CreateFolderModal'
-import CreateDocumentModal from './CreateDocumentModal'
+import CreateFolderModal from './modals/CreateFolderModal'
+import CreateDocumentModal from './modals/CreateDocumentModal'
+import ShareDocumentModal from './modals/ShareDocumentModal'
 
 export default function Home() {
   let id = useSelector(state => state.userData.id)
@@ -19,12 +22,17 @@ export default function Home() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentFolderId, setCurrentFolderId] = useState(rootFolderId)
+  const [openDocumentId, setOpenDocumentId] = React.useState(undefined)
+  const [shareDocument, setShareDocument] = React.useState(undefined)
   const [createFolderModalShow, setCreateFolderModalShow] = React.useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = React.useState(false)
-  const [documentId, setDocumentId] = React.useState(undefined)
+  const [shareDocumentModalShow, setShareDocumentModalShow] = React.useState(false)
+  
+  // Trigger redirect if a document id is set in order to open it
+  useEffect(() => { if (openDocumentId !== undefined) navigate('/editor', { state: {documentId: openDocumentId} }) }, [openDocumentId, navigate])
 
-  // Trigger redirect if a document id is set
-  useEffect(() => { if (documentId !== undefined) navigate('/editor', { state: {documentId: documentId} }) }, [documentId, navigate])
+  // Trigger show modal if a document wants to be shared
+  useEffect(() => { if (shareDocument !== undefined) setShareDocumentModalShow(true)}, [shareDocument])
 
   // Trigger used to update the file system on the server when something changes
   useEffect(() => {
@@ -35,20 +43,21 @@ export default function Home() {
 
   // Initialize data for the file system library
   const files = useFiles(fileMap, currentFolderId)
-  const handleFileAction = useFileActionHandler(
+  const handleFileAction = useActionHandler(
     id,
     token,
     fileMap, 
     setCreateFolderModalShow,
     setCreateDocumentModalShow,
+    setShareDocument,
     setCurrentFolderId,
-    setDocumentId,
+    setOpenDocumentId,
     dispatch)
   const folderChain = useFolderChain(fileMap, currentFolderId)
 
   // Initialize actions
   const fileActions = useMemo(
-    () => [ChonkyActions.DeleteFiles, ChonkyActions.CreateFolder, CreateDocument, ShareDocument],
+    () => [ChonkyActions.DeleteFiles, ChonkyActions.CreateFolder, CreateDocument, ShareDocument, CopyDocument],
     []
   )
 
@@ -57,12 +66,7 @@ export default function Home() {
       <FullFileBrowser files={files} fileActions={fileActions} onFileAction={handleFileAction} folderChain={folderChain} />
       <CreateFolderModal show={createFolderModalShow} onHide={() => setCreateFolderModalShow(false)} currentFolderId={currentFolderId} />
       <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
+      <ShareDocumentModal show={shareDocumentModalShow} onHide={() => setShareDocumentModalShow(false)} shareDocument={shareDocument} />
     </div>
   )
-}
-
-// Used to recreate the file system JSON data structure
-function recreateFileSystem(rootFolderId, fileMap) {
-  return JSON.parse('{"rootFolderId":"' + rootFolderId + '", ' +
-    '"fileMap":' + JSON.stringify(fileMap) + '}')
 }
