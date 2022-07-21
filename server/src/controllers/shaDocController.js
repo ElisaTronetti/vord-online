@@ -91,7 +91,7 @@ async function shareLocalDocument(req, res){
                 Responses.OkResponse(res, newShaDoc.sharedGroup);
             })
         } else {
-            Responses.ConflictError(res, {message: "404 document not found"});
+            Responses.ConflictError(res, {message: "404 document not found"}); //TODO che ci devo scrivere?
         }
         
     } catch (err) {
@@ -100,9 +100,25 @@ async function shareLocalDocument(req, res){
 }
 
 async function shareSharedDocument(req, res){
+    try{
+        const userId = new ObjectId(await getUserId(req.body.email))
+        
+        const filter = { _id: new ObjectId(req.body.documentId) }
+        
+        const newHolder = { _id: userId,
+                            email: req.body.email,
+                            role: req.body.role }
+        const update = { $push: { "sharedGroup": newHolder }}
+        
+        await SharedDocuments.findOneAndUpdate(filter, update)
 
+        Responses.OkResponse(res, "");
+    } catch (err) {
+        Responses.ServerError(res, {message: err.message});
+    }
 }
 
 module.exports = {
-    shareLocalDocument
+    shareLocalDocument,
+    shareSharedDocument
 }
