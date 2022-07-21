@@ -11,9 +11,11 @@ export const CreateDocument = defineFileAction({
     },
 })
 
+// Custom action used to create the share document behavior only if a document is selected
 export const ShareDocument =  defineFileAction({
     id: 'share_document',
     requiresSelection: true,
+    fileFilter: file => file && !file.isDir,
     button: {
         name: 'Share document',
         toolbar: true,
