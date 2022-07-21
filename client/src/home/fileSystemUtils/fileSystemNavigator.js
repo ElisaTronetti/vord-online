@@ -18,8 +18,8 @@ export const useFiles = (fileMap, currentFolderId) => {
 
 // Check the action and perform the specified function
 export const useFileActionHandler = (id, token, fileMap,
-    setCreateFolderModalShow, setCreateDocumentModalShow, setShareDocumentModalShow,
-    setCurrentFolderId, setDocumentId, dispatch) => {
+    setCreateFolderModalShow, setCreateDocumentModalShow,
+    setShareDocument, setCurrentFolderId, setDocumentId, dispatch) => {
     return useCallback(
         data => {
             if (data.id === ChonkyActions.OpenFiles.id) {
@@ -52,10 +52,10 @@ export const useFileActionHandler = (id, token, fileMap,
                 setCreateDocumentModalShow(true)
             } else if (data.id === ShareDocument.id) {
                 // Show modal to share a document
-                setShareDocumentModalShow(true)
+                setShareDocument(data.state.selectedFilesForAction)
             }
         },
-        [id, token, fileMap, setCurrentFolderId, setShareDocumentModalShow, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
+        [id, token, fileMap, setCurrentFolderId, setShareDocument, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
     )
 }
 
