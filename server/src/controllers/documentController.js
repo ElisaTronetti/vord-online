@@ -1,5 +1,5 @@
 const ObjectId = require('mongoose').Types.ObjectId
-const Responces = require("./responces/responce")
+const Responses = require("./responses/response")
 const Users = require('../models/userModel')
 
 async function createNewDocument(req, res){
@@ -17,9 +17,9 @@ async function createNewDocument(req, res){
         
         await Users.findOneAndUpdate(filter, update)
 
-        Responces.OkResponce(res, "");
+        Responses.OkResponse(res, "");
     } catch (err) {
-        Responces.ServerError(res, {message: err.message});
+        Responses.ServerError(res, {message: err.message});
     }
 }
 
@@ -33,9 +33,9 @@ async function deleteDocument(req, res){
         let user = await Users.findOneAndUpdate(filter, update, {
             new: true
           })
-        Responces.OkResponce(res, user.documents)
+        Responses.OkResponse(res, user.documents)
     } catch (err) {
-        Responces.ServerError(res, {message: err.message});
+        Responses.ServerError(res, {message: err.message});
     }
 } 
 
@@ -45,11 +45,11 @@ async function getDocument(req, res){
         .findOne({id: req.body.userId})
         .select({ documents: {$elemMatch: {_id: req.query._id}}})
         .exec(function (err, result) {
-            Responces.OkResponce(res, result.documents[0]);
+            Responses.OkResponse(res, result.documents[0]);
         });
         
     } catch (err) {
-        Responces.ServerError(res, {message: err.message});
+        Responses.ServerError(res, {message: err.message});
     }
 }
 
@@ -65,10 +65,10 @@ async function saveDocument(req, res){
                 }
             })
         .exec(function (err, result) {
-            Responces.OkResponce(res, "");
+            Responses.OkResponse(res, "");
         });
     } catch (err) {
-        Responces.ServerError(res, {message: err.message});
+        Responses.ServerError(res, {message: err.message});
     }
 }
 

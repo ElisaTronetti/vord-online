@@ -1,5 +1,5 @@
 const ObjectId = require('mongoose').Types.ObjectId
-const Responces = require("./responces/responce")
+const Responses = require("./responses/response")
 const Users = require('../models/userModel')
 const SharedDocuments = require('../models/sharedDocumentsModel')
 const SharedDocumentFactory = require('../models/factories/sharedDocument')
@@ -88,17 +88,20 @@ async function shareLocalDocument(req, res){
 
             //delete local document and send response
             await deleteDocument(req.body.user._id, req.body.documentId).then(()=>{
-                Responces.OkResponce(res, newShaDoc.sharedGroup);
+                Responses.OkResponse(res, newShaDoc.sharedGroup);
             })
         } else {
-            Responces.ConflictError(res, {message: "404 document not found"});
+            Responses.ConflictError(res, {message: "404 document not found"});
         }
         
     } catch (err) {
-        Responces.ServerError(res, {message: err.message});
+        Responses.ServerError(res, {message: err.message});
     }
 }
 
+async function shareSharedDocument(req, res){
+
+}
 
 module.exports = {
     shareLocalDocument

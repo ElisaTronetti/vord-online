@@ -1,5 +1,5 @@
 const ObjectId = require('mongoose').Types.ObjectId
-const Responces = require("./responces/responce")
+const Responses = require("./responses/response")
 const Users = require('../models/userModel')
 
 async function updateFileSystem(req) {
@@ -29,12 +29,12 @@ async function getUserFileSystem(req, res){
                 .select("fileSystem")
                 .lean()
                 .exec(function (err, fileSystem) {
-                        Responces.OkResponce(res, fileSystem);//res.end(JSON.stringify(fileSystem));
+                        Responses.OkResponse(res, fileSystem);//res.end(JSON.stringify(fileSystem));
                     });
                
             
         } catch(err){
-            Responces.ServerError(res, {message: err.message});
+            Responses.ServerError(res, {message: err.message});
         }
     }
 }
@@ -46,9 +46,9 @@ async function updateUserFileSystem(req, res){
         try {
             let updatedFS = await updateFileSystem(req)
     
-            Responces.OkResponce(res, updatedFS.fileSystem)
+            Responses.OkResponse(res, updatedFS.fileSystem)
         } catch (err) {
-            Responces.ServerError(res, {message: err.message});
+            Responses.ServerError(res, {message: err.message});
         }
     }
 }

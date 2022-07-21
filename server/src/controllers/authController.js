@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 
 const Users = require('../models/userModel')
 const UserFactory = require('../models/factories/user')
-const Responces = require('./responces/responce')
+const Responses = require('./responses/response')
 const ObjectId = require('mongoose').Types.ObjectId
 
 
@@ -24,17 +24,17 @@ async function signup(req, res) {
                         }
                     );
                     user.token = token; // save user token
-                    Responces.OkResponce(res, user);
+                    Responses.OkResponse(res, user);
                 })
                 
             }).catch(err => {
-                Responces.ServerError(res, {message: err.stack});
+                Responses.ServerError(res, {message: err.stack});
             })
         } else {
-            Responces.ConflictError(res, {message: "User with the same email already exists."});
+            Responses.ConflictError(res, {message: "User with the same email already exists."});
         }
     }).catch(err => {
-        Responces.ServerError(res, {message: err.message});
+        Responses.ServerError(res, {message: err.message});
     })
 }
 
