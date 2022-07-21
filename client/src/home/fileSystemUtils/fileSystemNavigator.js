@@ -1,7 +1,7 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useMemo, useCallback } from 'react'
-import { deleteFiles, moveFiles, deleteDocuments} from './modifyFileSystem'
-import { CreateDocument, ShareDocument } from './actions'
+import { deleteFiles, moveFiles, deleteDocuments, copyDocuments} from './modifyFileSystem'
+import { CopyDocument, CreateDocument, ShareDocument } from './actions'
 
 // Configure file for the file system
 export const useFiles = (fileMap, currentFolderId) => {
@@ -32,6 +32,9 @@ export const useFileActionHandler = (id, token, fileMap,
                     // Open document
                     setDocumentId(fileToOpen.id)
                 }
+            } else if (data.id === CopyDocument.id) {
+                // Copy files
+                copyDocuments(fileMap, data.state.selectedFilesForAction, dispatch)
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 deleteFiles(fileMap, data.state.selectedFilesForAction, dispatch)
                 // Delete documents from user

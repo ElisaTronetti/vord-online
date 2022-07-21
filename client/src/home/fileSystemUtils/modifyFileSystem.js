@@ -82,7 +82,7 @@ export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => 
 export const createDocument = (fileMap, currentFolderId, documentId, documentName, dispatch) => {
     // Create a copy of fileMap
     const newFileMap = { ...fileMap }
-    // Create the new folder
+    // Create the new document
     newFileMap[documentId] = {
         id: documentId,
         name: documentName + '.txt',
@@ -96,4 +96,26 @@ export const createDocument = (fileMap, currentFolderId, documentId, documentNam
     // Update fileMap
     dispatch(setFileMap(newFileMap))
     createSuccessToast('Document ' + documentName + ' created correctly')
+}
+
+// TODO call http request to create a copy of a file
+export const copyDocuments = (fileMap, files, dispatch) => {
+    // Create a copy of fileMap
+    const newFileMap = { ...fileMap }
+    files.forEach((file) => {
+        // Create the new document
+        let documentId = ObjectID().toHexString()
+        newFileMap[documentId] = {
+            id: documentId,
+            name: '(Copy)' + file.name,
+            parentId: file.parentId,
+            ext: '.txt',
+        }
+        // Update parent folder to reference the new folder
+        var parent = newFileMap[file.parentId]
+        var newDestinationChildrenIds = __spreadArray(__spreadArray([], parent.childrenIds, true), [documentId], false)
+        newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
+    })
+    // Update fileMap
+    dispatch(setFileMap(newFileMap))
 }
