@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom'
 
 import { CreateDocument, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
 import { updateFileSystem } from './fileSystemRequests'
-import { useFiles, useFileActionHandler, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
+import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
+import { useActionHandler } from './fileSystemUtils/actionHandler'
 import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
 
 import CreateFolderModal from './modals/CreateFolderModal'
@@ -42,7 +43,7 @@ export default function Home() {
 
   // Initialize data for the file system library
   const files = useFiles(fileMap, currentFolderId)
-  const handleFileAction = useFileActionHandler(
+  const handleFileAction = useActionHandler(
     id,
     token,
     fileMap, 
