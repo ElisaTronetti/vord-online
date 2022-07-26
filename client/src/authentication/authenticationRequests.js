@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { setToken, setId } from '../redux/userData/actions'
+import { setToken, setId, setEmail } from '../redux/userData/actions'
 import { setRootFolderId, setFileMap } from '../redux/fileSystemData/actions'
 import { createSuccessToast, createErrorToast, createWarningToast } from '../commonComponents/Toast'
 
@@ -16,6 +16,9 @@ export function userLogin(email, password, dispatch) {
                 // Save user id
                 let id = result._id
                 dispatch(setId(id))
+                // Save email
+                let email = result.email
+                dispatch(setEmail(email))
                 // Save file system if it exists
                 if (result.fileSystem !== undefined) {
                     let fileSystem = result.fileSystem
@@ -60,6 +63,9 @@ export function userSignup(name, surname, email, password, passwordConfirm, disp
                 // Save user id
                 let id = result._id
                 dispatch(setId(id))
+                // Save email
+                let email = result.email
+                dispatch(setEmail(email))
                 createSuccessToast('Signup successful!')
             },
             error: function () {
