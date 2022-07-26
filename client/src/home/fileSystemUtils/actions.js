@@ -1,13 +1,28 @@
 import { defineFileAction, ChonkyIconName } from 'chonky'
 
-// Custom action used to capture the creation of a document from the toolbar
+// Custom action used to capture the creation of a folder
+export const CreateFolder = defineFileAction({
+    id: 'create_folder',
+    button: {
+        name: 'Create folder',
+        contextMenu: true,
+        toolbar: true,
+        tooltip: 'Create a folder',
+        group: 'Actions',
+        icon: ChonkyIconName.folderCreate,
+    },
+})
+
+// Custom action used to capture the creation of a document
 export const CreateDocument = defineFileAction({
     id: 'create_document',
     button: {
         name: 'Create document',
+        contextMenu: true,
         toolbar: true,
-        tooltip: 'Create a document',
-        icon: ChonkyIconName.text
+        tooltip: 'Create document',
+        group: 'Actions',
+        icon: ChonkyIconName.text,
     },
 })
 
