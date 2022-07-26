@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -6,15 +7,18 @@ import Col from 'react-bootstrap/Col'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Row from 'react-bootstrap/Row'
 
-import { createSuccessToast, createErrorToast } from '../../commonComponents/Toast'
+import { createErrorToast } from '../../commonComponents/Toast'
+import { shareLocalDocument } from '../sharingRequests'
 
 export default function CreateDocumentModal(props) {
-    const [userToShare, setUserToShare] = useState("")
+    const [emailToShare, setEmailToShare] = useState("")
     const [inputRole, setInputRole] = useState("")
+    let id = useSelector(state => state.userData.id)
+    let email = useSelector(state => state.userData.email)
 
     function tryShareDocument() {
-        if (userToShare !== "" && inputRole !== "") {
-            createSuccessToast('Document ' + props.shareDocument[0].name + ' shared to ' + userToShare + ' with role ' + inputRole)
+        if (emailToShare !== "" && inputRole !== "") {
+            shareLocalDocument(id, email, emailToShare, inputRole, props.shareDocument[0].id)
             props.onHide()
         } else {
             createErrorToast('Insert all the required data')
@@ -37,7 +41,7 @@ export default function CreateDocumentModal(props) {
                         <FloatingLabel controlId="floatingInputGrid" label="Email address">
                             <Form.Control
                                 type="email"
-                                onChange={input => setUserToShare(input.target.value)}
+                                onChange={input => setEmailToShare(input.target.value)}
                                 onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); tryShareDocument() } }}
                                 placeholder="name@example.com" />
                         </FloatingLabel>
