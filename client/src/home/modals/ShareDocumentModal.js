@@ -55,9 +55,9 @@ export default function CreateDocumentModal(props) {
                                 onChange={input => setInputRole(input.target.value)}
                                 onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); tryShareDocument() } }}>
                                 <option></option>
-                                <option value="0">Admin</option>
-                                <option value="1">Editor</option>
-                                <option value="2">Read Only</option>
+                                <option value="1">Read Only</option>
+                                <option value="2">Editor</option>
+                                <option value="3">Owner</option>
                             </Form.Select>
                         </FloatingLabel>
                     </Col>
