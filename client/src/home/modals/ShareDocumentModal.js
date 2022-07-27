@@ -12,10 +12,11 @@ import { createErrorToast } from '../../commonComponents/Toast'
 import { shareLocalDocument } from '../sharingRequests'
 
 export default function CreateDocumentModal(props) {
-    const [inputFields, setInputFields] = useState([{
+    const initialState = [{
         email: '',
         role: ''
-    }])
+    }]
+    const [inputFields, setInputFields] = useState(initialState)
     const addInputField = () => {
         setInputFields([...inputFields, {
             email: '',
@@ -26,6 +27,9 @@ export default function CreateDocumentModal(props) {
         const rows = [...inputFields]
         rows.splice(index, 1)
         setInputFields(rows)
+    }
+    const resetInputFields = () => {
+        setInputFields(initialState)
     }
     const handleChange = (index, event) => {
         const { name, value } = event.target
@@ -40,7 +44,7 @@ export default function CreateDocumentModal(props) {
     function tryShareDocument() {
         const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''));
         if (!isEmpty) {
-            shareLocalDocument(id, email, inputFields, props.shareDocument[0].id, props)
+            shareLocalDocument(id, email, inputFields, props.shareDocument[0].id, props, resetInputFields)
         } else {
             createErrorToast('Insert all the required data')
         }

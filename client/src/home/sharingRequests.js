@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import { createErrorToast, createSuccessToast } from "../commonComponents/Toast"
 
-export function shareLocalDocument(userId, userEmail, inputFields, documentId, props) {
+export function shareLocalDocument(userId, userEmail, inputFields, documentId, props, resetInputFields) {
     $.ajax({
         contentType: 'application/json',
         dataType: 'json',
@@ -9,6 +9,7 @@ export function shareLocalDocument(userId, userEmail, inputFields, documentId, p
         success: function () {
             createSuccessToast("Document shared correctly")
             props.onHide()
+            resetInputFields()
         },
         error: function () {
             //TODO check if unauthorized and create a different error message
