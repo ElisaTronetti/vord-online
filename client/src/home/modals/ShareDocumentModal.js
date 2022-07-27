@@ -36,32 +36,35 @@ export default function CreateDocumentModal(props) {
                 <Modal.Title id="contained-modal-title-vcenter">Share document to:</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Row className="g-2">
-                    <Col md>
-                        <FloatingLabel controlId="floatingInputGrid" label="Email address">
-                            <Form.Control
-                                type="email"
-                                onChange={input => setEmailToShare(input.target.value)}
-                                onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); tryShareDocument() } }}
-                                placeholder="name@example.com" />
-                        </FloatingLabel>
-                    </Col>
-                    <Col md>
-                        <FloatingLabel
-                            controlId="floatingSelectGrid"
-                            label="Select role">
-                            <Form.Select
-                                aria-label=""
-                                onChange={input => setInputRole(input.target.value)}
-                                onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); tryShareDocument() } }}>
-                                <option></option>
-                                <option value="1">Read Only</option>
-                                <option value="2">Editor</option>
-                                <option value="3">Owner</option>
-                            </Form.Select>
-                        </FloatingLabel>
-                    </Col>
-                </Row>
+                <Form>
+                    <Row className="mb-3">
+                        <Form.Group as={Col} controlId="formGridEmail">
+                            <FloatingLabel controlId="floatingInputGrid" label="Email address">
+                                <Form.Control
+                                    type="email"
+                                    onChange={input => setEmailToShare(input.target.value)}
+                                    onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); tryShareDocument() } }}
+                                    placeholder="name@example.com" />
+                            </FloatingLabel>
+                        </Form.Group>
+
+                        <Form.Group as={Col} controlId="formGridRole">
+                            <FloatingLabel
+                                controlId="floatingSelectGrid"
+                                label="Select role">
+                                <Form.Select
+                                    aria-label=""
+                                    onChange={input => setInputRole(input.target.value)}
+                                    onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); tryShareDocument() } }}>
+                                    <option></option>
+                                    <option value="1">Read Only</option>
+                                    <option value="2">Editor</option>
+                                    <option value="3">Owner</option>
+                                </Form.Select>
+                            </FloatingLabel>
+                        </Form.Group>
+                    </Row>
+                </Form>
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={tryShareDocument}>Share</Button>
