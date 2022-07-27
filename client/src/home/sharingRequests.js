@@ -1,13 +1,14 @@
 import $ from 'jquery'
 import { createErrorToast, createSuccessToast } from "../commonComponents/Toast"
 
-export function shareLocalDocument(userId, userEmail, sharingEmail, sharingRole, documentId) {
+export function shareLocalDocument(userId, userEmail, inputFields, documentId, props) {
     $.ajax({
         contentType: 'application/json',
         dataType: 'json',
-        data: createShareLocalDocumentParams(userId, userEmail, sharingEmail, sharingRole, documentId),
+        data: createShareLocalDocumentParams(userId, userEmail, inputFields, documentId),
         success: function () {
             createSuccessToast("Document shared correctly")
+            props.onHide()
         },
         error: function () {
             //TODO check if unauthorized and create a different error message
@@ -19,16 +20,13 @@ export function shareLocalDocument(userId, userEmail, sharingEmail, sharingRole,
 }
 
 // Create body params for share local document
-function createShareLocalDocumentParams(userId, userEmail, sharingEmail, sharingRole, documentId) {
+function createShareLocalDocumentParams(userId, userEmail, inputFields, documentId) {
     return JSON.stringify({
         user: {
             _id: userId,
             email: userEmail
         },
-        sharedWith: [{
-            email: sharingEmail,
-            role: sharingRole
-        }],
+        sharedWith: inputFields,
         documentId: documentId
     })
 }
