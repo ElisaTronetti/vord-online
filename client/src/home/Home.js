@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { CreateDocument, CreateFolder, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
-import { updateFileSystem } from './fileSystemRequests'
+import { updateFileSystem, getFileSystem } from './fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
 import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
@@ -26,6 +26,14 @@ export default function Home() {
   const [shareDocument, setShareDocument] = React.useState(undefined)
   const [createFolderModalShow, setCreateFolderModalShow] = React.useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = React.useState(false)
+  
+  useEffect(() => {
+    // Ask periodically for the file system update
+    const interval = setInterval(() => {
+      getFileSystem(id, token, dispatch)
+    }, 5000);
+    return () => clearInterval(interval)
+  }, []);
 
   // Trigger redirect if a document id is set in order to open it
   useEffect(() => { if (openDocumentId !== undefined) navigate('/editor', { state: { documentId: openDocumentId } }) }, [openDocumentId, navigate])
