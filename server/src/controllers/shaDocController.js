@@ -85,8 +85,6 @@ async function updateUsers(sharedGroup, doc, authorId){
                                         author: new ObjectId(authorId),
                                         role: sharedGroup[i].role,
                                         }
-
-            console.log(sharedGroup[i]._id)
             update = {$push: {"sharedWithUser": newFileSharedWithUser}}
             filter = {_id : sharedGroup[i]._id}
             await Users.findOneAndUpdate(filter, update)
@@ -97,15 +95,23 @@ async function updateUsers(sharedGroup, doc, authorId){
     }
 }
 
-function checkIntersections(toAdd, alreadyPresent){
-    let i = 0, position
-    while (toAdd[i] !== undefined){
-        position = alreadyPresent.indexOf(toAdd[i])
-        if(position !== -1){
+async function checkIntersections(toAdd, alreadyPresent){
+    let i = 0, position, newEmails = [], oldEmails = [], copy
+    newEmails = toAdd.map(a => a.email);
+    oldEmails = alreadyPresent.map(a => a.email);
+    
+
+    console.log("new: " + newEmails +" old: "+oldEmails)
+    while (oldEmails[i] !== undefined){
+        position = newEmails.indexOf(oldEmails[i])
+        console.log(position)
+        if(position > -1){
             toAdd.splice(position, 1) //delete one element at index = position
+            console.log(toAdd)
         }
+        i = i + 1
     }
-    return toAdd
+    return toAdd 
 }
 
 //share local document, create shared document, delete local document
@@ -149,19 +155,21 @@ async function shareSharedDocument(req, res){
         //get shared group id's and generate shared group array and see if there are intersection with current shared group
         let sharedGroup = await generateSharedGroup(req.body.sharedWith)
         const currentSharedGroup = doc.sharedGroup
-        sharedGroup = checkIntersections(sharedGroup, currentSharedGroup)
-        if(sharedGroup.length === 0){ Responses.OkResponse(res, doc.sharedGroup) }
+        sharedGroup = await checkIntersections(sharedGroup, currentSharedGroup)
 
-        while(sharedGroup[i] !== undefined){
-            update = { $push: { "sharedGroup": sharedGroup[i] }}
-            await SharedDocuments.findByIdAndUpdate(new ObjectId(req.body.documentId), update)
-            i = i + 1
-        }
-
-        //update new holders sharedWithMe array
-        await updateUsers(sharedGroup, doc, doc.author)
-
-        Responses.OkResponse(res, doc.sharedGroup)
+        if(sharedGroup.length === 0){ Responses.OkResponse(res, {message: "document not found"})}
+        else{
+            while(sharedGroup[i] !== undefined){
+                update = { $push: { "sharedGroup": sharedGroup[i] }}
+                await SharedDocuments.findByIdAndUpdate(new ObjectId(req.body.documentId), update)
+                i = i + 1
+            }
+    
+            //update new holders sharedWithMe array
+            await updateUsers(sharedGroup, doc, doc.author)
+    
+            Responses.OkResponse(res, doc.sharedGroup)
+        }       
     } catch (err) {
         Responses.ServerError(res, {message: err.message})
     }
