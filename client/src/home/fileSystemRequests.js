@@ -1,5 +1,26 @@
 import $ from 'jquery'
 import { createErrorToast } from '../commonComponents/Toast'
+import { setRootFolderId, setFileMap } from '../redux/fileSystemData/actions'
+
+export function getFileSystem(id, token, dispatch) {
+    $.ajax({
+        contentType: 'application/json',
+        headers: { "token": token },
+        dataType: 'json',
+        success: function (result) {
+            let id = result.fileSystem.rootFolderId
+            dispatch(setRootFolderId(id))
+            let fileMap = result.fileSystem.fileMap
+            dispatch(setFileMap(fileMap))
+        },
+        error: function () {
+            console.log('error')
+        },
+        processData: false,
+        type: 'GET',
+        url: process.env.REACT_APP_SERVER + "fileSystem/getUserFileSystem?_id=" + id
+    })
+}
 
 export function updateFileSystem(id, token, fileSystem) {
     $.ajax({
@@ -54,7 +75,7 @@ function createDocumentParams(id, documentId, title) {
 }
 
 export function deleteDocument(id, token, documentId) {
-    
+
     $.ajax({
         contentType: 'application/json',
         headers: { 'token': token },

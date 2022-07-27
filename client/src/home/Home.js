@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { CreateDocument, CreateFolder, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
-import { updateFileSystem } from './fileSystemRequests'
+import { updateFileSystem, getFileSystem } from './fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
 import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
@@ -26,13 +26,17 @@ export default function Home() {
   const [shareDocument, setShareDocument] = React.useState(undefined)
   const [createFolderModalShow, setCreateFolderModalShow] = React.useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = React.useState(false)
-  const [shareDocumentModalShow, setShareDocumentModalShow] = React.useState(false)
   
-  // Trigger redirect if a document id is set in order to open it
-  useEffect(() => { if (openDocumentId !== undefined) navigate('/editor', { state: {documentId: openDocumentId} }) }, [openDocumentId, navigate])
+  useEffect(() => {
+    // Ask periodically for the file system update
+    const interval = setInterval(() => {
+      getFileSystem(id, token, dispatch)
+    }, 5000);
+    return () => clearInterval(interval)
+  }, []);
 
-  // Trigger show modal if a document wants to be shared
-  useEffect(() => { if (shareDocument !== undefined) setShareDocumentModalShow(true)}, [shareDocument])
+  // Trigger redirect if a document id is set in order to open it
+  useEffect(() => { if (openDocumentId !== undefined) navigate('/editor', { state: { documentId: openDocumentId } }) }, [openDocumentId, navigate])
 
   // Trigger used to update the file system on the server when something changes
   useEffect(() => {
@@ -46,7 +50,7 @@ export default function Home() {
   const handleFileAction = useActionHandler(
     id,
     token,
-    fileMap, 
+    fileMap,
     setCreateFolderModalShow,
     setCreateDocumentModalShow,
     setShareDocument,
@@ -66,7 +70,7 @@ export default function Home() {
       <FullFileBrowser files={files} fileActions={fileActions} onFileAction={handleFileAction} folderChain={folderChain} />
       <CreateFolderModal show={createFolderModalShow} onHide={() => setCreateFolderModalShow(false)} currentFolderId={currentFolderId} />
       <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
-      <ShareDocumentModal show={shareDocumentModalShow} onHide={() => setShareDocumentModalShow(false)} shareDocument={shareDocument} />
+      <ShareDocumentModal show={shareDocument !== undefined} onHide={() => setShareDocument(undefined)} shareDocument={shareDocument} />
     </div>
   )
 }
