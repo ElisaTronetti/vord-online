@@ -157,7 +157,7 @@ async function shareSharedDocument(req, res){
         const currentSharedGroup = doc.sharedGroup
         sharedGroup = await checkIntersections(sharedGroup, currentSharedGroup)
 
-        if(sharedGroup.length === 0){ Responses.OkResponse(res, {message: "document not found"})}
+        if(sharedGroup.length === 0){ Responses.OkResponse(res, {message: "the document is already shared with these users"})}
         else{
             while(sharedGroup[i] !== undefined){
                 update = { $push: { "sharedGroup": sharedGroup[i] }}
@@ -175,7 +175,42 @@ async function shareSharedDocument(req, res){
     }
 }
 
+async function tryUpdatingFS(req, res){
+    try{
+        //insert new field in fileMap
+        const user = await Users.findById(new ObjectId(req.body.userId))
+        const fileId = new ObjectId()
+        const newFile= {[fileId]:{
+            _id : fileId.toString(),
+            name: "prova"+".txt",
+            parentId: user.fileSystem.rootFolderId,
+            ext: ".txt",
+            isShared: true
+        }}
+        console.log(newFile)
+        let path = "fileSystem.fileMap."
+        path = path.concat(fileId.toString())
+        console.log(path)
+
+        await Users.updateOne({_id: new ObjectId(req.body.userId)}, {
+            $set: {[path]: newFile}
+        });
+
+        //insert new child in root folder
+        path = "fileSystem.fileMap."+ user.fileSystem.rootFolderId + ".childrenIds"
+        await Users.updateOne({_id: new ObjectId(req.body.userId)}, {
+            $push: {[path]: fileId.toString()}
+        });
+        //TODO incrementare childrenCount   
+        Responses.OkResponse(res, {message: "il mondo è meraviglioso"})
+             
+    } catch (err) {
+        Responses.ServerError(res, {message: err.message})
+    }
+}
+
 module.exports = {
     shareLocalDocument,
-    shareSharedDocument
+    shareSharedDocument,
+    tryUpdatingFS
 }
