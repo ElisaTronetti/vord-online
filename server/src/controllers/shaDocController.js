@@ -99,15 +99,11 @@ async function checkIntersections(toAdd, alreadyPresent){
     let i = 0, position, newEmails = [], oldEmails = [], copy
     newEmails = toAdd.map(a => a.email);
     oldEmails = alreadyPresent.map(a => a.email);
-    
 
-    console.log("new: " + newEmails +" old: "+oldEmails)
     while (oldEmails[i] !== undefined){
         position = newEmails.indexOf(oldEmails[i])
-        console.log(position)
         if(position > -1){
             toAdd.splice(position, 1) //delete one element at index = position
-            console.log(toAdd)
         }
         i = i + 1
     }
@@ -198,10 +194,12 @@ async function updateUsersFileSystem(sharedGroup, doc){
                 name: doc.title + ".txt",
                 parentId: rootFolderId,
                 ext: ".txt",
-                isShared: true
+                isShared: true,
+                color: "#27c906"
             }
-            path = "fileSystem.fileMap." + fileId.toString()
+
             //insert new field in fileMap
+            path = "fileSystem.fileMap." + fileId.toString()
             await Users.findByIdAndUpdate(userId, { $set: {[path]: newFile} });
 
            
@@ -220,15 +218,7 @@ async function updateUsersFileSystem(sharedGroup, doc){
 
             path = "fileSystem.fileMap." + rootFolderId
             await Users.findByIdAndUpdate(userId, { $set: {[path]: rootFolder}});
-            /*
-            //insert new child in root folder
-            path = "fileSystem.fileMap."+ rootFolderId + ".childrenIds"
-            await Users.findByIdAndUpdate(userId, { $push: {[path]: fileId.toString()}});
-
-            //increment root folder children count
-            path = "fileSystem.fileMap."+ rootFolderId + ".childrenCount"
-            await Users.findByIdAndUpdate(userId, {$inc: {[path]: 1}});
-            */
+           
             i++
         }    
     } catch (err) {
