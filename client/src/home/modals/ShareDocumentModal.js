@@ -9,7 +9,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Row from 'react-bootstrap/Row'
 
 import { createErrorToast } from '../../commonComponents/Toast'
-import { shareLocalDocument } from '../sharingRequests'
+import { shareDocument } from '../sharingRequests'
 
 export default function CreateDocumentModal(props) {
     const initialState = [{
@@ -24,6 +24,7 @@ export default function CreateDocumentModal(props) {
         }])
     }
     const removeInputFields = (index) => {
+        console.log(index)
         const rows = [...inputFields]
         rows.splice(index, 1)
         setInputFields(rows)
@@ -42,9 +43,11 @@ export default function CreateDocumentModal(props) {
     let email = useSelector(state => state.userData.email)
 
     function tryShareDocument() {
-        const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''));
+        const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
+        const document = props.shareDocument[0]
         if (!isEmpty) {
-            shareLocalDocument(id, email, inputFields, props.shareDocument[0].id, props, resetInputFields)
+            console.log(document)
+            shareDocument(id, email, inputFields, document.id, document.isShared, props, resetInputFields)
         } else {
             createErrorToast('Insert all the required data')
         }
@@ -102,7 +105,7 @@ export default function CreateDocumentModal(props) {
                                                 </Form.Group>
                                             </Col>
                                             <Col md={1} className="text-center">
-                                                {(inputFields.length !== 1) ? <Button className="btn btn-danger" onClick={removeInputFields}>-</Button> : ''}
+                                                {(inputFields.length !== 1) ? <Button className="btn btn-danger" onClick={() => removeInputFields(index)}>-</Button> : ''}
                                             </Col>
                                         </Row>
                                     )
