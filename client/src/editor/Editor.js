@@ -1,11 +1,17 @@
 import { default as React, useEffect } from 'react'
 import EditorJS from '@editorjs/editorjs'
 import Header from '@editorjs/header'
-import List from '@editorjs/list'
-import Link from '@editorjs/link'
 import SimpleImage from '@editorjs/simple-image'
 import Checklist from '@editorjs/checklist'
 import Quote from '@editorjs/quote'
+import Delimiter from '@editorjs/delimiter'
+import NestedList from '@editorjs/nested-list'
+import Table from '@editorjs/table'
+import CodeTool from '@editorjs/code'
+import Underline from '@editorjs/underline'
+import Marker from '@editorjs/marker'
+import InlineCode from '@editorjs/inline-code'
+import Paragraph from 'editorjs-paragraph-with-alignment'
 
 import { getDocument, saveDocument } from './editorRequests'
 import { useSelector } from 'react-redux'
@@ -41,18 +47,15 @@ function Editor() {
           class: Header,
           inlineToolbar: true
         },
+        paragraph: {
+          class: Paragraph,
+          inlineToolbar: true
+        },
         list: {
-          class: List,
+          class: NestedList,
           inlineToolbar: true
         },
-        link: {
-          class: Link,
-          inlineToolbar: true
-        },
-        image: {
-          class: SimpleImage,
-          inlineToolbar: true
-        },
+        image: SimpleImage,
         checklist: {
           class: Checklist,
           inlineToolbar: true
@@ -60,8 +63,20 @@ function Editor() {
         quote: {
           class: Quote,
           inlineToolbar: true
-        }
-      }
+        },
+        marker: {
+          class: Marker,
+          shortcut: 'CMD+SHIFT+M',
+        },
+        inlineCode: {
+          class: InlineCode
+        },
+        delimiter: Delimiter,
+        table: Table,
+        code: CodeTool,
+        underline: Underline,
+      },
+      defaultBlock: 'paragraph',
     })
 
     editor.isReady
