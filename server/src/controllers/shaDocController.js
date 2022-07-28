@@ -214,11 +214,9 @@ async function updateUsersFileSystem(sharedGroup, doc){
             await Users.findByIdAndUpdate(userId, {$inc: {[path]: 1}});
 
             i++
-        }
-        Responses.OkResponse(res, {message: ""})
-             
+        }    
     } catch (err) {
-        Responses.ServerError(res, {message: err.message})
+        throw err
     }
 }
 
