@@ -1,7 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { default as React, useEffect } from 'react'
 import EditorJS from '@editorjs/editorjs'
 import Header from '@editorjs/header'
+import List from '@editorjs/list'
+import Link from '@editorjs/link'
+import SimpleImage from '@editorjs/simple-image'
+import Checklist from '@editorjs/checklist'
+import Quote from '@editorjs/quote'
+
 import { getDocument, saveDocument } from './editorRequests'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -17,7 +22,7 @@ function Editor() {
   if (editorData === undefined) getDocument(documentId, token, userId, setEditorData)
   useEffect(() => {
     if (editorData !== undefined) initEditor()
-  }, [editorData]);
+  }, [editorData])
 
   // Editor configuration
   const initEditor = () => {
@@ -32,7 +37,30 @@ function Editor() {
       },
       autofocus: true,
       tools: {
-        header: Header,
+        header: {
+          class: Header,
+          inlineToolbar: true
+        },
+        list: {
+          class: List,
+          inlineToolbar: true
+        },
+        link: {
+          class: Link,
+          inlineToolbar: true
+        },
+        image: {
+          class: SimpleImage,
+          inlineToolbar: true
+        },
+        checklist: {
+          class: Checklist,
+          inlineToolbar: true
+        },
+        quote: {
+          class: Quote,
+          inlineToolbar: true
+        }
       }
     })
 
