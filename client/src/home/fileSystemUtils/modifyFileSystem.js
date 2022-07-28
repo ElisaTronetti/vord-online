@@ -88,6 +88,7 @@ export const createDocument = (fileMap, currentFolderId, documentId, documentNam
         name: documentName + '.txt',
         parentId: currentFolderId,
         ext: '.txt',
+        isShared: false
     }
     // Update parent folder to reference the new folder
     var parent = newFileMap[currentFolderId]
@@ -110,6 +111,7 @@ export const copyDocuments = (fileMap, files, dispatch) => {
             name: '(Copy)' + file.name,
             parentId: file.parentId,
             ext: '.txt',
+            isShared: false
         }
         // Update parent folder to reference the new folder
         var parent = newFileMap[file.parentId]
