@@ -33,7 +33,7 @@ export default function Home() {
       getFileSystem(id, token, dispatch)
     }, 5000);
     return () => clearInterval(interval)
-  }, []);
+  }, [id, token, dispatch]);
 
   // Trigger redirect if a document id is set in order to open it
   useEffect(() => { if (openDocumentId !== undefined) navigate('/editor', { state: { documentId: openDocumentId } }) }, [openDocumentId, navigate])
