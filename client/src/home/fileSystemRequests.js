@@ -8,9 +8,9 @@ export function getFileSystem(id, token, dispatch) {
         headers: { "token": token },
         dataType: 'json',
         success: function (result) {
-            let id = result.fileSystem.rootFolderId
+            let id = result.rootFolderId
             dispatch(setRootFolderId(id))
-            let fileMap = result.fileSystem.fileMap
+            let fileMap = result.fileMap
             dispatch(setFileMap(fileMap))
         },
         error: function () {
