@@ -16,7 +16,7 @@ export function shareDocument(userId, userEmail, inputFields, documentId, isShar
             createErrorToast('Error: impossible to share the document')
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + (isShared ? '/sharedDocuments/shareSharedDocument' : 'sharedDocuments/shareLocalDocument')
+        url: process.env.REACT_APP_SERVER + (isShared ? 'sharedDocuments/shareSharedDocument' : 'sharedDocuments/shareLocalDocument')
     })
 }
 
