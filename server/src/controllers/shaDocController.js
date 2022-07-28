@@ -184,7 +184,7 @@ async function shareSharedDocument(req, res){
 
 async function updateUsersFileSystem(sharedGroup, doc){
     try{
-        let i = 0, userId, user, path, newFile, rootFolderId
+        let i = 0, userId, user, path, newFile, rootFolderId, rootFolder
         const fileId = new ObjectId(doc._id)
 
         while(sharedGroup[i] !== undefined){
@@ -193,18 +193,34 @@ async function updateUsersFileSystem(sharedGroup, doc){
             user = await Users.findById(userId)
             rootFolderId = user.fileSystem.rootFolderId
 
-            newFile= {[fileId]:{
+            newFile = {
                 id : fileId,
                 name: doc.title + ".txt",
                 parentId: rootFolderId,
                 ext: ".txt",
                 isShared: true
-            }}
-
+            }
+            path = "fileSystem.fileMap" + fileId.toString()
             //insert new field in fileMap
-            path = "fileSystem.fileMap"
             await Users.findByIdAndUpdate(userId, { $set: {[path]: newFile} });
 
+           
+            //get root folder
+            rootFolder = user.fileSystem.fileMap[rootFolderId]
+
+            //update root folder (if necessary) and overwrite it in the database
+            if(!rootFolder.childrenIds){
+                rootFolder.childrenIds = []
+                rootFolder.childrenCount = 0
+            }
+            if(rootFolder.childrenIds.indexOf(fileId.toString()) < 0){
+                rootFolder.childrenIds.push(fileId.toString())
+                rootFolder.childrenCount++
+            }
+
+            path = "fileSystem.fileMap" + rootFolderId
+            await Users.findByIdAndUpdate(userId, { $set: {[path]: rootFolder}});
+            /*
             //insert new child in root folder
             path = "fileSystem.fileMap."+ rootFolderId + ".childrenIds"
             await Users.findByIdAndUpdate(userId, { $push: {[path]: fileId.toString()}});
@@ -212,7 +228,7 @@ async function updateUsersFileSystem(sharedGroup, doc){
             //increment root folder children count
             path = "fileSystem.fileMap."+ rootFolderId + ".childrenCount"
             await Users.findByIdAndUpdate(userId, {$inc: {[path]: 1}});
-
+            */
             i++
         }    
     } catch (err) {
