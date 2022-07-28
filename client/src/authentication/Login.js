@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
+import { LinkContainer } from 'react-router-bootstrap'
 
 import { userLogin } from './authenticationRequests'
 
@@ -48,7 +49,11 @@ export default function Login() {
                         </Form.Group>
                         <div className="text-center">
                             <Button variant="primary" onClick={tryLogin}>Login</Button>
-                            <p>Not a member? <a href="/signup">Register</a></p>
+                            <p>Not a member?
+                                <LinkContainer to="/signup">
+                                    <a>Register</a>
+                                </LinkContainer>
+                            </p>
                         </div>
                     </Form>
                 </div>
