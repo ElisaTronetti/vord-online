@@ -8,7 +8,7 @@ export const CreateFolder = defineFileAction({
         contextMenu: true,
         toolbar: true,
         tooltip: 'Create a folder',
-        group: 'Actions',
+        group: 'Create',
         icon: ChonkyIconName.folderCreate,
     },
 })
@@ -21,7 +21,7 @@ export const CreateDocument = defineFileAction({
         contextMenu: true,
         toolbar: true,
         tooltip: 'Create document',
-        group: 'Actions',
+        group: 'Create',
         icon: ChonkyIconName.text,
     },
 })

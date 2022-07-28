@@ -65,9 +65,16 @@ export default function Home() {
     []
   )
 
+  const actionsToDisable = [
+    ChonkyActions.SelectAllFiles.id,
+    ChonkyActions.SortFilesBySize.id,
+    ChonkyActions.SortFilesByDate.id,
+    ChonkyActions.ToggleHiddenFiles.id,
+  ]
+
   return (
     <div style={{ height: '100vh' }}>
-      <FullFileBrowser files={files} fileActions={fileActions} onFileAction={handleFileAction} folderChain={folderChain} />
+      <FullFileBrowser files={files} fileActions={fileActions} onFileAction={handleFileAction} folderChain={folderChain} disableDefaultFileActions={actionsToDisable}/>
       <CreateFolderModal show={createFolderModalShow} onHide={() => setCreateFolderModalShow(false)} currentFolderId={currentFolderId} />
       <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
       <ShareDocumentModal show={shareDocument !== undefined} onHide={() => setShareDocument(undefined)} shareDocument={shareDocument} />
