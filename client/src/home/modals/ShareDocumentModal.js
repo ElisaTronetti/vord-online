@@ -24,6 +24,7 @@ export default function CreateDocumentModal(props) {
         }])
     }
     const removeInputFields = (index) => {
+        console.log(index)
         const rows = [...inputFields]
         rows.splice(index, 1)
         setInputFields(rows)
@@ -104,7 +105,7 @@ export default function CreateDocumentModal(props) {
                                                 </Form.Group>
                                             </Col>
                                             <Col md={1} className="text-center">
-                                                {(inputFields.length !== 1) ? <Button className="btn btn-danger" onClick={removeInputFields}>-</Button> : ''}
+                                                {(inputFields.length !== 1) ? <Button className="btn btn-danger" onClick={() => removeInputFields(index)}>-</Button> : ''}
                                             </Col>
                                         </Row>
                                     )
