@@ -133,6 +133,9 @@ async function shareLocalDocument(req, res){
             //update each user sharedWithUser array
             await updateUsers(sharedGroup, doc, req.body.user._id)
 
+            //update shared group's respective file systems with the new file
+            await updateUsersFileSystem(sharedGroup, doc)
+
             //delete local document and send response
             await deleteDocument(req.body.user._id, req.body.documentId).then(()=>{
                 Responses.OkResponse(res, newShaDoc.sharedGroup)
@@ -159,6 +162,10 @@ async function shareSharedDocument(req, res){
 
         if(sharedGroup.length === 0){ Responses.OkResponse(res, {message: "the document is already shared with these users"})}
         else{
+            //update shared group's respective file systems with the new file
+            await updateUsersFileSystem(sharedGroup, doc)
+
+            //push new holders in the sharedGroup array of the shared document
             while(sharedGroup[i] !== undefined){
                 update = { $push: { "sharedGroup": sharedGroup[i] }}
                 await SharedDocuments.findByIdAndUpdate(new ObjectId(req.body.documentId), update)
@@ -168,41 +175,47 @@ async function shareSharedDocument(req, res){
             //update new holders sharedWithMe array
             await updateUsers(sharedGroup, doc, doc.author)
     
-            Responses.OkResponse(res, doc.sharedGroup)
+            Responses.OkResponse(res, sharedGroup)
         }       
     } catch (err) {
         Responses.ServerError(res, {message: err.message})
     }
 }
 
-async function tryUpdatingFS(req, res){
+async function updateUsersFileSystem(sharedGroup, doc){
     try{
-        //insert new field in fileMap
-        const user = await Users.findById(new ObjectId(req.body.userId))
-        const fileId = new ObjectId()
-        const newFile= {[fileId]:{
-            _id : fileId.toString(),
-            name: "prova"+".txt",
-            parentId: user.fileSystem.rootFolderId,
-            ext: ".txt",
-            isShared: true
-        }}
-        console.log(newFile)
-        let path = "fileSystem.fileMap."
-        path = path.concat(fileId.toString())
-        console.log(path)
+        let i = 0, userId, user, path, newFile, rootFolderId
+        const fileId = new ObjectId(doc._id)
 
-        await Users.updateOne({_id: new ObjectId(req.body.userId)}, {
-            $set: {[path]: newFile}
-        });
+        while(sharedGroup[i] !== undefined){
 
-        //insert new child in root folder
-        path = "fileSystem.fileMap."+ user.fileSystem.rootFolderId + ".childrenIds"
-        await Users.updateOne({_id: new ObjectId(req.body.userId)}, {
-            $push: {[path]: fileId.toString()}
-        });
-        //TODO incrementare childrenCount   
-        Responses.OkResponse(res, {message: "il mondo è meraviglioso"})
+            userId = new ObjectId(sharedGroup[i]._id)
+            user = await Users.findById(userId)
+            rootFolderId = user.fileSystem.rootFolderId
+
+            newFile= {[fileId]:{
+                _id : fileId,
+                name: doc.title + ".txt",
+                parentId: rootFolderId,
+                ext: ".txt",
+                isShared: true
+            }}
+
+            //insert new field in fileMap
+            path = "fileSystem.fileMap." + fileId.toString()
+            await Users.findByIdAndUpdate(userId, { $set: {[path]: newFile} });
+
+            //insert new child in root folder
+            path = "fileSystem.fileMap."+ rootFolderId + ".childrenIds"
+            await Users.findByIdAndUpdate(userId, { $push: {[path]: fileId.toString()}});
+
+            //increment root folder children count
+            path = "fileSystem.fileMap."+ rootFolderId + ".childrenCount"
+            await Users.findByIdAndUpdate(userId, {$inc: {[path]: 1}});
+
+            i++
+        }
+        Responses.OkResponse(res, {message: ""})
              
     } catch (err) {
         Responses.ServerError(res, {message: err.message})
@@ -211,6 +224,5 @@ async function tryUpdatingFS(req, res){
 
 module.exports = {
     shareLocalDocument,
-    shareSharedDocument,
-    tryUpdatingFS
+    shareSharedDocument
 }

@@ -22,6 +22,4 @@ router.post("/sharedDocuments/shareLocalDocument",  (req, res) => controller.sha
 //body param: same as before
 router.post("/sharedDocuments/shareSharedDocument",(req, res) => controller.shareSharedDocument(req, res));
 
-router.post("/sharedDocuments/tryUpdatingFS",(req, res) => controller.tryUpdatingFS(req, res));
-
 module.exports = router;
