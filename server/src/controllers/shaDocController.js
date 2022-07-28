@@ -194,7 +194,7 @@ async function updateUsersFileSystem(sharedGroup, doc){
             rootFolderId = user.fileSystem.rootFolderId
 
             newFile= {[fileId]:{
-                _id : fileId,
+                id : fileId,
                 name: doc.title + ".txt",
                 parentId: rootFolderId,
                 ext: ".txt",
@@ -202,7 +202,7 @@ async function updateUsersFileSystem(sharedGroup, doc){
             }}
 
             //insert new field in fileMap
-            path = "fileSystem.fileMap." + fileId.toString()
+            path = "fileSystem.fileMap"
             await Users.findByIdAndUpdate(userId, { $set: {[path]: newFile} });
 
             //insert new child in root folder

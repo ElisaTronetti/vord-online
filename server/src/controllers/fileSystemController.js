@@ -22,17 +22,9 @@ async function getUserFileSystem(req, res){
         res.status(406).json({err: "missing user id"})
     } else {
         try{
-                /*const result =  await getFileSystem(req.query._id);
-                if(result !== null){*/
-                Users
-                .findById(req.query._id)
-                .select("fileSystem")
-                .lean()
-                .exec(function (err, fileSystem) {
-                        Responses.OkResponse(res, fileSystem);//res.end(JSON.stringify(fileSystem));
-                    });
-               
-            
+            const user = await Users.findById(req.query._id)
+            Responses.OkResponse(res, user.fileSystem);
+                
         } catch(err){
             Responses.ServerError(res, {message: err.message});
         }
