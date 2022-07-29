@@ -3,7 +3,7 @@ const Users = require("../models/userModel")
 
 const verifyEmails = async (req, res, next) => {
   const sharedWith = req.body.sharedWith
-  console.log(sharedWith)
+
   if (sharedWith === undefined) {
     return res.status(403).send("sharedWith array not found");  //sharedWith doesn't exist (bad request)
   }
