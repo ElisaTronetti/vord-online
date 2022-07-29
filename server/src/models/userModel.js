@@ -22,19 +22,13 @@ let UserSchema = new mongoose.Schema({
     token:{
         type:String
     },
-    documents: [{            //documents of the user
+    documents: [{            //local documents of the user
         title: String,
         time: Number,
         blocks: Object,
         version: String
     }],
-    fileSystem: Object,
-    sharedWithUser:[{
-        title: String,
-        author: String,
-        role: Number,
-        localPath: String
-    }]
+    fileSystem: Object 
 })
 
 //hash password before saving it in the db

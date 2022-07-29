@@ -60,7 +60,7 @@ async function generateSharedGroup(sharedGroupArray){
             id = await getUserId(sharedGroupArray[i].email)
             _id = new ObjectId(id)
             email = sharedGroupArray[i].email
-            role = sharedGroupArray[i].role
+            role = parseInt(sharedGroupArray[i].role, 10)
 
             member = { _id, email, role }
             result.push(member)
@@ -73,26 +73,6 @@ async function generateSharedGroup(sharedGroupArray){
         throw err
     }
    
-}
-
-async function updateUsers(sharedGroup, doc, authorId){
-    let i = 0, newFileSharedWithUser, update, filter
-    
-    try{
-        while (sharedGroup[i] !== undefined){
-            newFileSharedWithUser = { _id: new ObjectId(doc._id),
-                                        title: doc.title,
-                                        author: new ObjectId(authorId),
-                                        role: sharedGroup[i].role,
-                                        }
-            update = {$push: {"sharedWithUser": newFileSharedWithUser}}
-            filter = {_id : sharedGroup[i]._id}
-            await Users.findOneAndUpdate(filter, update)
-            i = i + 1
-        }
-    } catch (err) {
-        throw err
-    }
 }
 
 async function checkIntersections(toAdd, alreadyPresent){
@@ -119,15 +99,13 @@ async function shareLocalDocument(req, res){
             let usersArray = req.body.sharedWith
             const email = req.body.user.email, role = 3
             usersArray.push({email, role})
+            console.log(usersArray)
             //get shared group id's and generate shared group array
             const sharedGroup = await generateSharedGroup(usersArray)
 
             //generate shared document and save it to the database
             let newShaDoc = SharedDocumentFactory.createSharedDocument(req.body.user, doc, sharedGroup)
             await newShaDoc.save()
-
-            //update each user sharedWithUser array
-            await updateUsers(sharedGroup, doc, req.body.user._id)
 
             //update shared group's respective file systems with the new file
             await updateUsersFileSystem(sharedGroup, doc)
@@ -158,18 +136,15 @@ async function shareSharedDocument(req, res){
 
         if(sharedGroup.length === 0){ Responses.OkResponse(res, {message: "the document is already shared with these users"})}
         else{
-            //update shared group's respective file systems with the new file
-            await updateUsersFileSystem(sharedGroup, doc)
-
             //push new holders in the sharedGroup array of the shared document
             while(sharedGroup[i] !== undefined){
                 update = { $push: { "sharedGroup": sharedGroup[i] }}
                 await SharedDocuments.findByIdAndUpdate(new ObjectId(req.body.documentId), update)
                 i = i + 1
             }
-    
-            //update new holders sharedWithMe array
-            await updateUsers(sharedGroup, doc, doc.author)
+
+            //update shared group's respective file systems with the new file
+            await updateUsersFileSystem(sharedGroup, doc)
     
             Responses.OkResponse(res, sharedGroup)
         }       
@@ -195,7 +170,8 @@ async function updateUsersFileSystem(sharedGroup, doc){
                 parentId: rootFolderId,
                 ext: ".txt",
                 isShared: true,
-                color: "#27c906"
+                color: "#27c906",
+                role: sharedGroup[i].role
             }
 
             //insert new field in fileMap

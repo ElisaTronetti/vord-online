@@ -1,5 +1,6 @@
 const SharedDocuments = require('../models/sharedDocumentsModel')
 const ObjectId = require('mongoose').Types.ObjectId
+const Responses = require("../controllers/responses/response")
 
 module.exports = function (requiredClearance) {
   return async function (req, res, next) {
@@ -24,7 +25,7 @@ module.exports = function (requiredClearance) {
             next();
           }      
         } catch (err) {
-          res.status(401).send("Operation forbidden: the user does not possess the requisites to perform the action.");
+          return Responses.ServerError(res, {message: err.message});
         }               
       }    
     }
