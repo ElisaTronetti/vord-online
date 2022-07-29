@@ -22,6 +22,10 @@ const verifyEmails = require('../middleware/verifyEmails')
 router.post("/sharedDocuments/shareLocalDocument", verifyEmails, (req, res) => controller.shareLocalDocument(req, res));
 
 //body param: same as before
-router.post("/sharedDocuments/shareSharedDocument", clearance(2), verifyEmails, (req, res) => controller.shareSharedDocument(req, res));
+router.post("/sharedDocuments/shareSharedDocument", clearance(3), verifyEmails, (req, res) => controller.shareSharedDocument(req, res));
+
+router.post("/sharedDocuments/manageSharedGroup", clearance(3), verifyEmails, (req, res) => controller.manageSharedGroup(req, res));
+
+router.get("/sharedDocuments/getSharedGroup", clearance(1), (req, res) => controller.getSharedGroup(req, res));
 
 module.exports = router;

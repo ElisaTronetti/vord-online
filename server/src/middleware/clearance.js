@@ -4,11 +4,17 @@ const Responses = require("../controllers/responses/response")
 
 module.exports = function (requiredClearance) {
   return async function (req, res, next) {
-    const documentId = req.body.documentId || req.headers["documentId"]
+    const documentId = req.body.documentId || req.headers["documentid"]
     if(!documentId) {
       res.status(403).send("Document id not found");
     } else {
-      const userId = req.body.user._id || req.headers["userId"]
+      const user = req.body.user
+      let userId = undefined
+      if(!user){
+        userId = req.headers["userid"]
+      } else {
+        userId = req.body.user._id
+      }
       if(!userId) {
         res.status(403).send("User id not found");
       } else {

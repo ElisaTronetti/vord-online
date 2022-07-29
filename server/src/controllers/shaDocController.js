@@ -67,7 +67,51 @@ async function shareSharedDocument(req, res){
     }
 }
 
+async function manageSharedGroup(req, res){
+    try{
+        const doc = await Utils.getSharedDocument(req.body.documentId)
+        if(!doc || doc.alreadyOpen){
+            Responses.ServerError(res, {message: "File already opened or non existing"})
+        } else {
+            const docId = new ObjectId(doc._id)
+
+            //empty the shared group
+            await SharedDocuments.findByIdAndUpdate(docId, { $set: { "sharedGroup": [] } })
+            
+            //re-generate sharedGroup with the body.sharedWith array and the user who has used this operation. 
+            let i = 0, userArray = req.body.sharedWith
+            const role = 3, email = req.body.user.email
+            userArray.push({email, role})
+            const sharedGroup = await Utils.generateSharedGroup(userArray)
+
+            //update shared group and return it
+            while(sharedGroup[i] !== undefined){
+                await SharedDocuments.findByIdAndUpdate(docId, {$push: {"sharedGroup": sharedGroup[i] } } )
+                i++
+            }
+            
+            const result = await Utils.getSharedGroup(req.body.documentId)
+            Responses.OkResponse(res, result)
+        }
+    } catch (err){
+        Responses.ServerError(res, {message: err.message})
+    }
+}
+
+async function getSharedGroup(req, res){
+    try{
+        SharedDocuments.findById(new ObjectId(req.headers["documentid"])).then((doc)=>{
+            console.log(doc.sharedGroup)
+            Responses.OkResponse(res, doc.sharedGroup)
+        })
+    } catch (err){
+        Responses.ServerError(res, {message: err.message})
+    }
+}
+
 module.exports = {
     shareLocalDocument,
-    shareSharedDocument
+    shareSharedDocument,
+    manageSharedGroup,
+    getSharedGroup
 }

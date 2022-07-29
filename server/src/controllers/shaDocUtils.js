@@ -137,6 +137,17 @@ async function updateUsersFileSystem(sharedGroup, doc){
     }
 }
 
+async function getSharedGroup(documentId){
+    try{
+        SharedDocuments.findById(new ObjectId(documentId)).then((res)=>{
+            console.log(res.sharedGroup)
+            return res.sharedGroup
+        })
+    } catch(err){
+        throw err
+    }
+}
+
 module.exports = {
     deleteDocument,
     getLocalDocument,
@@ -144,5 +155,6 @@ module.exports = {
     getUserId,
     generateSharedGroup,
     checkIntersections,
-    updateUsersFileSystem
+    updateUsersFileSystem,
+    getSharedGroup
 }
