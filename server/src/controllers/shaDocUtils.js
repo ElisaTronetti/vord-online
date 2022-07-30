@@ -90,19 +90,21 @@ async function checkIntersections(toAdd, alreadyPresent){
 
 async function updateUsersFileSystem(sharedGroup, doc){
     try{
-        let i = 0, userId, user, path, newFile, rootFolderId, rootFolder
+        let i = 0, userId, user, path, newFile, folderId, folder
         const fileId = new ObjectId(doc._id)
 
         while(sharedGroup[i] !== undefined){
 
             userId = new ObjectId(sharedGroup[i]._id)
             user = await Users.findById(userId)
-            rootFolderId = user.fileSystem.rootFolderId
+            if(sharedGroup[i].originalPath !== undefined){ folderId = sharedGroup[i].originalPath}
+            else{folderId = user.fileSystem.rootFolderId}
+            
 
             newFile = {
                 id : fileId,
                 name: doc.title + ".txt",
-                parentId: rootFolderId,
+                parentId: folderId,
                 ext: ".txt",
                 isShared: true,
                 color: "#27c906",
@@ -115,20 +117,20 @@ async function updateUsersFileSystem(sharedGroup, doc){
 
            
             //get root folder
-            rootFolder = user.fileSystem.fileMap[rootFolderId]
+            folder = user.fileSystem.fileMap[folderId]
 
             //update root folder (if necessary) and overwrite it in the database
-            if(!rootFolder.childrenIds){
-                rootFolder.childrenIds = []
-                rootFolder.childrenCount = 0
+            if(!folder.childrenIds){
+                folder.childrenIds = []
+                folder.childrenCount = 0
             }
-            if(rootFolder.childrenIds.indexOf(fileId.toString()) < 0){
-                rootFolder.childrenIds.push(fileId.toString())
-                rootFolder.childrenCount++
+            if(folder.childrenIds.indexOf(fileId.toString()) < 0){
+                folder.childrenIds.push(fileId.toString())
+                folder.childrenCount++
             }
 
-            path = "fileSystem.fileMap." + rootFolderId
-            await Users.findByIdAndUpdate(userId, { $set: {[path]: rootFolder}});
+            path = "fileSystem.fileMap." + folderId
+            await Users.findByIdAndUpdate(userId, { $set: {[path]: folder}});
            
             i++
         }    

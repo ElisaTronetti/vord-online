@@ -3,6 +3,7 @@ const Responses = require("./responses/response")
 const SharedDocuments = require('../models/sharedDocumentsModel')
 const SharedDocumentFactory = require('../models/factories/sharedDocument')
 const Utils =  require("./shaDocUtils")
+const Users = require('../models/userModel')
 
 //share local document, create shared document, delete local document
 async function shareLocalDocument(req, res){
@@ -10,12 +11,16 @@ async function shareLocalDocument(req, res){
         //get local document
         const doc = await Utils.getLocalDocument(req.body.user._id, req.body.documentId)
         if(doc !== undefined){
-            let usersArray = req.body.sharedWith
-            const email = req.body.user.email, role = 3
-            usersArray.push({email, role})
-            console.log(usersArray)
+            let usersArray = req.body.sharedWith, originalPath = undefined
+            const email = req.body.user.email, role = 3, _id = new ObjectId(req.body.user._id)
+            
+            //find the original parent folder of the local file to reinsert the shared version correctly in original autor's filesystem
+            const user = await Users.findById(_id)
+            originalPath = user.fileSystem.fileMap[[req.body.documentId]].parentId
+
             //get shared group id's and generate shared group array
             const sharedGroup = await Utils.generateSharedGroup(usersArray)
+            sharedGroup.push({_id, email, role, originalPath})
 
             //generate shared document and save it to the database
             let newShaDoc = SharedDocumentFactory.createSharedDocument(req.body.user, doc, sharedGroup)
