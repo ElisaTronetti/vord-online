@@ -7,11 +7,17 @@ async function createNewDocument(req, res){
     try {
         const newId = new ObjectId(req.body.newDocumentId)
         const filter = { _id: new ObjectId(req.body._id) } //userId
+        let blocks
+        if(req.body.blocks !== undefined){
+            blocks = req.body.blocks
+        } else {
+            blocks = []
+        }
 
         const newDocument = {   _id: newId,
                                 title: req.body.title, 
                                 time: req.body.time, 
-                                blocks: [], 
+                                blocks: blocks, 
                                 version: "2.25.0"}
         const update = { $push: { "documents": newDocument }}
         
