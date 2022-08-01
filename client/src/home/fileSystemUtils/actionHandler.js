@@ -21,7 +21,7 @@ export const useActionHandler = (id, token, fileMap,
                 }
             } else if (data.id === CopyDocument.id) {
                 // Copy files
-                copyDocuments(fileMap, data.state.selectedFilesForAction, dispatch)
+                copyDocuments(id, token, fileMap, data.state.selectedFilesForAction, dispatch)
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 deleteFiles(fileMap, data.state.selectedFilesForAction, dispatch)
                 // Delete documents from user

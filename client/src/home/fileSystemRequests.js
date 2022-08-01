@@ -102,3 +102,31 @@ function createDeleteDocumentParams(id, documentId) {
         documentId: documentId,
     })
 }
+
+export function copyDocument(id, token, originalDocumentId, documentId, title) {
+    $.ajax({
+        contentType: 'application/json',
+        headers: { 'token': token },
+        dataType: 'json',
+        data: copyDocumentParams(id, originalDocumentId, documentId, title),
+        success: function () {
+            console.log("Copied document")
+        },
+        error: function () {
+            createErrorToast('Error: impossible to copy document')
+        },
+        type: 'POST',
+        url: process.env.REACT_APP_SERVER + 'document/createNewDocument'
+    })
+}
+
+// Create body params for copy document
+function copyDocumentParams(id, originalDocumentId, documentId, title) {
+    return JSON.stringify({
+        _id: id,
+        originalDocumentId: originalDocumentId,
+        newDocumentId: documentId,
+        title: title,
+        time: new Date().getTime(),
+    })
+}

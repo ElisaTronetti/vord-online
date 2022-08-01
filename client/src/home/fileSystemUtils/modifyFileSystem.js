@@ -2,7 +2,7 @@ import { setFileMap } from '../../redux/fileSystemData/actions'
 import { __assign, __spreadArray } from './dataStructureUtils'
 import ObjectID from 'bson-objectid'
 import { FileHelper } from 'chonky'
-import { deleteDocument } from '../fileSystemRequests'
+import { deleteDocument, copyDocument } from '../fileSystemRequests'
 
 import { createSuccessToast } from '../../commonComponents/Toast'
 
@@ -99,8 +99,7 @@ export const createDocument = (fileMap, currentFolderId, documentId, documentNam
     createSuccessToast('Document ' + documentName + ' created correctly')
 }
 
-// TODO call http request to create a copy of a file
-export const copyDocuments = (fileMap, files, dispatch) => {
+export const copyDocuments = (id, token, fileMap, files, dispatch) => {
     // Create a copy of fileMap
     const newFileMap = { ...fileMap }
     files.forEach((file) => {
@@ -117,6 +116,8 @@ export const copyDocuments = (fileMap, files, dispatch) => {
         var parent = newFileMap[file.parentId]
         var newDestinationChildrenIds = __spreadArray(__spreadArray([], parent.childrenIds, true), [documentId], false)
         newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
+        // Create document copy
+        copyDocument(id, token, file.id, documentId, '(Copy)' + file.name)
     })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
