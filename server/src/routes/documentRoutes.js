@@ -3,7 +3,7 @@ const router = express.Router();
 const controller = require('../controllers/documentController');
 const auth = require("../middleware/auth");
 
-//body param: _id (user id), token, title, blocks (optional)
+//body param: _id (user id), token, title, originalDocumentId
 router.post("/document/createNewDocument", auth, (req, res) => controller.createNewDocument(req, res));
 
 //body param: userId, documentId

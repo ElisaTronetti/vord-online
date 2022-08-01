@@ -1,11 +1,12 @@
 import $ from 'jquery'
 import { createErrorToast, createSuccessToast } from "../commonComponents/Toast"
 
-export function shareDocument(userId, userEmail, inputFields, documentId, isShared, props, resetInputFields) {
+export function shareDocument(user, inputFields, documentId, isShared, props, resetInputFields) {
     $.ajax({
         contentType: 'application/json',
+        headers: { "token": user.token },
         dataType: 'json',
-        data: createShareDocumentParams(userId, userEmail, inputFields, documentId),
+        data: createShareDocumentParams(user, inputFields, documentId),
         success: function () {
             createSuccessToast("Document shared correctly")
             props.onHide()
@@ -21,13 +22,13 @@ export function shareDocument(userId, userEmail, inputFields, documentId, isShar
 }
 
 // Create body params for share document
-function createShareDocumentParams(userId, userEmail, inputFields, documentId) {
+function createShareDocumentParams(user, inputFields, documentId) {
     return JSON.stringify({
         user: {
-            _id: userId,
-            email: userEmail
+            _id: user.id,
+            email: user.email
         },
         sharedWith: inputFields,
-        documentId: documentId
+        documentId: documentId,
     })
 }

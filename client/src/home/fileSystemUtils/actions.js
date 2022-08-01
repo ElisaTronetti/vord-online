@@ -30,7 +30,7 @@ export const CreateDocument = defineFileAction({
 export const CopyDocument = defineFileAction({
     id: 'copy_document',
     requiresSelection: true,
-    fileFilter: file => file && !file.isDir,
+    fileFilter: file => file && !file.isDir && !file.isShared,
     hotkeys: ['ctrl+c'],
     button: {
         name: 'Copy selection',

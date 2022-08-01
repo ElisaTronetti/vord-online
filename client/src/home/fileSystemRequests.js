@@ -2,12 +2,15 @@ import $ from 'jquery'
 import { createErrorToast } from '../commonComponents/Toast'
 import { setRootFolderId, setFileMap } from '../redux/fileSystemData/actions'
 
-export function getFileSystem(id, token, dispatch) {
+export function getFileSystem(user, dispatch) {
     $.ajax({
         contentType: 'application/json',
-        headers: { "token": token },
+        headers: { "token": user.token },
         dataType: 'json',
+        data: createGetFileSystemParams(user.id),
         success: function (result) {
+            // No need to check the similarity
+            // A component will not rerender if the state is the same
             let id = result.rootFolderId
             dispatch(setRootFolderId(id))
             let fileMap = result.fileMap
@@ -16,18 +19,24 @@ export function getFileSystem(id, token, dispatch) {
         error: function () {
             console.log('error')
         },
-        processData: false,
         type: 'GET',
-        url: process.env.REACT_APP_SERVER + "fileSystem/getUserFileSystem?_id=" + id
+        url: process.env.REACT_APP_SERVER + "fileSystem/getUserFileSystem?_id=" + user.id
     })
 }
 
-export function updateFileSystem(id, token, fileSystem) {
+// Create body params for get file system
+function createGetFileSystemParams(id) {
+    return JSON.stringify({
+        _id: id
+    })
+}
+
+export function updateFileSystem(user, fileSystem) {
     $.ajax({
         contentType: 'application/json',
-        headers: { 'token': token },
+        headers: { 'token': user.token },
         dataType: 'json',
-        data: createFileSystemParams(id, fileSystem),
+        data: createFileSystemParams(user.id, fileSystem),
         success: function () {
             console.log("Updated file system")
         },
@@ -47,12 +56,12 @@ function createFileSystemParams(id, fileSystem) {
     })
 }
 
-export function createNewDocument(id, token, documentId, title) {
+export function createNewDocument(user, documentId, title) {
     $.ajax({
         contentType: 'application/json',
-        headers: { 'token': token },
+        headers: { 'token': user.token },
         dataType: 'json',
-        data: createDocumentParams(id, documentId, title),
+        data: createDocumentParams(user.id, documentId, title),
         success: function () {
             console.log("Created new document")
         },
@@ -74,13 +83,13 @@ function createDocumentParams(id, documentId, title) {
     })
 }
 
-export function deleteDocument(id, token, documentId) {
+export function deleteDocument(user, documentId) {
 
     $.ajax({
         contentType: 'application/json',
-        headers: { 'token': token },
+        headers: { 'token': user.token },
         dataType: 'json',
-        data: createDeleteDocumentParams(id, documentId),
+        data: createDeleteDocumentParams(user.id, documentId),
         success: function () {
             console.log("Document deleted")
         },
@@ -98,5 +107,33 @@ function createDeleteDocumentParams(id, documentId) {
     return JSON.stringify({
         userId: id,
         documentId: documentId,
+    })
+}
+
+export function copyDocument(user, originalDocumentId, documentId, title) {
+    $.ajax({
+        contentType: 'application/json',
+        headers: { 'token': user.token },
+        dataType: 'json',
+        data: copyDocumentParams(user.id, originalDocumentId, documentId, title),
+        success: function () {
+            console.log("Copied document")
+        },
+        error: function () {
+            createErrorToast('Error: impossible to copy document')
+        },
+        type: 'POST',
+        url: process.env.REACT_APP_SERVER + 'document/createNewDocument'
+    })
+}
+
+// Create body params for copy document
+function copyDocumentParams(id, originalDocumentId, documentId, title) {
+    return JSON.stringify({
+        _id: id,
+        originalDocumentId: originalDocumentId,
+        newDocumentId: documentId,
+        title: title,
+        time: new Date().getTime(),
     })
 }

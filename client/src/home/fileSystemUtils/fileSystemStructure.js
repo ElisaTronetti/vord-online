@@ -10,7 +10,8 @@ let emptyFileSystem = '{'+
           '"name":"Home",'+
           '"isDir":true,'+
           '"childrenIds":[],'+
-          '"childrenCount":0'+
+          '"childrenCount":0,'+
+          '"isShared":false'+
        '}'+
     '}'+
  '}'

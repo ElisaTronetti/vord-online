@@ -1,6 +1,7 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Responses = require("./responses/response")
 const Users = require('../models/userModel')
+const Utils =  require("./shaDocUtils")
 
 async function createNewDocument(req, res){
 
@@ -8,8 +9,10 @@ async function createNewDocument(req, res){
         const newId = new ObjectId(req.body.newDocumentId)
         const filter = { _id: new ObjectId(req.body._id) } //userId
         let blocks
-        if(req.body.blocks !== undefined){
-            blocks = req.body.blocks
+        if(req.body.originalDocumentId !== undefined){
+            //get local document
+            const originalDocument = await Utils.getLocalDocument(req.body._id, req.body.originalDocumentId)
+            blocks = originalDocument.blocks
         } else {
             blocks = []
         }

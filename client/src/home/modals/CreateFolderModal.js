@@ -9,11 +9,19 @@ import { createFolder } from '../fileSystemUtils/modifyFileSystem'
 export default function CreateFolderModal(props) {
     const [inputFolderName, setInputFolderName] = useState("")
     const dispatch = useDispatch()
-    let fileMap = useSelector(state => state.fileSystemData.fileMap)
+
+    const user = {
+        id: useSelector(state => state.userData.id),
+        token: useSelector(state => state.userData.token)
+    }
+    const fileSystem = {
+        rootFolderId: useSelector(state => state.fileSystemData.rootFolderId),
+        fileMap: useSelector(state => state.fileSystemData.fileMap)
+    }
 
     function tryCreateFolder() {
         if (inputFolderName !== "") {
-            createFolder(fileMap, props.currentFolderId, inputFolderName, dispatch)
+            createFolder(user, fileSystem, props.currentFolderId, inputFolderName, dispatch)
             props.onHide()
         }
     }
