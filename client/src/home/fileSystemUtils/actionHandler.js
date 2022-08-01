@@ -4,7 +4,7 @@ import { deleteFiles, moveFiles, deleteDocuments, copyDocuments} from './modifyF
 import { CopyDocument, CreateDocument, ShareDocument } from './actions'
 
 // Check the action and perform the specified function
-export const useActionHandler = (id, token, rootFolderId, fileMap,
+export const useActionHandler = (user, rootFolderId, fileMap,
     setCreateFolderModalShow, setCreateDocumentModalShow,
     setShareDocument, setCurrentFolderId, setDocumentId, dispatch) => {
     return useCallback(
@@ -21,15 +21,14 @@ export const useActionHandler = (id, token, rootFolderId, fileMap,
                 }
             } else if (data.id === CopyDocument.id) {
                 // Copy files
-                copyDocuments(id, token, rootFolderId, fileMap, data.state.selectedFilesForAction, dispatch)
+                copyDocuments(user, rootFolderId, fileMap, data.state.selectedFilesForAction, dispatch)
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
-                deleteFiles(id, token, rootFolderId, fileMap, data.state.selectedFilesForAction, dispatch)
+                deleteFiles(user, rootFolderId, fileMap, data.state.selectedFilesForAction, dispatch)
                 // Delete documents from user
-                deleteDocuments(id, token, data.state.selectedFilesForAction)
+                deleteDocuments(user, data.state.selectedFilesForAction)
             } else if (data.id === ChonkyActions.MoveFiles.id) {
                 moveFiles(
-                    id,
-                    token,
+                    user,
                     rootFolderId,
                     fileMap,
                     data.payload.files,
@@ -48,6 +47,6 @@ export const useActionHandler = (id, token, rootFolderId, fileMap,
                 setShareDocument(data.state.selectedFilesForAction)
             }
         },
-        [id, token, rootFolderId, fileMap, setCurrentFolderId, setShareDocument, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
+        [user, rootFolderId, fileMap, setCurrentFolderId, setShareDocument, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
     )
 }

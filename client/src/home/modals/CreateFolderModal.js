@@ -10,14 +10,16 @@ export default function CreateFolderModal(props) {
     const [inputFolderName, setInputFolderName] = useState("")
     const dispatch = useDispatch()
 
-    let id = useSelector(state => state.userData.id)
-    let token = useSelector(state => state.userData.token)
+    const user = {
+        id: useSelector(state => state.userData.id),
+        token: useSelector(state => state.userData.token)
+    }
     let rootFolderId = useSelector(state => state.fileSystemData.rootFolderId)
     let fileMap = useSelector(state => state.fileSystemData.fileMap)
 
     function tryCreateFolder() {
         if (inputFolderName !== "") {
-            createFolder(id, token, rootFolderId, fileMap, props.currentFolderId, inputFolderName, dispatch)
+            createFolder(user, rootFolderId, fileMap, props.currentFolderId, inputFolderName, dispatch)
             props.onHide()
         }
     }

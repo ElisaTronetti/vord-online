@@ -4,18 +4,19 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { CreateDocument, CreateFolder, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
-import { updateFileSystem, getFileSystem } from './fileSystemRequests'
+import { getFileSystem } from './fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
-import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
 
 import CreateFolderModal from './modals/CreateFolderModal'
 import CreateDocumentModal from './modals/CreateDocumentModal'
 import ShareDocumentModal from './modals/ShareDocumentModal'
 
 export default function Home() {
-  let id = useSelector(state => state.userData.id)
-  let token = useSelector(state => state.userData.token)
+  const user = {
+    id: useSelector(state => state.userData.id),
+    token: useSelector(state => state.userData.token)
+  }
   let rootFolderId = useSelector(state => state.fileSystemData.rootFolderId)
   let fileMap = useSelector(state => state.fileSystemData.fileMap)
 
@@ -30,26 +31,18 @@ export default function Home() {
   useEffect(() => {
     // Ask periodically for the file system update
     const interval = setInterval(() => {
-      getFileSystem(id, token, dispatch)
+      getFileSystem(user, dispatch)
     }, 5000);
     return () => clearInterval(interval)
-  }, [id, token, dispatch])
+  })
 
   // Trigger redirect if a document id is set in order to open it
   useEffect(() => { if (openDocumentId !== undefined) navigate('/editor', { state: { documentId: openDocumentId } }) }, [openDocumentId, navigate])
 
-  // Trigger used to update the file system on the server when something changes
-  /* useEffect(() => {
-    let fileSystem = recreateFileSystem(rootFolderId, fileMap)
-    // Calling HTTP request
-    updateFileSystem(id, token, fileSystem)
-  }, [rootFolderId, fileMap, id, token])*/
-
   // Initialize data for the file system library
   const files = useFiles(fileMap, currentFolderId)
   const handleFileAction = useActionHandler(
-    id,
-    token,
+    user,
     rootFolderId,
     fileMap,
     setCreateFolderModalShow,

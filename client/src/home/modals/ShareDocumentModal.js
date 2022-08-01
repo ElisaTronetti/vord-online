@@ -39,15 +39,17 @@ export default function CreateDocumentModal(props) {
         setInputFields(list)
     }
 
-    let id = useSelector(state => state.userData.id)
-    let email = useSelector(state => state.userData.email)
+    const user = {
+        id: useSelector(state => state.userData.id),
+        token: useSelector(state => state.userData.token),
+        email: useSelector(state => state.userData.email)
+    }
 
     function tryShareDocument() {
         const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
         const document = props.shareDocument[0]
         if (!isEmpty) {
-            console.log(document)
-            shareDocument(id, email, inputFields, document.id, document.isShared, props, resetInputFields)
+            shareDocument(user, inputFields, document.id, document.isShared, props, resetInputFields)
         } else {
             createErrorToast('Insert all the required data')
         }
