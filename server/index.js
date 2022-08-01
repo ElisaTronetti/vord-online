@@ -1,3 +1,5 @@
+import io from "socket.io";
+import { teaserSocketLockHandler } from "./middleware/teaserLock";
 const bodyParser = require('body-parser')
 const express = require('express');
 const app = express();
@@ -25,6 +27,10 @@ app.use(sharedDocumentRoutes);
 app.use(bodyParser.json());
 
 const port = process.env.PORT;
-app.listen(port, ()=>{
+const server = app.listen(port, ()=>{
     console.log('Listening on port ' + port)
 })
+
+// Create a socket and apply teaser locking listener on it
+const socket = io(server);
+teaserSocketLockHandler(socket);
