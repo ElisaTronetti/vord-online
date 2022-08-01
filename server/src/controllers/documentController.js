@@ -13,7 +13,6 @@ async function createNewDocument(req, res){
             //get local document
             const originalDocument = await Utils.getLocalDocument(req.body._id, req.body.originalDocumentId)
             blocks = originalDocument.blocks
-            console.log(blocks)
         } else {
             blocks = []
         }
