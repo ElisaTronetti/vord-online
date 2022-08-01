@@ -8,6 +8,8 @@ export function getFileSystem(id, token, dispatch) {
         headers: { "token": token },
         dataType: 'json',
         success: function (result) {
+            // No need to check the similarity
+            // A component will not rerender if the state is the same
             let id = result.rootFolderId
             dispatch(setRootFolderId(id))
             let fileMap = result.fileMap
