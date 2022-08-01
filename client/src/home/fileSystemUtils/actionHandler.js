@@ -4,7 +4,7 @@ import { deleteFiles, moveFiles, deleteDocuments, copyDocuments} from './modifyF
 import { CopyDocument, CreateDocument, ShareDocument } from './actions'
 
 // Check the action and perform the specified function
-export const useActionHandler = (id, token, fileMap,
+export const useActionHandler = (id, token, rootFolderId, fileMap,
     setCreateFolderModalShow, setCreateDocumentModalShow,
     setShareDocument, setCurrentFolderId, setDocumentId, dispatch) => {
     return useCallback(
@@ -21,13 +21,16 @@ export const useActionHandler = (id, token, fileMap,
                 }
             } else if (data.id === CopyDocument.id) {
                 // Copy files
-                copyDocuments(id, token, fileMap, data.state.selectedFilesForAction, dispatch)
+                copyDocuments(id, token, rootFolderId, fileMap, data.state.selectedFilesForAction, dispatch)
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
-                deleteFiles(fileMap, data.state.selectedFilesForAction, dispatch)
+                deleteFiles(id, token, rootFolderId, fileMap, data.state.selectedFilesForAction, dispatch)
                 // Delete documents from user
                 deleteDocuments(id, token, data.state.selectedFilesForAction)
             } else if (data.id === ChonkyActions.MoveFiles.id) {
                 moveFiles(
+                    id,
+                    token,
+                    rootFolderId,
                     fileMap,
                     data.payload.files,
                     data.payload.source,
@@ -45,6 +48,6 @@ export const useActionHandler = (id, token, fileMap,
                 setShareDocument(data.state.selectedFilesForAction)
             }
         },
-        [id, token, fileMap, setCurrentFolderId, setShareDocument, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
+        [id, token, rootFolderId, fileMap, setCurrentFolderId, setShareDocument, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
     )
 }

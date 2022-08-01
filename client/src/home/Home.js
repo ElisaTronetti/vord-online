@@ -39,17 +39,18 @@ export default function Home() {
   useEffect(() => { if (openDocumentId !== undefined) navigate('/editor', { state: { documentId: openDocumentId } }) }, [openDocumentId, navigate])
 
   // Trigger used to update the file system on the server when something changes
-  useEffect(() => {
+  /* useEffect(() => {
     let fileSystem = recreateFileSystem(rootFolderId, fileMap)
     // Calling HTTP request
     updateFileSystem(id, token, fileSystem)
-  }, [rootFolderId, fileMap, id, token])
+  }, [rootFolderId, fileMap, id, token])*/
 
   // Initialize data for the file system library
   const files = useFiles(fileMap, currentFolderId)
   const handleFileAction = useActionHandler(
     id,
     token,
+    rootFolderId,
     fileMap,
     setCreateFolderModalShow,
     setCreateDocumentModalShow,

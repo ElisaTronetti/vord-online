@@ -2,11 +2,12 @@ import { setFileMap } from '../../redux/fileSystemData/actions'
 import { __assign, __spreadArray } from './dataStructureUtils'
 import ObjectID from 'bson-objectid'
 import { FileHelper } from 'chonky'
-import { deleteDocument, copyDocument } from '../fileSystemRequests'
+import { recreateFileSystem } from './fileSystemStructure'
+import { updateFileSystem, deleteDocument, copyDocument } from '../fileSystemRequests'
 
 import { createSuccessToast } from '../../commonComponents/Toast'
 
-export const deleteFiles = (fileMap, files, dispatch) => {
+export const deleteFiles = (id, token, rootFolderId, fileMap, files, dispatch) => {
     // Create a copy of fileMap
     const newFileMap = { ...fileMap }
     files.forEach((file) => {
@@ -21,10 +22,11 @@ export const deleteFiles = (fileMap, files, dispatch) => {
                 childrenIds: newChildrenIds,
                 childrenCount: newChildrenIds.length,
             }
+            createSuccessToast(file.name + ' deleted correctly')
         }
         // Update the fileMap in redux
         dispatch(setFileMap(newFileMap))
-        createSuccessToast('Element deleted correctly')
+        update(id, token, rootFolderId, newFileMap)
     })
 }
 
@@ -38,7 +40,7 @@ export const deleteDocuments = (id, token, files) => {
     })
 }
 
-export const moveFiles = (fileMap, files, source, destination, dispatch) => {
+export const moveFiles = (id, token, rootFolderId, fileMap, files, source, destination, dispatch) => {
     // Create a copy of fileMap
     const newFileMap = { ...fileMap }
     const moveFileIds = new Set(files.map((f) => f.id))
@@ -54,10 +56,11 @@ export const moveFiles = (fileMap, files, source, destination, dispatch) => {
     })
     // Update the fileMap in redux
     dispatch(setFileMap(newFileMap))
-    createSuccessToast('Element moved correctly')
+    update(id, token, rootFolderId, newFileMap)
+    createSuccessToast('File moved correctly')
 }
 
-export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => {
+export const createFolder = (id, token, rootFoldeId, fileMap, currentFolderId, folderName, dispatch) => {
     // Create a copy of fileMap
     const newFileMap = { ...fileMap }
     // Create the new folder
@@ -76,10 +79,11 @@ export const createFolder = (fileMap, currentFolderId, folderName, dispatch) => 
     newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
+    update(id, token, rootFoldeId, newFileMap)
     createSuccessToast('Folder ' + folderName + ' created correctly')
 }
 
-export const createDocument = (fileMap, currentFolderId, documentId, documentName, dispatch) => {
+export const createDocument = (id, token, rootFolderId, fileMap, currentFolderId, documentId, documentName, dispatch) => {
     // Create a copy of fileMap
     const newFileMap = { ...fileMap }
     // Create the new document
@@ -96,18 +100,21 @@ export const createDocument = (fileMap, currentFolderId, documentId, documentNam
     newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
+    update(id, token, rootFolderId, newFileMap)
     createSuccessToast('Document ' + documentName + ' created correctly')
 }
 
-export const copyDocuments = (id, token, fileMap, files, dispatch) => {
+export const copyDocuments = (id, token, rootFolderId, fileMap, files, dispatch) => {
     // Create a copy of fileMap
     const newFileMap = { ...fileMap }
     files.forEach((file) => {
+        // Document name
+        let name = '(Copy)' + file.name
         // Create the new document
         let documentId = ObjectID().toHexString()
         newFileMap[documentId] = {
             id: documentId,
-            name: '(Copy)' + file.name,
+            name: name,
             parentId: file.parentId,
             ext: '.txt',
             isShared: false
@@ -117,8 +124,16 @@ export const copyDocuments = (id, token, fileMap, files, dispatch) => {
         var newDestinationChildrenIds = __spreadArray(__spreadArray([], parent.childrenIds, true), [documentId], false)
         newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
         // Create document copy
-        copyDocument(id, token, file.id, documentId, '(Copy)' + file.name)
+        copyDocument(id, token, file.id, documentId, name)
+        createSuccessToast('Document ' + name + ' copied correctly')
     })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
+    update(id, token, rootFolderId, fileMap)
+}
+
+function update(id, token, rootFolderId, fileMap){
+    let fileSystem = recreateFileSystem(rootFolderId, fileMap)
+    // Calling HTTP request
+    updateFileSystem(id, token, fileSystem)
 }
