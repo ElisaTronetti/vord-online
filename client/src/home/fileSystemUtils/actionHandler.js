@@ -4,7 +4,7 @@ import { deleteFiles, moveFiles, deleteDocuments, copyDocuments} from './modifyF
 import { CopyDocument, CreateDocument, ShareDocument } from './actions'
 
 // Check the action and perform the specified function
-export const useActionHandler = (user, rootFolderId, fileMap,
+export const useActionHandler = (user, fileSystem,
     setCreateFolderModalShow, setCreateDocumentModalShow,
     setShareDocument, setCurrentFolderId, setDocumentId, dispatch) => {
     return useCallback(
@@ -21,16 +21,15 @@ export const useActionHandler = (user, rootFolderId, fileMap,
                 }
             } else if (data.id === CopyDocument.id) {
                 // Copy files
-                copyDocuments(user, rootFolderId, fileMap, data.state.selectedFilesForAction, dispatch)
+                copyDocuments(user, fileSystem, data.state.selectedFilesForAction, dispatch)
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
-                deleteFiles(user, rootFolderId, fileMap, data.state.selectedFilesForAction, dispatch)
+                deleteFiles(user, fileSystem, data.state.selectedFilesForAction, dispatch)
                 // Delete documents from user
                 deleteDocuments(user, data.state.selectedFilesForAction)
             } else if (data.id === ChonkyActions.MoveFiles.id) {
                 moveFiles(
                     user,
-                    rootFolderId,
-                    fileMap,
+                    fileSystem,
                     data.payload.files,
                     data.payload.source,
                     data.payload.destination,
@@ -47,6 +46,6 @@ export const useActionHandler = (user, rootFolderId, fileMap,
                 setShareDocument(data.state.selectedFilesForAction)
             }
         },
-        [user, rootFolderId, fileMap, setCurrentFolderId, setShareDocument, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
+        [user, fileSystem, setCurrentFolderId, setShareDocument, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
     )
 }

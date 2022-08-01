@@ -7,9 +7,9 @@ import { updateFileSystem, deleteDocument, copyDocument } from '../fileSystemReq
 
 import { createSuccessToast } from '../../commonComponents/Toast'
 
-export const deleteFiles = (user, rootFolderId, fileMap, files, dispatch) => {
+export const deleteFiles = (user, fileSystem, files, dispatch) => {
     // Create a copy of fileMap
-    const newFileMap = { ...fileMap }
+    const newFileMap = { ...fileSystem.fileMap }
     files.forEach((file) => {
         // Delete file from the file map
         delete newFileMap[file.id]
@@ -26,7 +26,7 @@ export const deleteFiles = (user, rootFolderId, fileMap, files, dispatch) => {
         }
         // Update the fileMap in redux
         dispatch(setFileMap(newFileMap))
-        update(user, rootFolderId, newFileMap)
+        update(user, fileSystem.rootFolderId, newFileMap)
     })
 }
 
@@ -40,9 +40,9 @@ export const deleteDocuments = (user, files) => {
     })
 }
 
-export const moveFiles = (user, rootFolderId, fileMap, files, source, destination, dispatch) => {
+export const moveFiles = (user, fileSystem, files, source, destination, dispatch) => {
     // Create a copy of fileMap
-    const newFileMap = { ...fileMap }
+    const newFileMap = { ...fileSystem.fileMap }
     const moveFileIds = new Set(files.map((f) => f.id))
     // Delete files from their source folder
     var newSourceChildrenIds = source.childrenIds.filter(function (id) { return !moveFileIds.has(id) })
@@ -56,13 +56,13 @@ export const moveFiles = (user, rootFolderId, fileMap, files, source, destinatio
     })
     // Update the fileMap in redux
     dispatch(setFileMap(newFileMap))
-    update(user, rootFolderId, newFileMap)
+    update(user, fileSystem.rootFolderId, newFileMap)
     createSuccessToast('File moved correctly')
 }
 
-export const createFolder = (user, rootFoldeId, fileMap, currentFolderId, folderName, dispatch) => {
+export const createFolder = (user, fileSystem, currentFolderId, folderName, dispatch) => {
     // Create a copy of fileMap
-    const newFileMap = { ...fileMap }
+    const newFileMap = { ...fileSystem.fileMap }
     // Create the new folder
     let folderId = ObjectID().toHexString()
     newFileMap[folderId] = {
@@ -79,13 +79,13 @@ export const createFolder = (user, rootFoldeId, fileMap, currentFolderId, folder
     newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
-    update(user, rootFoldeId, newFileMap)
+    update(user, fileSystem.rootFoldeId, newFileMap)
     createSuccessToast('Folder ' + folderName + ' created correctly')
 }
 
-export const createDocument = (user, rootFolderId, fileMap, currentFolderId, documentId, documentName, dispatch) => {
+export const createDocument = (user, fileSystem, currentFolderId, documentId, documentName, dispatch) => {
     // Create a copy of fileMap
-    const newFileMap = { ...fileMap }
+    const newFileMap = { ...fileSystem.fileMap }
     // Create the new document
     newFileMap[documentId] = {
         id: documentId,
@@ -100,13 +100,13 @@ export const createDocument = (user, rootFolderId, fileMap, currentFolderId, doc
     newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
-    update(user, rootFolderId, newFileMap)
+    update(user, fileSystem.rootFolderId, newFileMap)
     createSuccessToast('Document ' + documentName + ' created correctly')
 }
 
-export const copyDocuments = (user, rootFolderId, fileMap, files, dispatch) => {
+export const copyDocuments = (user, fileSystem, files, dispatch) => {
     // Create a copy of fileMap
-    const newFileMap = { ...fileMap }
+    const newFileMap = { ...fileSystem.fileMap }
     files.forEach((file) => {
         // Document name
         let name = '(Copy)' + file.name
@@ -129,7 +129,7 @@ export const copyDocuments = (user, rootFolderId, fileMap, files, dispatch) => {
     })
     // Update fileMap
     dispatch(setFileMap(newFileMap))
-    update(user, rootFolderId, newFileMap)
+    update(user, fileSystem.rootFolderId, newFileMap)
 }
 
 function update(user, rootFolderId, fileMap){

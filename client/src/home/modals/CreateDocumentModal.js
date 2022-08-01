@@ -15,14 +15,16 @@ export default function CreateDocumentModal(props) {
         id: useSelector(state => state.userData.id),
         token: useSelector(state => state.userData.token)
     }
-    let rootFolderId = useSelector(state => state.fileSystemData.rootFolderId)
-    let fileMap = useSelector(state => state.fileSystemData.fileMap)
+    const fileSystem = {
+        rootFolderId: useSelector(state => state.fileSystemData.rootFolderId),
+        fileMap: useSelector(state => state.fileSystemData.fileMap)
+    }
 
     function tryCreateDocument() {
         if (inputDocumentName !== "") {
             let documentId = ObjectID().toHexString()
             // Create document in the file system
-            createDocument(user, rootFolderId, fileMap, props.currentFolderId, documentId, inputDocumentName, dispatch)
+            createDocument(user, fileSystem, props.currentFolderId, documentId, inputDocumentName, dispatch)
             // Trigger HTTP request to create document in the list of documents in the server
             createNewDocument(user, documentId, inputDocumentName)
             props.onHide()

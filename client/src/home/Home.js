@@ -17,16 +17,18 @@ export default function Home() {
     id: useSelector(state => state.userData.id),
     token: useSelector(state => state.userData.token)
   }
-  let rootFolderId = useSelector(state => state.fileSystemData.rootFolderId)
-  let fileMap = useSelector(state => state.fileSystemData.fileMap)
-
+  const fileSystem = {
+    rootFolderId: useSelector(state => state.fileSystemData.rootFolderId),
+    fileMap: useSelector(state => state.fileSystemData.fileMap)
+  }
+ 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [currentFolderId, setCurrentFolderId] = useState(rootFolderId)
-  const [openDocumentId, setOpenDocumentId] = React.useState(undefined)
-  const [shareDocument, setShareDocument] = React.useState(undefined)
-  const [createFolderModalShow, setCreateFolderModalShow] = React.useState(false)
-  const [createDocumentModalShow, setCreateDocumentModalShow] = React.useState(false)
+  const [currentFolderId, setCurrentFolderId] = useState(fileSystem.rootFolderId)
+  const [openDocumentId, setOpenDocumentId] = useState(undefined)
+  const [shareDocument, setShareDocument] = useState(undefined)
+  const [createFolderModalShow, setCreateFolderModalShow] = useState(false)
+  const [createDocumentModalShow, setCreateDocumentModalShow] = useState(false)
   
   useEffect(() => {
     // Ask periodically for the file system update
@@ -40,18 +42,17 @@ export default function Home() {
   useEffect(() => { if (openDocumentId !== undefined) navigate('/editor', { state: { documentId: openDocumentId } }) }, [openDocumentId, navigate])
 
   // Initialize data for the file system library
-  const files = useFiles(fileMap, currentFolderId)
+  const files = useFiles(fileSystem.fileMap, currentFolderId)
   const handleFileAction = useActionHandler(
     user,
-    rootFolderId,
-    fileMap,
+    fileSystem,
     setCreateFolderModalShow,
     setCreateDocumentModalShow,
     setShareDocument,
     setCurrentFolderId,
     setOpenDocumentId,
     dispatch)
-  const folderChain = useFolderChain(fileMap, currentFolderId)
+  const folderChain = useFolderChain(fileSystem.fileMap, currentFolderId)
 
   // Initialize actions
   const fileActions = useMemo(

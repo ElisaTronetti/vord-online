@@ -36,8 +36,7 @@ function Editor() {
       holder: EDITTOR_HOLDER_ID,
       logLevel: "ERROR",
       onChange: async () => {
-        let content = await editor.saver.save();
-        console.log(content)
+        let content = await editor.saver.save()
         // Logic to save this data to DB
         saveDocument(userId, documentId, token, content.blocks)
       },
