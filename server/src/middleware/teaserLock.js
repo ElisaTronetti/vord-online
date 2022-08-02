@@ -1,13 +1,13 @@
 let teaserLocks = [];
 
-export const DISCONNECT = "disconnect";
-export const TEASER_LOCK_ENTER = "teaser:lock:enter";
-export const TEASER_LOCK_LEAVE = "teaser:lock:leave";
-export const TEASER_LOCK_LIST = "teaser:lock:list";
+const DISCONNECT = "disconnect";
+const TEASER_LOCK_ENTER = "teaser:lock:enter";
+const TEASER_LOCK_LEAVE = "teaser:lock:leave";
+const TEASER_LOCK_LIST = "teaser:lock:list";
 
 // Handler called to broadcast when a change occurs in the lock list
 // Useful for UI changes (enable / disable buttons...)
-export const emitTeaserLocksChange = socket => {
+const emitTeaserLocksChange = socket => {
   socket.emit(TEASER_LOCK_LIST, teaserLocks);
 };
 
@@ -15,7 +15,7 @@ export const emitTeaserLocksChange = socket => {
 // => Client passes the wanted "teaserId" to lock and a callback named "notifyLocked" as argument
 // => Handler calls "notifyLocked" back with the lock information (already locked or not)
 // => Handler adds the lock to the lock list if needed, and broadcasts lock change
-export const onTeaserLockEnter = (socket, clientId) => (
+const onTeaserLockEnter = (socket, clientId) => (
   { teaserId },
   notifyLocked
 ) => {
@@ -35,7 +35,7 @@ export const onTeaserLockEnter = (socket, clientId) => (
 // => Client passes the "teaserId" to unlock
 // => Handler removes the lock from this teaserId for this particular "clientId" (remind "mutex")
 // => Handler broadcasts lock change if the teaser lock list has changed
-export const onTeaserLockLeave = (socket, clientId) => ({ teaserId }) => {
+const onTeaserLockLeave = (socket, clientId) => ({ teaserId }) => {
   const initialLength = teaserLocks.length;
 
   teaserLocks = teaserLocks.filter(
@@ -50,7 +50,7 @@ export const onTeaserLockLeave = (socket, clientId) => ({ teaserId }) => {
 // Handler called when a client socket connection is broken (or when browser tab is closed)
 // => Handler removes locks from the clientId (unique id (per tab) corresponding to socket connection)
 // => Handler broadcasts lock change if the teaser lock list has changed
-export const onDisconnect = (socket, clientId) => () => {
+const onDisconnect = (socket, clientId) => () => {
   const initialLength = teaserLocks.length;
 
   teaserLocks = teaserLocks.filter(lt => !(lt.clientId === clientId));
@@ -63,7 +63,7 @@ export const onDisconnect = (socket, clientId) => () => {
 // This function is responsible for the websocket event registration on all lock commands
 // TEASER_LOCK_ENTER => P (Claim / Decrease)
 // TEASER_LOCK_LEAVE & DISCONNECT => V (Release / Increase)
-export const teaserSocketLockHandler = socket => {
+const teaserSocketLockHandler = socket => {
   socket.on("connection", client => {
     client.on(TEASER_LOCK_ENTER, onTeaserLockEnter(socket, client.id));
     client.on(TEASER_LOCK_LEAVE, onTeaserLockLeave(socket, client.id));
@@ -73,4 +73,6 @@ export const teaserSocketLockHandler = socket => {
   return socket;
 };
 
-export default teaserSocketLockHandler;
+module.exports = {
+  teaserSocketLockHandler
+}

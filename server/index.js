@@ -1,6 +1,6 @@
-import io from "socket.io";
-import { teaserSocketLockHandler } from "./middleware/teaserLock";
-const bodyParser = require('body-parser')
+const io = require('socket.io');
+const { teaserSocketLockHandler } = require("./src/middleware/teaserLock.js");
+const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 app.use(express.json());

@@ -2,7 +2,7 @@ const ObjectId = require('mongoose').Types.ObjectId
 const Responses = require("./responses/response")
 const SharedDocuments = require('../models/sharedDocumentsModel')
 const SharedDocumentFactory = require('../models/factories/sharedDocument')
-const Utils =  require("./shaDocUtils")
+const Utils = require("./shaDocUtils")
 const Users = require('../models/userModel')
 
 //share local document, create shared document, delete local document
