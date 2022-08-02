@@ -8,7 +8,7 @@ const DOCUMENT_LOCK_LIST = "document:lock:list";
 // Handler called to broadcast when a change occurs in the lock list
 // Useful for UI changes (enable / disable buttons...)
 const emitDocumentLocksChange = socket => {
-  socket.emit(TEASER_LOCK_LIST, teaserLocks);
+  socket.emit(DOCUMENT_LOCK_LIST, documentLocks);
 };
 
 // Handler called when a client attempts to lock a resource
