@@ -2,9 +2,10 @@ import { ChonkyActions, FileHelper } from 'chonky'
 import { useCallback } from 'react'
 import { deleteFiles, moveFiles, deleteDocuments, copyDocuments} from './modifyFileSystem'
 import { CopyDocument, CreateDocument, ShareDocument } from './actions'
+import { checkDocumentLock } from '../../util/resourcesLock'
 
 // Check the action and perform the specified function
-export const useActionHandler = (user, fileSystem,
+export const useActionHandler = (user, fileSystem, socket,
     setCreateFolderModalShow, setCreateDocumentModalShow,
     setShareDocument, setCurrentFolderId, setDocumentId, dispatch) => {
     return useCallback(
@@ -17,7 +18,12 @@ export const useActionHandler = (user, fileSystem,
                     setCurrentFolderId(fileToOpen.id)
                 } else {
                     // Open document
-                    setDocumentId(fileToOpen.id)
+                    if (!fileToOpen.isShared) {
+                        // Open without lock checks if it is a local document
+                        setDocumentId(fileToOpen.id)
+                    } else {
+                        checkDocumentLock(socket, fileToOpen.id, setDocumentId)
+                    }
                 }
             } else if (data.id === CopyDocument.id) {
                 // Copy files
@@ -46,6 +52,6 @@ export const useActionHandler = (user, fileSystem,
                 setShareDocument(data.state.selectedFilesForAction)
             }
         },
-        [user, fileSystem, setCurrentFolderId, setShareDocument, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
+        [user, fileSystem, socket, setCurrentFolderId, setShareDocument, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentId, dispatch]
     )
 }

@@ -16,7 +16,7 @@ import CustomNavbar from './commonComponents/CustomNavbar'
 
 setChonkyDefaults({ iconComponent: ChonkyIconFA })
 
-//configure reedux store and its reducers
+// Configure reedux store and its reducers
 const store = configureStore({
   reducer: allReducers
 })

@@ -2,6 +2,7 @@ import { FullFileBrowser, ChonkyActions } from 'chonky'
 import React, { useState, useMemo, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import io from 'socket.io-client'
 
 import { CreateDocument, CreateFolder, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
 import { getFileSystem } from './fileSystemRequests'
@@ -12,6 +13,9 @@ import CreateFolderModal from './modals/CreateFolderModal'
 import CreateDocumentModal from './modals/CreateDocumentModal'
 import ShareDocumentModal from './modals/ShareDocumentModal'
 
+// Open socket
+const socket = io(process.env.REACT_APP_SERVER)
+
 export default function Home() {
   const user = {
     id: useSelector(state => state.userData.id),
@@ -21,7 +25,7 @@ export default function Home() {
     rootFolderId: useSelector(state => state.fileSystemData.rootFolderId),
     fileMap: useSelector(state => state.fileSystemData.fileMap)
   }
- 
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentFolderId, setCurrentFolderId] = useState(fileSystem.rootFolderId)
@@ -29,7 +33,7 @@ export default function Home() {
   const [shareDocument, setShareDocument] = useState(undefined)
   const [createFolderModalShow, setCreateFolderModalShow] = useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = useState(false)
-  
+
   useEffect(() => {
     // Ask periodically for the file system update
     const interval = setInterval(() => {
@@ -46,6 +50,7 @@ export default function Home() {
   const handleFileAction = useActionHandler(
     user,
     fileSystem,
+    socket,
     setCreateFolderModalShow,
     setCreateDocumentModalShow,
     setShareDocument,
@@ -69,7 +74,7 @@ export default function Home() {
 
   return (
     <div style={{ height: '100vh' }}>
-      <FullFileBrowser files={files} fileActions={fileActions} onFileAction={handleFileAction} folderChain={folderChain} disableDefaultFileActions={actionsToDisable}/>
+      <FullFileBrowser files={files} fileActions={fileActions} onFileAction={handleFileAction} folderChain={folderChain} disableDefaultFileActions={actionsToDisable} />
       <CreateFolderModal show={createFolderModalShow} onHide={() => setCreateFolderModalShow(false)} currentFolderId={currentFolderId} />
       <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
       <ShareDocumentModal show={shareDocument !== undefined} onHide={() => setShareDocument(undefined)} shareDocument={shareDocument} />
