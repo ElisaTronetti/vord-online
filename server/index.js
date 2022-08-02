@@ -1,5 +1,5 @@
 const io = require('socket.io');
-const { teaserSocketLockHandler } = require("./src/middleware/teaserLock.js");
+const { documentSocketLockHandler } = require("./src/middleware/teaserLock.js");
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
@@ -15,9 +15,9 @@ mongoose = require('mongoose');
 mongoose.connect(process.env.DB_CONNECTION_STRING);
 
 const authRoutes = require('./src/routes/authRoutes');
-const fileSystemRoutes =  require('./src/routes/fileSystemRoutes');
-const documentRoutes =  require('./src/routes/documentRoutes');
-const sharedDocumentRoutes =  require('./src/routes/shaDocRoutes');
+const fileSystemRoutes = require('./src/routes/fileSystemRoutes');
+const documentRoutes = require('./src/routes/documentRoutes');
+const sharedDocumentRoutes = require('./src/routes/shaDocRoutes');
 
 app.use(authRoutes);
 app.use(fileSystemRoutes);
@@ -27,10 +27,14 @@ app.use(sharedDocumentRoutes);
 app.use(bodyParser.json());
 
 const port = process.env.PORT;
-const server = app.listen(port, ()=>{
+const server = app.listen(port, () => {
     console.log('Listening on port ' + port)
 })
 
-// Create a socket and apply teaser locking listener on it
-const socket = io(server);
-teaserSocketLockHandler(socket);
+// Create a socket with open cors policies and apply document locking listener on it
+const socket = io(server, {
+    cors: {
+        origin: '*',
+    }
+});
+documentSocketLockHandler(socket);
