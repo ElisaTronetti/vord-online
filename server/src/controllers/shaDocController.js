@@ -4,6 +4,7 @@ const SharedDocuments = require('../models/sharedDocumentsModel')
 const SharedDocumentFactory = require('../models/factories/sharedDocument')
 const Utils = require("./shaDocUtils")
 const Users = require('../models/userModel')
+const { updateUserFileSystem } = require('./fileSystemController')
 
 //share local document, create shared document, delete local document
 async function shareLocalDocument(req, res){
@@ -106,9 +107,56 @@ async function manageSharedGroup(req, res){
 async function getSharedGroup(req, res){
     try{
         SharedDocuments.findById(new ObjectId(req.headers["documentid"])).then((doc)=>{
-            console.log(doc.sharedGroup)
             Responses.OkResponse(res, doc.sharedGroup)
         })
+    } catch (err){
+        Responses.ServerError(res, {message: err.message})
+    }
+}
+
+async function getSharedDocument(req, res){
+    try{
+        SharedDocuments.findById(new ObjectId(req.headers["documentid"])).then((doc)=>{
+            Responses.OkResponse(res, doc)
+        })
+    } catch (err){
+        Responses.ServerError(res, {message: err.message})
+    }
+}
+
+async function saveSharedDocument(req, res){
+    try{
+        const update = {$set:{"blocks":req.body.blocks}}
+        SharedDocuments.findByIdAndUpdate(new ObjectId(req.body.documentId), update)
+        .then((doc)=>{
+            Responses.OkResponse(res, doc)
+        })
+    } catch (err){
+        Responses.ServerError(res, {message: err.message})
+    }
+}
+
+async function deleteForMe(req, res){
+    try{
+        const user = await Utils.deleteSharedDocumentForUser(req.body.user._id, req.body.documentId)
+        Responses.OkResponse(res, user)
+    } catch (err){
+        Responses.ServerError(res, {message: err.message})
+    }
+}
+
+async function deleteForAll(req, res){
+    try{
+        const sharedGroup = await Utils.getSharedGroup(req.body.documentId)
+        let user, result
+        for (const member of sharedGroup) {
+            console.log(member)
+            user = await Utils.deleteSharedDocumentForUser(member._id, req.body.documentId)
+            if(user._id === new ObjectId(req.body.user._id)){result = user}
+        }
+        
+        //return updated user
+        Responses.OkResponse(res, result)
     } catch (err){
         Responses.ServerError(res, {message: err.message})
     }
@@ -118,5 +166,9 @@ module.exports = {
     shareLocalDocument,
     shareSharedDocument,
     manageSharedGroup,
-    getSharedGroup
+    getSharedGroup,
+    getSharedDocument,
+    saveSharedDocument,
+    deleteForMe,
+    deleteForAll
 }

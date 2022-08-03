@@ -24,7 +24,6 @@ module.exports = function (requiredClearance) {
                                       .select({ sharedGroup: {$elemMatch: {_id: new ObjectId(userId)}}})
           
           const role = sharedDocument.sharedGroup[0].role
-  
           if(!role || role < requiredClearance){
             res.status(401).send("Operation forbidden: the user does not possess the requisites to perform the action.");
           } else {

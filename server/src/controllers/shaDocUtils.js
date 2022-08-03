@@ -1,6 +1,7 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Users = require('../models/userModel')
 const SharedDocuments = require('../models/sharedDocumentsModel')
+const { unsubscribe } = require('../routes/documentRoutes')
 
 async function deleteDocument(userId, documentId){
     const usId = new ObjectId(userId)
@@ -150,6 +151,27 @@ async function getSharedGroup(documentId){
     }
 }
 
+async function deleteSharedDocumentForUser(uId, dId){
+    try{
+        const documentId = new ObjectId(dId)
+        const userId = new ObjectId(uId)
+
+        //delete user from document's shared group
+        let update = {$pull: {sharedGroup: {_id: userId}}}
+        await SharedDocuments.findByIdAndUpdate(documentId, update)
+
+        //delete document from user's filesystem
+        const path = "fileSystem.fileMap." + dId
+        update = {$unset: {[path]: 1}}
+        const user = await Users.findByIdAndUpdate(userId, update, {new: true})
+        
+        //return updated user
+        return user
+    } catch (err){
+        throw err
+    }
+}
+
 module.exports = {
     deleteDocument,
     getLocalDocument,
@@ -158,5 +180,6 @@ module.exports = {
     generateSharedGroup,
     checkIntersections,
     updateUsersFileSystem,
-    getSharedGroup
+    getSharedGroup,
+    deleteSharedDocumentForUser
 }
