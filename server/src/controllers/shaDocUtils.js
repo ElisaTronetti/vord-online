@@ -1,7 +1,6 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Users = require('../models/userModel')
 const SharedDocuments = require('../models/sharedDocumentsModel')
-const { unsubscribe } = require('../routes/documentRoutes')
 
 async function deleteDocument(userId, documentId){
     const usId = new ObjectId(userId)

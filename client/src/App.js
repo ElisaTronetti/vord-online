@@ -6,6 +6,7 @@ import { ChonkyIconFA } from 'chonky-icon-fontawesome'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { SocketContext, socket } from './util/socketContext'
 
 import allReducers from './redux'
 import Home from './home/Home'
@@ -25,16 +26,18 @@ function App() {
   return (
     <div>
       <Provider store={store}>
-        <ToastContainer />
-        <BrowserRouter>
-        <CustomNavbar />
-          <Routes>
+        <SocketContext.Provider value={socket}>
+          <ToastContainer />
+          <BrowserRouter>
+            <CustomNavbar />
+            <Routes>
               <Route path='/' element={<Login />} />
               <Route path='/signup' element={<Signup />} />
               <Route path='/home' element={<Home />} />
               <Route path='/editor' element={<Editor />} />
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
+        </SocketContext.Provider>
       </Provider>
     </div>
   )

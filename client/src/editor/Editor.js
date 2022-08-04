@@ -1,4 +1,6 @@
-import { default as React, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import EditorJS from '@editorjs/editorjs'
 import Header from '@editorjs/header'
 import SimpleImage from '@editorjs/simple-image'
@@ -13,22 +15,38 @@ import Marker from '@editorjs/marker'
 import InlineCode from '@editorjs/inline-code'
 import Paragraph from 'editorjs-paragraph-with-alignment'
 
-import { getDocument, saveDocument } from './editorRequests'
-import { useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { getDocument, saveDocument } from './localDocumentEditorRequests'
+import { getSharedDocument, saveSharedDocument } from './sharedDocumentEditorRequests'
+import { SocketContext } from '../util/socketContext'
+import { documentLockLeave } from '../util/resourcesLock'
 
 const EDITTOR_HOLDER_ID = 'editorjs'
 
 function Editor() {
-  const [editorData, setEditorData] = React.useState(undefined)
+  const [editorData, setEditorData] = useState(undefined)
   let userId = useSelector(state => state.userData.id)
   let token = useSelector(state => state.userData.token)
-  const documentId = useLocation().state.documentId
+  const document = useLocation().state.document
+  const socket = useContext(SocketContext)
 
-  if (editorData === undefined) getDocument(documentId, token, userId, setEditorData)
+  if (editorData === undefined && document.isShared) {
+    // Retrieve shared file
+    getSharedDocument(document.id, userId, setEditorData)
+  } else if (editorData === undefined && !document.isShared) {
+    // Retrieve local file
+    getDocument(document.id, token, userId, setEditorData)
+  }
   useEffect(() => {
     if (editorData !== undefined) initEditor()
   }, [editorData])
+
+  // Editor closing effect
+  useEffect(() => {
+    return () => {
+        // Unlock document resource on editor closing
+        if (document.isShared) documentLockLeave(socket, document.id)
+    }
+}, [])
 
   // Editor configuration
   const initEditor = () => {
@@ -38,7 +56,13 @@ function Editor() {
       onChange: async () => {
         let content = await editor.saver.save()
         // Logic to save this data to DB
-        saveDocument(userId, documentId, token, content.blocks)
+        if (document.isShared) {
+          // Save shared document
+          saveSharedDocument(userId, document.id, content.blocks)
+        } else {
+          // Save local document
+          saveDocument(userId, document.id, token, content.blocks)
+        }
       },
       autofocus: true,
       tools: {
