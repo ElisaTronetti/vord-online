@@ -1,20 +1,17 @@
 import { FullFileBrowser, ChonkyActions } from 'chonky'
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import io from 'socket.io-client'
 
 import { CreateDocument, CreateFolder, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
 import { getFileSystem } from './fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
+import { SocketContext } from '../util/socketContext'
 
 import CreateFolderModal from './modals/CreateFolderModal'
 import CreateDocumentModal from './modals/CreateDocumentModal'
 import ShareDocumentModal from './modals/ShareDocumentModal'
-
-// Open socket
-const socket = io(process.env.REACT_APP_SERVER)
 
 export default function Home() {
   const user = {
@@ -25,6 +22,8 @@ export default function Home() {
     rootFolderId: useSelector(state => state.fileSystemData.rootFolderId),
     fileMap: useSelector(state => state.fileSystemData.fileMap)
   }
+
+  const socket = useContext(SocketContext)
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -38,7 +37,7 @@ export default function Home() {
     // Ask periodically for the file system update
     const interval = setInterval(() => {
       getFileSystem(user, dispatch)
-    }, 5000);
+    }, 5000)
     return () => clearInterval(interval)
   })
 

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import EditorJS from '@editorjs/editorjs'
 import Header from '@editorjs/header'
 import SimpleImage from '@editorjs/simple-image'
@@ -15,8 +17,8 @@ import Paragraph from 'editorjs-paragraph-with-alignment'
 
 import { getDocument, saveDocument } from './localDocumentEditorRequests'
 import { getSharedDocument, saveSharedDocument } from './sharedDocumentEditorRequests'
-import { useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { SocketContext } from '../util/socketContext'
+import { documentLockLeave } from '../util/resourcesLock'
 
 const EDITTOR_HOLDER_ID = 'editorjs'
 
@@ -25,6 +27,7 @@ function Editor() {
   let userId = useSelector(state => state.userData.id)
   let token = useSelector(state => state.userData.token)
   const document = useLocation().state.document
+  const socket = useContext(SocketContext)
 
   if (editorData === undefined && document.isShared) {
     // Retrieve shared file
@@ -36,6 +39,14 @@ function Editor() {
   useEffect(() => {
     if (editorData !== undefined) initEditor()
   }, [editorData])
+
+  // Editor closing effect
+  useEffect(() => {
+    return () => {
+        // Unlock document resource on editor closing
+        if (document.isShared) documentLockLeave(socket, document.id)
+    }
+}, [])
 
   // Editor configuration
   const initEditor = () => {
