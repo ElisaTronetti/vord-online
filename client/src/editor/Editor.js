@@ -13,7 +13,7 @@ import Marker from '@editorjs/marker'
 import InlineCode from '@editorjs/inline-code'
 import Paragraph from 'editorjs-paragraph-with-alignment'
 
-import { getDocument, saveDocument } from './editorRequests'
+import { getDocument, saveDocument, getSharedDocument } from './editorRequests'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
@@ -23,9 +23,15 @@ function Editor() {
   const [editorData, setEditorData] = React.useState(undefined)
   let userId = useSelector(state => state.userData.id)
   let token = useSelector(state => state.userData.token)
-  const documentId = useLocation().state.documentId
+  const document = useLocation().state.document
 
-  if (editorData === undefined) getDocument(documentId, token, userId, setEditorData)
+  if (editorData === undefined && document.isShared) {
+    // Retrieve shared file
+    getSharedDocument(document.id, userId, setEditorData)
+  } else if (editorData === undefined && !document.isShared) {
+    // Retrieve local file
+    getDocument(document.id, token, userId, setEditorData)
+  }
   useEffect(() => {
     if (editorData !== undefined) initEditor()
   }, [editorData])
@@ -38,7 +44,7 @@ function Editor() {
       onChange: async () => {
         let content = await editor.saver.save()
         // Logic to save this data to DB
-        saveDocument(userId, documentId, token, content.blocks)
+        saveDocument(userId, document.id, token, content.blocks)
       },
       autofocus: true,
       tools: {

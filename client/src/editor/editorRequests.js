@@ -17,6 +17,22 @@ export function getDocument(documentId, token, userId, setEditorData) {
     })
 }
 
+export function getSharedDocument(documentId, userId, setEditorData) {
+    $.ajax({
+        contentType: 'application/json',
+        headers: { 'userid': userId, 'documentid': documentId },
+        success: function (res) {
+            setEditorData(res)
+            createSuccessToast("Opening document")
+        },
+        error: function () {
+            createErrorToast('Error: impossible to retrieve the document')
+        },
+        type: 'GET',
+        url: process.env.REACT_APP_SERVER + 'sharedDocuments/getSharedDocument'
+    })
+}
+
 export function saveDocument(userId, documentId, token, blocks) {
     $.ajax({
         contentType: 'application/json',

@@ -29,7 +29,7 @@ export default function Home() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentFolderId, setCurrentFolderId] = useState(fileSystem.rootFolderId)
-  const [openDocumentId, setOpenDocumentId] = useState(undefined)
+  const [openDocument, setDocumentToOpen] = useState(undefined)
   const [shareDocument, setShareDocument] = useState(undefined)
   const [createFolderModalShow, setCreateFolderModalShow] = useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = useState(false)
@@ -43,7 +43,7 @@ export default function Home() {
   })
 
   // Trigger redirect if a document id is set in order to open it
-  useEffect(() => { if (openDocumentId !== undefined) navigate('/editor', { state: { documentId: openDocumentId } }) }, [openDocumentId, navigate])
+  useEffect(() => { if (openDocument !== undefined) navigate('/editor', { state: { document: openDocument } }) }, [openDocument, navigate])
 
   // Initialize data for the file system library
   const files = useFiles(fileSystem.fileMap, currentFolderId)
@@ -55,7 +55,7 @@ export default function Home() {
     setCreateDocumentModalShow,
     setShareDocument,
     setCurrentFolderId,
-    setOpenDocumentId,
+    setDocumentToOpen,
     dispatch)
   const folderChain = useFolderChain(fileSystem.fileMap, currentFolderId)
 
