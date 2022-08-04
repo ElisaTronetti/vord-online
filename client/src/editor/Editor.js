@@ -1,4 +1,4 @@
-import { default as React, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import EditorJS from '@editorjs/editorjs'
 import Header from '@editorjs/header'
 import SimpleImage from '@editorjs/simple-image'
@@ -13,14 +13,15 @@ import Marker from '@editorjs/marker'
 import InlineCode from '@editorjs/inline-code'
 import Paragraph from 'editorjs-paragraph-with-alignment'
 
-import { getDocument, saveDocument, getSharedDocument } from './editorRequests'
+import { getDocument, saveDocument } from './localDocumentEditorRequests'
+import { getSharedDocument, saveSharedDocument } from './sharedDocumentEditorRequests'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
 const EDITTOR_HOLDER_ID = 'editorjs'
 
 function Editor() {
-  const [editorData, setEditorData] = React.useState(undefined)
+  const [editorData, setEditorData] = useState(undefined)
   let userId = useSelector(state => state.userData.id)
   let token = useSelector(state => state.userData.token)
   const document = useLocation().state.document
@@ -44,7 +45,13 @@ function Editor() {
       onChange: async () => {
         let content = await editor.saver.save()
         // Logic to save this data to DB
-        saveDocument(userId, document.id, token, content.blocks)
+        if (document.isShared) {
+          // Save shared document
+          saveSharedDocument(userId, document.id, content.blocks)
+        } else {
+          // Save local document
+          saveDocument(userId, document.id, token, content.blocks)
+        }
       },
       autofocus: true,
       tools: {
