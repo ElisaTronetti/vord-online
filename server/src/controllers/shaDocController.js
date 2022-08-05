@@ -21,19 +21,25 @@ async function shareLocalDocument(req, res){
 
             //get shared group id's and generate shared group array
             const sharedGroup = await Utils.generateSharedGroup(usersArray)
-            sharedGroup.push({_id, email, role, originalPath})
+            if(sharedGroup.length == 1 && sharedGroup[0].email == email){
+                Responses.ConflictError(res, {message: "cannot share a document with oneself"})
+            } else {
+                //push author
+                sharedGroup.push({_id, email, role, originalPath})
 
-            //generate shared document and save it to the database
-            let newShaDoc = SharedDocumentFactory.createSharedDocument(req.body.user, doc, sharedGroup)
-            await newShaDoc.save()
+                //generate shared document and save it to the database
+                let newShaDoc = SharedDocumentFactory.createSharedDocument(req.body.user, doc, sharedGroup)
+                await newShaDoc.save()
 
-            //update shared group's respective file systems with the new file
-            await Utils.updateUsersFileSystem(sharedGroup, doc)
+                //update shared group's respective file systems with the new file
+                await Utils.updateUsersFileSystem(sharedGroup, doc)
 
-            //delete local document and send response
-            await Utils.deleteDocument(req.body.user._id, req.body.documentId).then(()=>{
-                Responses.OkResponse(res, newShaDoc.sharedGroup)
-            })
+                //delete local document and send response
+                await Utils.deleteDocument(req.body.user._id, req.body.documentId).then(()=>{
+                    Responses.OkResponse(res, newShaDoc.sharedGroup)
+                })
+            }
+            
         } else {
             Responses.NotFoundError(res, {message: "document not found"})
         }
@@ -139,6 +145,10 @@ async function saveSharedDocument(req, res){
 async function deleteForMe(req, res){
     try{
         const user = await Utils.deleteSharedDocumentForUser(req.body.user._id, req.body.documentId)
+
+        //check if the shared group is composed by only one user, and if it is convert the shared document in local document of that user
+        await Utils.checkAndRestoreLocalDocument(req.body.documentId)
+
         Responses.OkResponse(res, user)
     } catch (err){
         Responses.ServerError(res, {message: err.message})
@@ -149,8 +159,8 @@ async function deleteForAll(req, res){
     try{
         const sharedGroup = await Utils.getSharedGroup(req.body.documentId)
         let user, result
-        for (const member of sharedGroup) {
-            console.log(member)
+        
+        for (let member of sharedGroup) {
             user = await Utils.deleteSharedDocumentForUser(member._id, req.body.documentId)
             if(user._id === new ObjectId(req.body.user._id)){result = user}
         }

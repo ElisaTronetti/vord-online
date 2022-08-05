@@ -141,10 +141,8 @@ async function updateUsersFileSystem(sharedGroup, doc){
 
 async function getSharedGroup(documentId){
     try{
-        SharedDocuments.findById(new ObjectId(documentId)).then((res)=>{
-            console.log(res.sharedGroup)
-            return res.sharedGroup
-        })
+        const res = await SharedDocuments.findById(new ObjectId(documentId))
+        return res.sharedGroup
     } catch(err){
         throw err
     }
@@ -171,6 +169,52 @@ async function deleteSharedDocumentForUser(uId, dId){
     }
 }
 
+async function checkAndRestoreLocalDocument(dId){
+    try{
+        const sharedGroup = await getSharedGroup(dId)
+        if(sharedGroup.length > 1){ return }
+        else {
+            let user = sharedGroup[0]
+            const userId = new ObjectId(user._id)
+            const doc = await getSharedDocument(dId)
+            const documentId = new ObjectId(dId)
+
+            //create new local document for the user
+            const newDocument = {   _id: documentId,
+                                    title: doc.title, 
+                                    time: new Date(), 
+                                    blocks: doc.blocks, 
+                                    version: "2.25.0"}
+
+            await Users.findByIdAndUpdate(userId, { $push: { "documents": newDocument }})
+
+            //update user's fileSystem
+            user = await Users.findById(userId)
+            const originalPath = user.fileSystem.fileMap[[dId]].parentId
+
+            const newFile = {
+                id : documentId,
+                name: doc.title,
+                parentId: originalPath,
+                ext: ".txt",
+                isShared: false
+            }
+
+            //insert new field in fileMap
+            const path = "fileSystem.fileMap." + documentId.toString()
+            await Users.findByIdAndUpdate(userId, { $set: {[path]: newFile} });
+
+            //delete shared document
+            await SharedDocuments.findByIdAndDelete(documentId)
+
+            return
+        }
+        
+    } catch (err){
+        throw err
+    }
+}
+
 module.exports = {
     deleteDocument,
     getLocalDocument,
@@ -180,5 +224,6 @@ module.exports = {
     checkIntersections,
     updateUsersFileSystem,
     getSharedGroup,
-    deleteSharedDocumentForUser
+    deleteSharedDocumentForUser,
+    checkAndRestoreLocalDocument
 }
