@@ -21,7 +21,7 @@ async function shareLocalDocument(req, res){
 
             //get shared group id's and generate shared group array
             const sharedGroup = await Utils.generateSharedGroup(usersArray)
-            if(sharedGroup.length() == 1 && sharedGroup[0].email == email){
+            if(sharedGroup.length == 1 && sharedGroup[0].email == email){
                 Responses.ConflictError(res, {message: "cannot share a document with oneself"})
             } else {
                 //push author
@@ -147,7 +147,7 @@ async function deleteForMe(req, res){
         const user = await Utils.deleteSharedDocumentForUser(req.body.user._id, req.body.documentId)
 
         //check if the shared group is composed by only one user, and if it is convert the shared document in local document of that user
-        await checkAndRestoreLocalDocument(req.body.documentId)
+        await Utils.checkAndRestoreLocalDocument(req.body.documentId)
 
         Responses.OkResponse(res, user)
     } catch (err){
