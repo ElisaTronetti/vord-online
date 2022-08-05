@@ -46,7 +46,7 @@ function Editor() {
         // Unlock document resource on editor closing
         if (document.isShared) documentLockLeave(socket, document.id)
     }
-}, [])
+}, [document, socket])
 
   // Editor configuration
   const initEditor = () => {
