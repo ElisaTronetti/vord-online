@@ -92,6 +92,6 @@ function createSignupParams(name, surname, email, password) {
         name: name.trim(),
         surname: surname.trim(),
         email: email.trim(),
-        password: password
+        password: password,
     })
 }

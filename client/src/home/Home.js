@@ -4,10 +4,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { CreateDocument, CreateFolder, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
-import { getFileSystem } from './fileSystemRequests'
+import { getFileSystem, updateFileSystem } from './fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
 import { SocketContext } from '../util/socketContext'
+import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
 
 import CreateFolderModal from './modals/CreateFolderModal'
 import CreateDocumentModal from './modals/CreateDocumentModal'
@@ -34,6 +35,7 @@ export default function Home() {
   const [createDocumentModalShow, setCreateDocumentModalShow] = useState(false)
 
   useEffect(() => {
+    updateFileSystem(user, recreateFileSystem(fileSystem.rootFolderId, fileSystem.fileMap))
     // Ask periodically for the file system update
     const interval = setInterval(() => {
       getFileSystem(user, dispatch)
