@@ -18,9 +18,10 @@ async function shareLocalDocument(req, res){
             //find the original parent folder of the local file to reinsert the shared version correctly in original autor's filesystem
             const user = await Users.findById(_id)
             originalPath = user.fileSystem.fileMap[[req.body.documentId]].parentId
-
+            
             //get shared group id's and generate shared group array
             const sharedGroup = await Utils.generateSharedGroup(usersArray)
+            
             if(sharedGroup.length == 1 && sharedGroup[0].email == email){
                 Responses.ConflictError(res, {message: "cannot share a document with oneself"})
             } else {
@@ -29,8 +30,9 @@ async function shareLocalDocument(req, res){
 
                 //generate shared document and save it to the database
                 let newShaDoc = SharedDocumentFactory.createSharedDocument(req.body.user, doc, sharedGroup)
+                
                 await newShaDoc.save()
-
+                
                 //update shared group's respective file systems with the new file
                 await Utils.updateUsersFileSystem(sharedGroup, doc)
 

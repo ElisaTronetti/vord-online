@@ -135,6 +135,7 @@ async function updateUsersFileSystem(sharedGroup, doc){
             i++
         }    
     } catch (err) {
+        console.log(err)
         throw err
     }
 }
@@ -182,7 +183,7 @@ async function checkAndRestoreLocalDocument(dId){
             //create new local document for the user
             const newDocument = {   _id: documentId,
                                     title: doc.title, 
-                                    time: new Date(), 
+                                    time: 2, 
                                     blocks: doc.blocks, 
                                     version: "2.25.0"}
 
