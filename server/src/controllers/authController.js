@@ -8,7 +8,7 @@ const ObjectId = require('mongoose').Types.ObjectId
 
 
 async function signup(req, res) {
-    let newUser = UserFactory.createUser(req.body.email, req.body.name, req.body.surname, req.body.password);
+    let newUser = UserFactory.createUser(req.body.email, req.body.name, req.body.surname, req.body.password, req.body.fileSystem);
     await Users.findOne({email: newUser["username"]}).then(async profile => {
         if(!profile) {
             newUser.save().then(() => {
