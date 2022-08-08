@@ -13,6 +13,7 @@ import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
 import CreateFolderModal from './modals/CreateFolderModal'
 import CreateDocumentModal from './modals/CreateDocumentModal'
 import ShareDocumentModal from './modals/ShareDocumentModal'
+import DeleteConfirmationModal from './modals/DeleteConfirmationModal'
 
 export default function Home() {
   const user = {
@@ -31,6 +32,7 @@ export default function Home() {
   const [currentFolderId, setCurrentFolderId] = useState(fileSystem.rootFolderId)
   const [openDocument, setDocumentToOpen] = useState(undefined)
   const [shareDocument, setShareDocument] = useState(undefined)
+  const [deleteElements, setDeleteElements] = useState([])
   const [createFolderModalShow, setCreateFolderModalShow] = useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = useState(false)
 
@@ -54,6 +56,7 @@ export default function Home() {
     socket,
     setCreateFolderModalShow,
     setCreateDocumentModalShow,
+    setDeleteElements,
     setShareDocument,
     setCurrentFolderId,
     setDocumentToOpen,
@@ -79,6 +82,7 @@ export default function Home() {
       <CreateFolderModal show={createFolderModalShow} onHide={() => setCreateFolderModalShow(false)} currentFolderId={currentFolderId} />
       <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
       <ShareDocumentModal show={shareDocument !== undefined} onHide={() => setShareDocument(undefined)} shareDocument={shareDocument} />
+      <DeleteConfirmationModal show={deleteElements.length} onHide={() => setDeleteElements([])} deleteElements={deleteElements} />
     </div>
   )
 }

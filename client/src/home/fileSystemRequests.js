@@ -83,7 +83,7 @@ function createDocumentParams(id, documentId, title) {
     })
 }
 
-export function deleteDocument(user, documentId) {
+export function deleteLocalDocument(user, documentId) {
 
     $.ajax({
         contentType: 'application/json',
