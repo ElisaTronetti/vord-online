@@ -13,7 +13,6 @@ function createSharedDocument(user, doc, sharedGroup) {
         time: doc.time,
         version: doc.version,
         author: authorId,
-        alreadyOpen: false,
         sharedGroup: sharedGroup
     })
 }

@@ -12,10 +12,6 @@ let sharedDocumentsSchema = new mongoose.Schema({
     time: Number,
     blocks: Object,
     version: String,
-    alreadyOpen: {
-        type: Boolean,
-        required: true
-    },
     sharedGroup: [{
         email: {
             type: String,
