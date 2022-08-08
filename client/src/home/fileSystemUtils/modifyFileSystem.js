@@ -2,7 +2,8 @@ import { setFileMap } from '../../redux/fileSystemData/actions'
 import { __assign, __spreadArray } from './dataStructureUtils'
 import ObjectID from 'bson-objectid'
 import { recreateFileSystem } from './fileSystemStructure'
-import { updateFileSystem, copyDocument } from '../fileSystemRequests'
+import { updateFileSystem } from '../fileSystemRequests'
+import { copyDocument } from '../documentsUtils/documentRequests'
 
 import { createSuccessToast } from '../../commonComponents/Toast'
 

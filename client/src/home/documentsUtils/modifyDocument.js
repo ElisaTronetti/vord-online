@@ -1,5 +1,4 @@
-import { deleteLocalDocument } from '../fileSystemRequests'
-import { deleteSharedDocument } from '../documentRequests'
+import { deleteSharedDocument, deleteLocalDocument } from './documentRequests'
 import { FileHelper } from 'chonky'
 
 export const deleteLocalDocuments = (user, files) => {

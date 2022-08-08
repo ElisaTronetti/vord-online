@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import ObjectID from 'bson-objectid'
 
 import { createDocument } from '../fileSystemUtils/modifyFileSystem'
-import { createNewDocument } from '../fileSystemRequests'
+import { createNewDocument } from '../documentsUtils/documentRequests'
 
 export default function CreateDocumentModal(props) {
     const [inputDocumentName, setInputDocumentName] = useState("")
