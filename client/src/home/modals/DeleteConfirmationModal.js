@@ -40,7 +40,12 @@ export default function DeleteConfirmationModal(props) {
 
     return (
         <div>
-            <Modal show={props.show} onHide={props.onHide}>
+            <Modal
+                show={props.show}
+                onHide={props.onHide}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Delete Confirmation</Modal.Title>
                 </Modal.Header>
@@ -56,7 +61,7 @@ export default function DeleteConfirmationModal(props) {
                     </div>
                 </Modal.Footer>
             </Modal>
-            <DeleteSharedModal show={showOwnedDocumentsDeleteOptions} onHide={() => {props.onHide(); setShowOwnedDocumentsDeleteOptions(false)}} deleteElements={props.deleteElements} sharedDocuments={sharedDocuments} ownedDocuments={ownedDocuments} />
+            <DeleteSharedModal show={showOwnedDocumentsDeleteOptions} onHide={() => { props.onHide(); setShowOwnedDocumentsDeleteOptions(false) }} deleteElements={props.deleteElements} sharedDocuments={sharedDocuments} ownedDocuments={ownedDocuments} />
         </div>
     )
 }

@@ -32,7 +32,10 @@ export default function DeleteSharedModal(props) {
     return (
         <Modal
             show={props.show}
-            onHide={props.onHide}>
+            onHide={props.onHide}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered>
             <Modal.Header closeButton>
                 <Modal.Title>Delete Confirmation</Modal.Title>
             </Modal.Header>
