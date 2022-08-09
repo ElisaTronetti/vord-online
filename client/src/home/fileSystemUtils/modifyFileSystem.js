@@ -1,9 +1,9 @@
 import { setFileMap } from '../../redux/fileSystemData/actions'
 import { __assign, __spreadArray } from './dataStructureUtils'
 import ObjectID from 'bson-objectid'
-import { FileHelper } from 'chonky'
 import { recreateFileSystem } from './fileSystemStructure'
-import { updateFileSystem, deleteDocument, copyDocument } from '../fileSystemRequests'
+import { updateFileSystem } from '../fileSystemRequests'
+import { copyDocument } from '../documentsUtils/documentRequests'
 
 import { createSuccessToast } from '../../commonComponents/Toast'
 
@@ -24,20 +24,10 @@ export const deleteFiles = (user, fileSystem, files, dispatch) => {
             }
             createSuccessToast(file.name + ' deleted correctly')
         }
-        // Update the fileMap in redux
-        dispatch(setFileMap(newFileMap))
-        update(user, fileSystem.rootFolderId, newFileMap)
     })
-}
-
-export const deleteDocuments = (user, files) => {
-    files.forEach((file) => {
-        // Check if document
-        if (!FileHelper.isDirectory(file)) {
-            // Delete document from user
-            deleteDocument(user, file.id)
-        }
-    })
+    // Update the fileMap in redux
+    dispatch(setFileMap(newFileMap))
+    update(user, fileSystem.rootFolderId, newFileMap)
 }
 
 export const moveFiles = (user, fileSystem, files, source, destination, dispatch) => {
@@ -132,7 +122,7 @@ export const copyDocuments = (user, fileSystem, files, dispatch) => {
     update(user, fileSystem.rootFolderId, newFileMap)
 }
 
-function update(user, rootFolderId, fileMap){
+function update(user, rootFolderId, fileMap) {
     let fileSystem = recreateFileSystem(rootFolderId, fileMap)
     // Calling HTTP request
     updateFileSystem(user, fileSystem)

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Container from 'react-bootstrap/Container'
@@ -45,11 +45,13 @@ export default function CreateDocumentModal(props) {
         email: useSelector(state => state.userData.email)
     }
 
+    const dispatch = useDispatch()
+
     function tryShareDocument() {
         const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
         const document = props.shareDocument[0]
         if (!isEmpty) {
-            shareDocument(user, inputFields, document.id, document.isShared, props, resetInputFields)
+            shareDocument(user, inputFields, document, props, resetInputFields, dispatch)
         } else {
             createErrorToast('Insert all the required data')
         }

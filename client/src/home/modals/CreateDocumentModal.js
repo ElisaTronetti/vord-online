@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -6,11 +6,12 @@ import Form from 'react-bootstrap/Form'
 import ObjectID from 'bson-objectid'
 
 import { createDocument } from '../fileSystemUtils/modifyFileSystem'
-import { createNewDocument } from '../fileSystemRequests'
+import { createNewDocument } from '../documentsUtils/documentRequests'
 
 export default function CreateDocumentModal(props) {
     const [inputDocumentName, setInputDocumentName] = useState("")
     const dispatch = useDispatch()
+    const inputRef = useRef()
     const user = {
         id: useSelector(state => state.userData.id),
         token: useSelector(state => state.userData.token)
@@ -37,7 +38,8 @@ export default function CreateDocumentModal(props) {
             onHide={props.onHide}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
-            centered>
+            centered
+            onShow={() => { inputRef.current.focus() }}>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">Create document</Modal.Title>
             </Modal.Header>
@@ -46,7 +48,7 @@ export default function CreateDocumentModal(props) {
                     <Form.Group className="mb-3" controlId="formFolderName">
                         <Form.Label>Document name</Form.Label>
                         <Form.Control
-                            autoFocus
+                            ref={inputRef}
                             onChange={input => setInputDocumentName(input.target.value)}
                             onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); tryCreateDocument() } }}
                             placeholder="Enter new document name" />
