@@ -24,10 +24,10 @@ export const deleteFiles = (user, fileSystem, files, dispatch) => {
             }
             createSuccessToast(file.name + ' deleted correctly')
         }
-        // Update the fileMap in redux
-        dispatch(setFileMap(newFileMap))
-        update(user, fileSystem.rootFolderId, newFileMap)
     })
+    // Update the fileMap in redux
+    dispatch(setFileMap(newFileMap))
+    update(user, fileSystem.rootFolderId, newFileMap)
 }
 
 export const moveFiles = (user, fileSystem, files, source, destination, dispatch) => {
@@ -122,7 +122,7 @@ export const copyDocuments = (user, fileSystem, files, dispatch) => {
     update(user, fileSystem.rootFolderId, newFileMap)
 }
 
-function update(user, rootFolderId, fileMap){
+function update(user, rootFolderId, fileMap) {
     let fileSystem = recreateFileSystem(rootFolderId, fileMap)
     // Calling HTTP request
     updateFileSystem(user, fileSystem)
