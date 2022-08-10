@@ -38,6 +38,16 @@ async function deleteFolder(req, res){
     }
 }
 
+async function moveElement(req, res){
+    try {
+        await FileSystemUtils.moveElement(req.body.userId, req.body.elementId, req.body.destinationId)
+        const user = await Users.findById(new ObjectId(req.body.userId))
+        Responses.OkResponse(res, user);
+    } catch (err) {
+        Responses.ServerError(res, {message: err.message});
+    }
+}
+
 async function getUserFileSystem(req, res){
     if(req.query._id === undefined){
         res.status(406).json({err: "missing user id"})
@@ -70,5 +80,6 @@ module.exports = {
     getUserFileSystem,
     updateUserFileSystem,
     createFolder,
-    deleteFolder
+    deleteFolder,
+    moveElement
 }
