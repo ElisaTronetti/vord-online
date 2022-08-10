@@ -41,15 +41,16 @@ async function createNewDocument(req, res){
 
 async function deleteDocument(req, res){
     const userId = new ObjectId(req.body.userId)
-    const documentId = new ObjectId(req.body.documentId)
-    const filter = { _id: userId }
-    const update = {$pull: {documents: {_id: documentId}}}
-    
+    const documentId = new ObjectId(req.body.documentId)  
     try{
-        let user = await Users.findOneAndUpdate(filter, update, {
-            new: true
-          })
-        Responses.OkResponse(res, user.documents)
+        //delete from document array
+        await Users.findByIdAndUpdate(userId, {$pull: {documents: {_id: documentId}}})
+
+        //delete from fileSystem
+        await FileSystemUtils.deleteFileSystemElement(req.body.userId, req.body.documentId)
+
+        const user = await Users.findById(userId)
+        Responses.OkResponse(res, user)
     } catch (err) {
         Responses.ServerError(res, {message: err.message});
     }

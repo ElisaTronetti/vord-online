@@ -2,7 +2,7 @@ const ObjectId = require('mongoose').Types.ObjectId
 const Responses = require("./responses/response")
 const Users = require('../models/userModel')
 const { findByIdAndUpdate } = require('../models/userModel')
-const FileFactory = require("/../models/factories/fileSystem")
+const FileFactory = require("../models/factories/fileSystem")
 const ShaDocUtils = require("./shaDocUtils")
 
 async function createFileSystemElement(userId, parentId, name, newFileId){
@@ -87,4 +87,5 @@ async function updateParent(userId, parentId, fileId, bool){
 }
 
 module.exports = {createFileSystemElement,
+                  deleteFileSystemElement,
                   updateParent}

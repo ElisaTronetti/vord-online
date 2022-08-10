@@ -20,7 +20,17 @@ async function updateFileSystem(req) {
 
 async function createFolder(req, res){
     try {
-        FileSystemUtils.createFileSystemElement(req.body.userId, req.body.parentId, req.body.name)
+        await FileSystemUtils.createFileSystemElement(req.body.userId, req.body.parentId, req.body.name)
+        const user = await Users.findById(new ObjectId(req.body.userId))
+        Responses.OkResponse(res, user);
+    } catch (err) {
+        Responses.ServerError(res, {message: err.message});
+    }
+}
+
+async function deleteFolder(req, res){
+    try {
+        await FileSystemUtils.deleteFileSystemElement(req.body.userId, req.body.folderId)
         const user = await Users.findById(new ObjectId(req.body.userId))
         Responses.OkResponse(res, user);
     } catch (err) {
@@ -59,5 +69,6 @@ async function updateUserFileSystem(req, res){
 module.exports = {
     getUserFileSystem,
     updateUserFileSystem,
-    createFolder
+    createFolder,
+    deleteFolder
 }
