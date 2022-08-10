@@ -143,12 +143,9 @@ async function updateUsersFileSystem(sharedGroup, doc){
             path = "fileSystem.fileMap." + folderId
             
             await Users.findByIdAndUpdate(userId, { $set: {[path]: folder}});
-            console.log(userId)
-            console.log(user.fileSystem.fileMap[fileId])
             i++
         }    
     } catch (err) {
-        console.log(err)
         throw err
     }
 }
@@ -237,7 +234,8 @@ async function deleteFolder(userId, folderId){
         for(let elemId of childrenIds){
             elem = user.fileSystem.fileMap[elemId]
             if(elem.isDir === true){
-                deleteFolder(userId, elemId)
+                deleteFolder(userId, elemId) //delete folder content
+                deleteFile(userId, elemId)
             } else {
                 if(!elem.role){
                     //delete local file
@@ -250,6 +248,20 @@ async function deleteFolder(userId, folderId){
                 }
             }
         }
+
+        //remove folder from parent
+        const parentId = user.fileSystem.fileMap[folderId].parentId
+        const parent = user.fileSystem.fileMap[parentId]
+
+        parent.childrenIds.splice(parent.childrenIds.indexOf(folderId))
+        parent.childrenCount--
+        const path = "fileSystem.fileMap." + parentId
+        
+        await Users.findByIdAndUpdate(userId, { $set: {[path]: parent}});
+
+        //delete folder
+        deleteFile(userId, folderId)
+
     } catch (err){
         Responses.ServerError(res, {message: err.message})
     }
