@@ -1,6 +1,7 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Responses = require("./responses/response")
 const Users = require('../models/userModel')
+const FileSystemUtils = require("./fileSystemUtils")
 
 async function updateFileSystem(req) {
     try {
@@ -16,6 +17,16 @@ async function updateFileSystem(req) {
        throw err;
     }
   }
+
+async function createFolder(req, res){
+    try {
+        FileSystemUtils.createFileSystemElement(req.body.userId, req.body.parentId, req.body.name)
+        const user = await Users.findById(new ObjectId(req.body.userId))
+        Responses.OkResponse(res, user);
+    } catch (err) {
+        Responses.ServerError(res, {message: err.message});
+    }
+}
 
 async function getUserFileSystem(req, res){
     if(req.query._id === undefined){
@@ -47,5 +58,6 @@ async function updateUserFileSystem(req, res){
 
 module.exports = {
     getUserFileSystem,
-    updateUserFileSystem
+    updateUserFileSystem,
+    createFolder
 }

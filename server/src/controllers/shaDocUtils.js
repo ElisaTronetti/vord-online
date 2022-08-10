@@ -1,6 +1,8 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Users = require('../models/userModel')
 const SharedDocuments = require('../models/sharedDocumentsModel')
+const FileSystemUtils = require('./fileSystemUtils')
+const { findById } = require('../models/userModel')
 
 async function deleteDocument(userId, documentId){
     const usId = new ObjectId(userId)
@@ -163,17 +165,19 @@ async function deleteSharedDocumentForUser(uId, dId){
     try{
         const documentId = new ObjectId(dId)
         const userId = new ObjectId(uId)
-
+        let user = await findById(userId)
+        const parentId = user.fileSystem.fileMap[dId].parentId
+        
         //delete user from document's shared group
-        let update = {$pull: {sharedGroup: {_id: userId}}}
-        await SharedDocuments.findByIdAndUpdate(documentId, update)
+        await SharedDocuments.findByIdAndUpdate(documentId, {$pull: {sharedGroup: {_id: userId}}})
 
         //delete document from user's filesystem
         const path = "fileSystem.fileMap." + dId
-        update = {$unset: {[path]: 1}}
-        const user = await Users.findByIdAndUpdate(userId, update, {new: true})
+        await Users.findByIdAndUpdate(userId, {$unset: {[path]: 1}})
+        await FileSystemUtils.updateParent(uId, parentId, dId, false)
         
         //return updated user
+        user = await findById(userId)
         return user
     } catch (err){
         throw err
