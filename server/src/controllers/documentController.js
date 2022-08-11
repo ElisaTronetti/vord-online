@@ -59,9 +59,10 @@ async function deleteDocument(req, res){
 async function getDocument(req, res){
     try{
         Users
-        .findOne({id: req.body.userId})
+        .findOne({_id: req.query.userId})
         .select({ documents: {$elemMatch: {_id: req.query._id}}})
         .exec(function (err, result) {
+            console.log(result)
             Responses.OkResponse(res, result.documents[0]);
         });
         
