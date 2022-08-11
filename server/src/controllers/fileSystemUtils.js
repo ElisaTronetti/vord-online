@@ -28,7 +28,7 @@ async function createFileSystemElement(userId, parentId, name, newFileId){
         }
          
         //insert new element in the fileSystem and update parent
-        await findByIdAndUpdate(new ObjectId(userId), {$set: { [path]: element}})
+        await Users.findByIdAndUpdate(new ObjectId(userId), {$set: { [path]: element}})
 
         await updateParent(userId, parentId, fileId, true)
 
@@ -95,7 +95,7 @@ async function updateParent(userId, parentId, fileId, bool){
             folder.childrenIds.splice(folder.childrenIds.indexOf(fileId))
             folder.childrenCount--
         }
-        await findByIdAndUpdate(new ObjectId(userId), {$set: { [path]: folder}})
+        await Users.findByIdAndUpdate(new ObjectId(userId), {$set: { [path]: folder}})
     } catch (err){
         throw err
     }
