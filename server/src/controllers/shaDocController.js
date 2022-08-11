@@ -84,8 +84,8 @@ async function shareSharedDocument(req, res){
 async function manageSharedGroup(req, res){
     try{
         const doc = await Utils.getSharedDocument(req.body.documentId)
-        if(!doc || doc.alreadyOpen){
-            Responses.ServerError(res, {message: "File already opened or non existing"})
+        if(!doc){
+            Responses.ServerError(res, {message: "File not found"})
         } else {
             const docId = new ObjectId(doc._id)
 
