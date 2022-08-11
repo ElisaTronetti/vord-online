@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 import { moveFiles, copyDocuments } from './modifyFileSystem'
 import { CopyDocument, CreateDocument, ShareDocument } from './actions'
 import { openDocumentIfUnlocked } from '../../util/resourcesLock'
+import { moveElements } from '../fileSystemRequests'
 
 // Check the action and perform the specified function
 export const useActionHandler = (user, fileSystem, socket,
@@ -31,11 +32,9 @@ export const useActionHandler = (user, fileSystem, socket,
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 setDeleteElements(data.state.selectedFilesForAction)
             } else if (data.id === ChonkyActions.MoveFiles.id) {
-                moveFiles(
+                moveElements(
                     user,
-                    fileSystem,
                     data.payload.files,
-                    data.payload.source,
                     data.payload.destination,
                     dispatch
                 )

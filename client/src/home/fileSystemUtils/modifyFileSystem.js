@@ -35,26 +35,6 @@ export const deleteFiles = (user, fileSystem, files, dispatch) => {
     return updatedFileSystem
 }
 
-export const moveFiles = (user, fileSystem, files, source, destination, dispatch) => {
-    // Create a copy of fileMap
-    const newFileMap = { ...fileSystem.fileMap }
-    const moveFileIds = new Set(files.map((f) => f.id))
-    // Delete files from their source folder
-    var newSourceChildrenIds = source.childrenIds.filter(function (id) { return !moveFileIds.has(id) })
-    newFileMap[source.id] = __assign(__assign({}, source), { childrenIds: newSourceChildrenIds, childrenCount: newSourceChildrenIds.length })
-    // Add the files to their destination folder
-    var newDestinationChildrenIds = __spreadArray(__spreadArray([], destination.childrenIds, true), files.map(function (f) { return f.id }), true)
-    newFileMap[destination.id] = __assign(__assign({}, destination), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
-    // Update the parent folder ID on the files from source folder ID to the destination folder ID.
-    files.forEach(function (file) {
-        newFileMap[file.id] = __assign(__assign({}, file), { parentId: destination.id })
-    })
-    // Update the fileMap in redux
-    dispatch(setFileMap(newFileMap))
-    update(user, fileSystem.rootFolderId, newFileMap)
-    createSuccessToast('File moved correctly')
-}
-
 export const copyDocuments = (user, fileSystem, files, dispatch) => {
     // Create a copy of fileMap
     const newFileMap = { ...fileSystem.fileMap }
