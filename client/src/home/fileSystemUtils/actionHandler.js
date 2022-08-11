@@ -1,6 +1,6 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useCallback } from 'react'
-import { moveFiles, copyDocuments } from './modifyFileSystem'
+import { copyDocuments } from './modifyFileSystem'
 import { CopyDocument, CreateDocument, ShareDocument } from './actions'
 import { openDocumentIfUnlocked } from '../../util/resourcesLock'
 import { moveElements } from '../fileSystemRequests'

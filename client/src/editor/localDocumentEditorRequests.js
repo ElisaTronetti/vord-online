@@ -1,26 +1,34 @@
 import $ from 'jquery'
 import { createErrorToast, createSuccessToast } from '../commonComponents/Toast'
 
-export function getDocument(documentId, token, userId, setEditorData) {
+export function getDocument(documentId, user, setEditorData) {
     $.ajax({
         contentType: 'application/json',
-        headers: { 'token': token, 'userId': userId },
+        headers: { 'token': user.token},
         success: function (res) {
             setEditorData(res)
             createSuccessToast("Opening document")
         },
-        error: function () {
+        error: function (err) {
+            console.log(err)
             createErrorToast('Error: impossible to retrieve the document')
         },
         type: 'GET',
-        url: process.env.REACT_APP_SERVER + 'document/getDocument?_id='+documentId
+        url: process.env.REACT_APP_SERVER + 'document/getDocument?_id='+documentId+'&userId='+user.id
     })
 }
 
-export function saveDocument(userId, documentId, token, blocks) {
+// Create body params for file system
+function createGetDocumentParams(userId) {
+    return JSON.stringify({
+        userId: userId
+    })
+}
+
+export function saveDocument(user, documentId, blocks) {
     $.ajax({
         contentType: 'application/json',
-        data: createDocumentParams(userId, documentId, token, blocks),
+        data: createDocumentParams(user.id, documentId, user.token, blocks),
         success: function (res) {
             createSuccessToast("Document saved")
         },

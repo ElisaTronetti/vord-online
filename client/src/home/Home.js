@@ -4,11 +4,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { CreateDocument, CreateFolder, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
-import { getFileSystem, updateFileSystem } from './fileSystemRequests'
+import { getFileSystem } from './fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
 import { SocketContext } from '../util/socketContext'
-import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
 
 import CreateFolderModal from './modals/CreateFolderModal'
 import CreateDocumentModal from './modals/CreateDocumentModal'
