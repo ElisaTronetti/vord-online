@@ -174,6 +174,19 @@ async function deleteForAll(req, res){
     }
 }
 
+async function deleteFolder(req, res){
+    try{
+        await Utils.deleteFolder(req.body.user._id, req.body.folderId)
+        const user = await Users.findById(new ObjectId(req.body.user._id))
+        
+        //return updated user
+        Responses.OkResponse(res, user)
+        
+    } catch (err){
+        Responses.ServerError(res, {message: err.message})
+    }
+}
+
 module.exports = {
     shareLocalDocument,
     shareSharedDocument,
@@ -182,5 +195,6 @@ module.exports = {
     getSharedDocument,
     saveSharedDocument,
     deleteForMe,
-    deleteForAll
+    deleteForAll,
+    deleteFolder
 }

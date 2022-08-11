@@ -1,6 +1,8 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Users = require('../models/userModel')
 const SharedDocuments = require('../models/sharedDocumentsModel')
+const FileSystemUtils = require('./fileSystemUtils')
+const { findById } = require('../models/userModel')
 
 async function deleteDocument(userId, documentId){
     const usId = new ObjectId(userId)
@@ -12,6 +14,17 @@ async function deleteDocument(userId, documentId){
         await Users.findOneAndUpdate(filter, update, {
             new: true
           })
+    } catch (err) {
+       throw err
+    }
+}
+
+async function deleteFile(userId, documentId){
+    try{
+        const path = "fileSystem.fileMap." + documentId
+        update = {$unset: {[path]: 1}}
+        const user = await Users.findByIdAndUpdate(new ObjectId(userId), update, {new: true})
+        return user
     } catch (err) {
        throw err
     }
@@ -114,7 +127,7 @@ async function updateUsersFileSystem(sharedGroup, doc){
             //insert new field in fileMap
             path = "fileSystem.fileMap." + fileId.toString()
             await Users.findByIdAndUpdate(userId, { $set: {[path]: newFile} });
-
+            user = await Users.findById(userId)
            
             //get root folder
             folder = user.fileSystem.fileMap[folderId]
@@ -130,12 +143,11 @@ async function updateUsersFileSystem(sharedGroup, doc){
             }
 
             path = "fileSystem.fileMap." + folderId
+            
             await Users.findByIdAndUpdate(userId, { $set: {[path]: folder}});
-           
             i++
         }    
     } catch (err) {
-        console.log(err)
         throw err
     }
 }
@@ -153,17 +165,19 @@ async function deleteSharedDocumentForUser(uId, dId){
     try{
         const documentId = new ObjectId(dId)
         const userId = new ObjectId(uId)
-
+        let user = await findById(userId)
+        const parentId = user.fileSystem.fileMap[dId].parentId
+        
         //delete user from document's shared group
-        let update = {$pull: {sharedGroup: {_id: userId}}}
-        await SharedDocuments.findByIdAndUpdate(documentId, update)
+        await SharedDocuments.findByIdAndUpdate(documentId, {$pull: {sharedGroup: {_id: userId}}})
 
         //delete document from user's filesystem
         const path = "fileSystem.fileMap." + dId
-        update = {$unset: {[path]: 1}}
-        const user = await Users.findByIdAndUpdate(userId, update, {new: true})
+        await Users.findByIdAndUpdate(userId, {$unset: {[path]: 1}})
+        await FileSystemUtils.updateParent(uId, parentId, dId, false)
         
         //return updated user
+        user = await findById(userId)
         return user
     } catch (err){
         throw err
@@ -216,8 +230,50 @@ async function checkAndRestoreLocalDocument(dId){
     }
 }
 
+async function deleteFolder(userId, folderId){
+    try{
+        let elem
+        const user = await Users.findById(new ObjectId(userId))
+        const childrenIds = user.fileSystem.fileMap[folderId].childrenIds
+        for(let elemId of childrenIds){
+            elem = user.fileSystem.fileMap[elemId]
+            if(elem.isDir === true){
+                deleteFolder(userId, elemId) //delete folder content
+                deleteFile(userId, elemId)
+            } else {
+                if(!elem.role){
+                    //delete local file
+                    await deleteDocument(userId, elemId)
+                    await deleteFile(userId, elemId)
+                } else {
+                    //delete shared file
+                    await deleteSharedDocumentForUser(userId, elemId)
+                    await checkAndRestoreLocalDocument(elemId)
+                }
+            }
+        }
+
+        //remove folder from parent
+        const parentId = user.fileSystem.fileMap[folderId].parentId
+        const parent = user.fileSystem.fileMap[parentId]
+
+        parent.childrenIds.splice(parent.childrenIds.indexOf(folderId))
+        parent.childrenCount--
+        const path = "fileSystem.fileMap." + parentId
+        
+        await Users.findByIdAndUpdate(userId, { $set: {[path]: parent}});
+
+        //delete folder
+        deleteFile(userId, folderId)
+
+    } catch (err){
+        Responses.ServerError(res, {message: err.message})
+    }
+}
+
 module.exports = {
     deleteDocument,
+    deleteFile,
     getLocalDocument,
     getSharedDocument,
     getUserId,
@@ -226,5 +282,6 @@ module.exports = {
     updateUsersFileSystem,
     getSharedGroup,
     deleteSharedDocumentForUser,
-    checkAndRestoreLocalDocument
+    checkAndRestoreLocalDocument,
+    deleteFolder
 }

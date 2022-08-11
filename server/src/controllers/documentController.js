@@ -1,32 +1,39 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Responses = require("./responses/response")
 const Users = require('../models/userModel')
-const Utils =  require("./shaDocUtils")
+const ShaDocUtils =  require("./shaDocUtils")
+const FileSystemUtils = require("./fileSystemUtils")
 
 async function createNewDocument(req, res){
 
     try {
-        const newId = new ObjectId(req.body.newDocumentId)
-        const filter = { _id: new ObjectId(req.body._id) } //userId
+        const newId = new ObjectId()
+        let user = await Users.findById(new ObjectId(req.body._id))
+
         let blocks
         if(req.body.originalDocumentId !== undefined){
             //get local document
-            const originalDocument = await Utils.getLocalDocument(req.body._id, req.body.originalDocumentId)
+            const originalDocument = await ShaDocUtils.getLocalDocument(req.body._id, req.body.originalDocumentId)
             blocks = originalDocument.blocks
         } else {
             blocks = []
         }
 
+        //create document
         const newDocument = {   _id: newId,
                                 title: req.body.title, 
                                 time: req.body.time, 
                                 blocks: blocks, 
                                 version: "2.25.0"}
-        const update = { $push: { "documents": newDocument }}
+        await Users.findByIdAndUpdate(new ObjectId(req.body._id), { $push: { "documents": newDocument }})
         
-        await Users.findOneAndUpdate(filter, update)
+        //create file 
+        FileSystemUtils.createFileSystemElement(req.body._id, user.fileSystem.rootFolderId, newDocument.title, newId.toString())
 
-        Responses.OkResponse(res, "");
+        //get updated user and return it
+        user = await Users.findById(new ObjectId(req.body._id))
+
+        Responses.OkResponse(res, user);
     } catch (err) {
         Responses.ServerError(res, {message: err.message});
     }
@@ -34,15 +41,16 @@ async function createNewDocument(req, res){
 
 async function deleteDocument(req, res){
     const userId = new ObjectId(req.body.userId)
-    const documentId = new ObjectId(req.body.documentId)
-    const filter = { _id: userId }
-    const update = {$pull: {documents: {_id: documentId}}}
-    
+    const documentId = new ObjectId(req.body.documentId)  
     try{
-        let user = await Users.findOneAndUpdate(filter, update, {
-            new: true
-          })
-        Responses.OkResponse(res, user.documents)
+        //delete from document array
+        await Users.findByIdAndUpdate(userId, {$pull: {documents: {_id: documentId}}})
+
+        //delete from fileSystem
+        await FileSystemUtils.deleteFileSystemElement(req.body.userId, req.body.documentId)
+
+        const user = await Users.findById(userId)
+        Responses.OkResponse(res, user)
     } catch (err) {
         Responses.ServerError(res, {message: err.message});
     }

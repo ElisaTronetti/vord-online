@@ -4,11 +4,9 @@ const bcrypt = require('bcryptjs')
 const Users = require('../models/userModel')
 const UserFactory = require('../models/factories/user')
 const Responses = require('./responses/response')
-const ObjectId = require('mongoose').Types.ObjectId
-
 
 async function signup(req, res) {
-    let newUser = UserFactory.createUser(req.body.email, req.body.name, req.body.surname, req.body.password, req.body.fileSystem);
+    let newUser = UserFactory.createUser(req.body.email, req.body.name, req.body.surname, req.body.password);
     await Users.findOne({email: newUser["username"]}).then(async profile => {
         if(!profile) {
             newUser.save().then(() => {
