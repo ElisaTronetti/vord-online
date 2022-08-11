@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import { setRootFolderId, setFileMap } from '../../redux/fileSystemData/actions'
 import { createErrorToast, createSuccessToast } from '../../commonComponents/Toast'
 
 export function deleteSharedDocument(user, document, deleteForMe) {
@@ -8,11 +9,11 @@ export function deleteSharedDocument(user, document, deleteForMe) {
         dataType: 'json',
         data: createDeleteSharedDocument(user, document.id),
         success: function () {
-           createSuccessToast('The shared document ' + document.name + ' has been deleted correctly') 
+            createSuccessToast('The shared document ' + document.name + ' has been deleted correctly')
         },
         error: function (err) {
             console.log(err)
-            createErrorToast('Error while deleting ' + document.name )
+            createErrorToast('Error while deleting ' + document.name)
         },
         type: 'POST',
         url: process.env.REACT_APP_SERVER + "sharedDocuments/" + ((deleteForMe) ? "deleteForMe" : "deleteForAll")
@@ -30,17 +31,22 @@ function createDeleteSharedDocument(user, documentId) {
     })
 }
 
-export function createNewDocument(user, documentId, title) {
+export function createNewDocument(user, documentTitle, dispatch) {
     $.ajax({
         contentType: 'application/json',
         headers: { 'token': user.token },
         dataType: 'json',
-        data: createDocumentParams(user.id, documentId, title),
-        success: function () {
-            console.log("Created new document")
+        data: createDocumentParams(user.id, documentTitle),
+        success: function (result) {
+            // Save new file system state
+            let id = result.fileSystem.rootFolderId
+            dispatch(setRootFolderId(id))
+            let fileMap = result.fileSystem.fileMap
+            dispatch(setFileMap(fileMap))
+            createSuccessToast('Document ' + documentTitle + '.txt created correctly')
         },
         error: function () {
-            createErrorToast('Error: impossible to create a new document')
+            createErrorToast('Error: impossible to create the new document ' + documentTitle + '.txt')
         },
         type: 'POST',
         url: process.env.REACT_APP_SERVER + 'document/createNewDocument'
@@ -48,11 +54,10 @@ export function createNewDocument(user, documentId, title) {
 }
 
 // Create body params for create document
-function createDocumentParams(id, documentId, title) {
+function createDocumentParams(id, documentTitle) {
     return JSON.stringify({
         _id: id,
-        newDocumentId: documentId,
-        title: title,
+        title: documentTitle,
         time: new Date().getTime(),
     })
 }

@@ -55,27 +55,6 @@ export const moveFiles = (user, fileSystem, files, source, destination, dispatch
     createSuccessToast('File moved correctly')
 }
 
-export const createDocument = (user, fileSystem, currentFolderId, documentId, documentName, dispatch) => {
-    // Create a copy of fileMap
-    const newFileMap = { ...fileSystem.fileMap }
-    // Create the new document
-    newFileMap[documentId] = {
-        id: documentId,
-        name: documentName + '.txt',
-        parentId: currentFolderId,
-        ext: '.txt',
-        isShared: false
-    }
-    // Update parent folder to reference the new folder
-    var parent = newFileMap[currentFolderId]
-    var newDestinationChildrenIds = __spreadArray(__spreadArray([], parent.childrenIds, true), [documentId], false)
-    newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
-    // Update fileMap
-    dispatch(setFileMap(newFileMap))
-    update(user, fileSystem.rootFolderId, newFileMap)
-    createSuccessToast('Document ' + documentName + ' created correctly')
-}
-
 export const copyDocuments = (user, fileSystem, files, dispatch) => {
     // Create a copy of fileMap
     const newFileMap = { ...fileSystem.fileMap }
