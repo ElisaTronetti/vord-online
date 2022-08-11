@@ -28,7 +28,7 @@ async function createNewDocument(req, res){
         await Users.findByIdAndUpdate(new ObjectId(req.body._id), { $push: { "documents": newDocument }})
         
         //create file 
-        FileSystemUtils.createFileSystemElement(req.body._id, user.fileSystem.rootFolderId, newDocument.title, newId.toString())
+        await FileSystemUtils.createFileSystemElement(req.body._id, user.fileSystem.rootFolderId, newDocument.title, newId.toString())
 
         //get updated user and return it
         user = await Users.findById(new ObjectId(req.body._id))
