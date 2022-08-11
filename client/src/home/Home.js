@@ -26,7 +26,6 @@ export default function Home() {
   }
 
   const socket = useContext(SocketContext)
-
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentFolderId, setCurrentFolderId] = useState(fileSystem.rootFolderId)
@@ -37,7 +36,7 @@ export default function Home() {
   const [createDocumentModalShow, setCreateDocumentModalShow] = useState(false)
 
   useEffect(() => {
-    updateFileSystem(user, recreateFileSystem(fileSystem.rootFolderId, fileSystem.fileMap))
+    //updateFileSystem(user, recreateFileSystem(fileSystem.rootFolderId, fileSystem.fileMap))
     // Ask periodically for the file system update
     const interval = setInterval(() => {
       getFileSystem(user, dispatch)
