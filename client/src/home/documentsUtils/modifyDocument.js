@@ -1,4 +1,5 @@
 import { deleteSharedDocument, deleteLocalDocument } from './documentRequests'
+import { deleteDocumentIfUnlocked } from '../../util/resourcesLock'
 import { FileHelper } from 'chonky'
 
 export const deleteLocalDocuments = (user, files) => {
@@ -11,12 +12,14 @@ export const deleteLocalDocuments = (user, files) => {
     })
 }
 
-export const deleteSharedDocuments = (user, files, deleteForMe) => {
-    files.forEach((file) => {
-        // Check if shared document
-        if (!FileHelper.isDirectory(file) && file.isShared) {
-            // Delete shared document from user
-            deleteSharedDocument(user, file, deleteForMe)
-        }
+export const deleteSharedDocumentsForMe = (user, ownedDocuments) => {
+    ownedDocuments.forEach((document) => {
+        deleteSharedDocument(user, document, true)
+    })
+}
+
+export const deleteSharedDocumentsForAll = (user, fileSystem, ownedDocuments, socket, dispatch) => {
+    ownedDocuments.forEach((document) => {
+        deleteDocumentIfUnlocked(user, fileSystem, document, socket, dispatch)
     })
 }

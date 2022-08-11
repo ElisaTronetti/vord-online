@@ -10,7 +10,8 @@ export function deleteSharedDocument(user, document, deleteForMe) {
         success: function () {
            createSuccessToast('The shared document ' + document.name + ' has been deleted correctly') 
         },
-        error: function () {
+        error: function (err) {
+            console.log(err)
             createErrorToast('Error while deleting ' + document.name )
         },
         type: 'POST',

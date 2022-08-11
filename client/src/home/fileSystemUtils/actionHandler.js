@@ -2,7 +2,7 @@ import { ChonkyActions, FileHelper } from 'chonky'
 import { useCallback } from 'react'
 import { moveFiles, copyDocuments } from './modifyFileSystem'
 import { CopyDocument, CreateDocument, ShareDocument } from './actions'
-import { checkDocumentLock } from '../../util/resourcesLock'
+import { openDocumentIfUnlocked } from '../../util/resourcesLock'
 
 // Check the action and perform the specified function
 export const useActionHandler = (user, fileSystem, socket,
@@ -22,7 +22,7 @@ export const useActionHandler = (user, fileSystem, socket,
                         // Open without lock checks if it is a local document
                         setDocumentToOpen(fileToOpen)
                     } else {
-                        checkDocumentLock(socket, fileToOpen, setDocumentToOpen)
+                        openDocumentIfUnlocked(socket, fileToOpen, setDocumentToOpen)
                     }
                 }
             } else if (data.id === CopyDocument.id) {

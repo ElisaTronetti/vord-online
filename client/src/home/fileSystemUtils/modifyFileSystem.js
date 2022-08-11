@@ -28,6 +28,11 @@ export const deleteFiles = (user, fileSystem, files, dispatch) => {
     // Update the fileMap in redux
     dispatch(setFileMap(newFileMap))
     update(user, fileSystem.rootFolderId, newFileMap)
+    const updatedFileSystem = {
+        rootFolderId: fileSystem.rootFolderId,
+        fileMap: newFileMap
+    }
+    return updatedFileSystem
 }
 
 export const moveFiles = (user, fileSystem, files, source, destination, dispatch) => {

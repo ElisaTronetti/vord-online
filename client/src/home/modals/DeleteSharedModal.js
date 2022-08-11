@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { deleteFiles } from '../fileSystemUtils/modifyFileSystem'
-import { deleteLocalDocuments, deleteSharedDocuments } from '../documentsUtils/modifyDocument'
+import { deleteLocalDocuments, deleteSharedDocumentsForMe, deleteSharedDocumentsForAll } from '../documentsUtils/modifyDocument'
+import { SocketContext } from '../../util/socketContext'
 
 export default function DeleteSharedModal(props) {
     const user = {
@@ -15,18 +16,25 @@ export default function DeleteSharedModal(props) {
         fileMap: useSelector(state => state.fileSystemData.fileMap)
     }
     const dispatch = useDispatch()
+    const socket = useContext(SocketContext)
 
     function confirmDeleteElements(deleteForMe) {
         props.onHide()
         // If there are not owned shared files
         // Delete files from file system
-        deleteFiles(user, fileSystem, props.deleteElements, dispatch)
+        const updatedFileSystem = deleteFiles(user, fileSystem, props.localElements.concat(props.sharedDocuments), dispatch)
         // Delete local documents from user
-        deleteLocalDocuments(user, props.deleteElements)
+        deleteLocalDocuments(user, props.localElements)
         // Delete shared documents
-        deleteSharedDocuments(user, props.sharedDocuments, true)
-        // Delete owned documents with correct option
-        deleteSharedDocuments(user, props.ownedDocuments, deleteForMe)
+        deleteSharedDocumentsForMe(user, props.sharedDocuments)
+        if (deleteForMe) {
+            // Delete owned documents with correct option
+            deleteFiles(user, updatedFileSystem, props.ownedDocuments, dispatch)
+            deleteSharedDocumentsForMe(user, props.ownedDocuments)
+        } else {
+            deleteSharedDocumentsForAll(user, updatedFileSystem, props.ownedDocuments, socket, dispatch)
+        }
+
     }
 
     return (

@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { deleteFiles } from '../fileSystemUtils/modifyFileSystem'
-import { deleteLocalDocuments, deleteSharedDocuments } from '../documentsUtils/modifyDocument'
+import { deleteLocalDocuments, deleteSharedDocumentsForMe } from '../documentsUtils/modifyDocument'
 
-import DeleteSharedModal from './DeleteSharedModel'
+import DeleteSharedModal from './DeleteSharedModal'
 
 export default function DeleteConfirmationModal(props) {
     const user = {
@@ -19,6 +19,7 @@ export default function DeleteConfirmationModal(props) {
 
     const dispatch = useDispatch()
     const [showOwnedDocumentsDeleteOptions, setShowOwnedDocumentsDeleteOptions] = useState(undefined)
+    const localElements = props.deleteElements.filter(e => isDir(e) || !isSharedDocument(e))
     const sharedDocuments = props.deleteElements.filter(isSharedDocument).filter(d => !isOwner(d))
     const ownedDocuments = props.deleteElements.filter(isSharedDocument).filter(isOwner)
 
@@ -30,7 +31,8 @@ export default function DeleteConfirmationModal(props) {
             // Delete local documents from user
             deleteLocalDocuments(user, props.deleteElements)
             // Delete shared documents with user
-            deleteSharedDocuments(user, sharedDocuments, true)
+            deleteSharedDocumentsForMe(user, sharedDocuments)
+            props.onHide()
         } else {
             // Show modal to ask if the owned shared files 
             // are going to be deleted for the user or for the shared group
@@ -61,7 +63,7 @@ export default function DeleteConfirmationModal(props) {
                     </div>
                 </Modal.Footer>
             </Modal>
-            <DeleteSharedModal show={showOwnedDocumentsDeleteOptions} onHide={() => { props.onHide(); setShowOwnedDocumentsDeleteOptions(false) }} deleteElements={props.deleteElements} sharedDocuments={sharedDocuments} ownedDocuments={ownedDocuments} />
+            <DeleteSharedModal show={showOwnedDocumentsDeleteOptions} onHide={() => { props.onHide(); setShowOwnedDocumentsDeleteOptions(false) }} localElements={localElements} sharedDocuments={sharedDocuments} ownedDocuments={ownedDocuments} />
         </div>
     )
 }
@@ -77,6 +79,10 @@ function deleteElementsMessage(deleteElements) {
         }
     }
     return message
+}
+
+function isDir(element) {
+    return element.isDir
 }
 
 function isSharedDocument(document) {
