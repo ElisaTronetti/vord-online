@@ -54,3 +54,17 @@ export const ShareDocument =  defineFileAction({
         icon: ChonkyIconName.users,
     },
 })
+
+// Custom action used to create handle the shared group of a document
+export const HandleSharedGroup =  defineFileAction({
+    id: 'handle_shared_group',
+    requiresSelection: true,
+    fileFilter: file => file && !file.isDir && file.isShared,
+    button: {
+        name: 'Handle shared group',
+        toolbar: true,
+        contextMenu: true,
+        group: 'Actions',
+        icon: ChonkyIconName.config,
+    },
+})

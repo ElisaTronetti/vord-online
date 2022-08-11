@@ -3,7 +3,7 @@ import React, { useState, useMemo, useEffect, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { CreateDocument, CreateFolder, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
+import { CreateDocument, CreateFolder, ShareDocument, CopyDocument, HandleSharedGroup } from './fileSystemUtils/actions'
 import { getFileSystem } from './fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
@@ -13,6 +13,7 @@ import CreateFolderModal from './modals/CreateFolderModal'
 import CreateDocumentModal from './modals/CreateDocumentModal'
 import ShareDocumentModal from './modals/ShareDocumentModal'
 import DeleteConfirmationModal from './modals/DeleteConfirmationModal'
+import HandleSharedGroupModal from './modals/HandleSharedGroup'
 
 export default function Home() {
   const user = {
@@ -30,6 +31,7 @@ export default function Home() {
   const [currentFolderId, setCurrentFolderId] = useState(fileSystem.rootFolderId)
   const [openDocument, setDocumentToOpen] = useState(undefined)
   const [shareDocument, setShareDocument] = useState(undefined)
+  const [handleSharedGroup, setHandleSharedGroup] = useState(undefined)
   const [deleteElements, setDeleteElements] = useState([])
   const [createFolderModalShow, setCreateFolderModalShow] = useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = useState(false)
@@ -58,12 +60,13 @@ export default function Home() {
     setShareDocument,
     setCurrentFolderId,
     setDocumentToOpen,
+    setHandleSharedGroup,
     dispatch)
   const folderChain = useFolderChain(fileSystem.fileMap, currentFolderId)
 
   // Initialize actions
   const fileActions = useMemo(
-    () => [ChonkyActions.DeleteFiles, CreateFolder, CreateDocument, ShareDocument, CopyDocument],
+    () => [ChonkyActions.DeleteFiles, CreateFolder, CreateDocument, ShareDocument, CopyDocument, HandleSharedGroup],
     []
   )
 
@@ -81,6 +84,7 @@ export default function Home() {
       <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
       <ShareDocumentModal show={shareDocument !== undefined} onHide={() => setShareDocument(undefined)} shareDocument={shareDocument} />
       <DeleteConfirmationModal show={deleteElements.length} onHide={() => setDeleteElements([])} deleteElements={deleteElements} />
+      <HandleSharedGroupModal show={handleSharedGroup !== undefined} onHide={() => setHandleSharedGroup(undefined)} document={handleSharedGroup} />
     </div>
   )
 }

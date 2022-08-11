@@ -34,3 +34,20 @@ function createShareDocumentParams(user, inputFields, documentId) {
         documentId: documentId,
     })
 }
+
+export function getSharedGroup(documentId, userId, setInputFields) {
+    console.log(documentId)
+    console.log(userId)
+    $.ajax({
+        contentType: 'application/json',
+        headers: { 'userid': userId, 'documentid': documentId },
+        success: function (res) {
+            setInputFields(res)
+        },
+        error: function () {
+            createErrorToast('Error: impossible to retrieve the shared group')
+        },
+        type: 'GET',
+        url: process.env.REACT_APP_SERVER + 'sharedDocuments/getSharedGroup'
+    })
+}

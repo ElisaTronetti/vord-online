@@ -1,14 +1,14 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useCallback } from 'react'
 import { copyDocuments } from './modifyFileSystem'
-import { CopyDocument, CreateDocument, ShareDocument } from './actions'
+import { CopyDocument, CreateDocument, HandleSharedGroup, ShareDocument } from './actions'
 import { openDocumentIfUnlocked } from '../../util/resourcesLock'
 import { moveElements } from '../fileSystemRequests'
 
 // Check the action and perform the specified function
 export const useActionHandler = (user, fileSystem, socket,
     setCreateFolderModalShow, setCreateDocumentModalShow, setDeleteElements,
-    setShareDocument, setCurrentFolderId, setDocumentToOpen, dispatch) => {
+    setShareDocument, setCurrentFolderId, setDocumentToOpen, setHandleSharedGroup, dispatch) => {
     return useCallback(
         data => {
             if (data.id === ChonkyActions.OpenFiles.id) {
@@ -47,8 +47,10 @@ export const useActionHandler = (user, fileSystem, socket,
             } else if (data.id === ShareDocument.id) {
                 // Show modal to share a document
                 setShareDocument(data.state.selectedFilesForAction)
+            } else if (data.id === HandleSharedGroup.id) {
+                setHandleSharedGroup(data.state.selectedFilesForAction)
             }
         },
-        [user, fileSystem, socket, setCurrentFolderId, setShareDocument, setDeleteElements, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentToOpen, dispatch]
+        [user, fileSystem, socket, setHandleSharedGroup, setCurrentFolderId, setShareDocument, setDeleteElements, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentToOpen, dispatch]
     )
 }
