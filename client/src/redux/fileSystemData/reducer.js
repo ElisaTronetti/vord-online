@@ -1,8 +1,6 @@
-import { emptyFileSystemJson } from '../../home/fileSystemUtils/fileSystemStructure'
-
 var initialState = {
-    rootFolderId: emptyFileSystemJson.rootFolderId,
-    fileMap: emptyFileSystemJson.fileMap
+    rootFolderId: undefined,
+    fileMap: undefined
 }
 
 const fileSystemReducer = (state = initialState, action) => {
