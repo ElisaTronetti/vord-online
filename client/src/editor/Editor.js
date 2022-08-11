@@ -33,7 +33,7 @@ function Editor() {
 
   if (editorData === undefined && document.isShared) {
     // Retrieve shared file
-    getSharedDocument(user, setEditorData)
+    getSharedDocument(document.id, user.id, setEditorData)
   } else if (editorData === undefined && !document.isShared) {
     // Retrieve local file
     getDocument(document.id, user, setEditorData)
@@ -60,7 +60,7 @@ function Editor() {
         // Logic to save this data to DB
         if (document.isShared) {
           // Save shared document
-          saveSharedDocument(user.is, document.id, content.blocks)
+          saveSharedDocument(user.id, document.id, content.blocks)
         } else {
           // Save local document
           saveDocument(user, document.id, content.blocks)

@@ -4,7 +4,7 @@ import { createErrorToast, createSuccessToast } from '../commonComponents/Toast'
 export function getDocument(documentId, user, setEditorData) {
     $.ajax({
         contentType: 'application/json',
-        headers: { 'token': user.token},
+        headers: { 'token': user.token },
         success: function (res) {
             setEditorData(res)
             createSuccessToast("Opening document")
@@ -15,13 +15,6 @@ export function getDocument(documentId, user, setEditorData) {
         },
         type: 'GET',
         url: process.env.REACT_APP_SERVER + 'document/getDocument?_id='+documentId+'&userId='+user.id
-    })
-}
-
-// Create body params for file system
-function createGetDocumentParams(userId) {
-    return JSON.stringify({
-        userId: userId
     })
 }
 
