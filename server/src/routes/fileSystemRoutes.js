@@ -15,7 +15,7 @@ router.post("/fileSystem/createFolder", auth, (req, res) => controller.createFol
 //body param: userId, folderId, token
 router.post("/fileSystem/deleteFolder", auth, (req, res) => controller.deleteFolder(req, res));
 
-//body param: userId, elementId, destinationId, token
-router.post("/fileSystem/moveElement", auth, (req, res) => controller.moveElement(req, res));
+//body param: userId, elementIds, destinationId, token
+router.post("/fileSystem/moveElements", auth, (req, res) => controller.moveElements(req, res));
 
 module.exports = router;

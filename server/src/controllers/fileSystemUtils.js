@@ -66,16 +66,18 @@ async function deleteFileSystemElement(userId, elementId){
     }
 }
 
-async function moveElement(userId, elementId, destination){
+async function moveElements(userId, elementIds, destination){
     try{
-        //initialize utility variables
-        const user = await Users.findById(new ObjectId(userId))
-        const path = "fileSystem.fileMap." + elementId + "parentId"
-        const parentId = user.fileSystem.fileMap[elementId].parentId
+        for (let elementId of elementIds){
+            //initialize utility variables
+            const user = await Users.findById(new ObjectId(userId))
+            const path = "fileSystem.fileMap." + elementId + ".parentId"
+            const parentId = user.fileSystem.fileMap[elementId].parentId
 
-        await updateParent(userId, destination, elementId, true) //put element in new folder
-        await updateParent(userId, parentId, elementId, false)   //remove element from previous folder
-        await Users.findByIdAndUpdate(new ObjectId(userId), {$set: {[path]: destination}}) //update parentId field of the element 
+            await updateParent(userId, destination, elementId, true) //put element in new folder
+            await updateParent(userId, parentId, elementId, false)   //remove element from previous folder
+            await Users.findByIdAndUpdate(new ObjectId(userId), {$set: {[path]: destination}}) //update parentId field of the element 
+        }      
     } catch (err){
         throw err
     }
@@ -92,7 +94,7 @@ async function updateParent(userId, parentId, fileId, bool){
             folder.childrenIds.push(fileId)
             folder.childrenCount++
         } else{
-            folder.childrenIds.splice(folder.childrenIds.indexOf(fileId))
+            folder.childrenIds.splice(folder.childrenIds.indexOf(fileId), 1)
             folder.childrenCount--
         }
         await Users.findByIdAndUpdate(new ObjectId(userId), {$set: { [path]: folder}})
@@ -103,5 +105,5 @@ async function updateParent(userId, parentId, fileId, bool){
 
 module.exports = {createFileSystemElement,
                   deleteFileSystemElement,
-                  moveElement,
+                  moveElements,
                   updateParent}
