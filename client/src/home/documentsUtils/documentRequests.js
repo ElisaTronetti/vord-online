@@ -5,7 +5,7 @@ import { createErrorToast, createSuccessToast } from '../../commonComponents/Toa
 export function deleteSharedDocument(user, document, deleteForMe, dispatch) {
     $.ajax({
         contentType: 'application/json',
-        headers: { "token": user.token },
+        headers: { 'token': user.token },
         dataType: 'json',
         data: createDeleteSharedDocument(user, document.id),
         success: function (result) {

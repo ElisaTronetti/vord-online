@@ -1,5 +1,4 @@
 import { createErrorToast } from '../commonComponents/Toast'
-import { deleteFiles } from '../home/fileSystemUtils/modifyFileSystem'
 import { deleteSharedDocument } from '../home/documentsUtils/documentRequests'
 
 const DOCUMENT_LOCK_ENTER = 'document:lock:enter'
@@ -16,15 +15,13 @@ export function openDocumentIfUnlocked(socket, document, setDocumentToOpen) {
     })
 }
 
-export function deleteDocumentIfUnlocked(user, fileSystem, document, socket, dispatch) {
+export function deleteDocumentIfUnlocked(user, document, socket, dispatch) {
     let documentId = document.id
     socket.emit(DOCUMENT_LOCK_ENTER, { documentId }, function (isDocumentLocked) {
         if (isDocumentLocked) {
             createErrorToast('The document ' + document.name + ' is corrently opened by someone else, you can not delete it')
         } else {
-            deleteSharedDocument(user, document, false)
-            // Delete document from file system if not currently locked
-            deleteFiles(user, fileSystem, [document], dispatch)
+            deleteSharedDocument(user, document, false, dispatch)
         }
     })
 }

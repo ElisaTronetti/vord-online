@@ -1,46 +1,30 @@
 import { deleteSharedDocument, deleteLocalDocument } from './documentRequests'
 import { deleteFolder } from '../folderRequests'
 import { deleteDocumentIfUnlocked } from '../../util/resourcesLock'
-import { FileHelper } from 'chonky'
+import { isSharedDocumentOwned, isDocument, isDocumentLocal, isSharedDocument } from './documentUtils'
 
-export const deleteElements = (user, elements, dispatch) => {
+export const deleteElementsForMe = (user, elements, dispatch) => {
     elements.forEach((element) => {
-        if (FileHelper.isDirectory(element)) {
+        if (!isDocument(element)) {
             deleteFolder(user, element, dispatch)
-        } else if (!FileHelper.isDirectory(element) && !element.isShared) {
+        } else if (isDocumentLocal(element)) {
             deleteLocalDocument(user, element, dispatch)
-        } else if (!FileHelper.isDirectory(element) && element.isShared) {
+        } else if (isSharedDocument(element)) {
             deleteSharedDocument(user, element, true, dispatch)
         }
     })
 }
 
-export const deleteFolders = (user, files) => {
-    files.forEach((file) => {
-        if (FileHelper.isDirectory(file)) {
-            deleteFolder(user, document)
+export const deleteElementsForAll = (user, elements, socket, dispatch) => {
+    elements.forEach((element) => {
+        if (!isDocument(element)) {
+            deleteFolder(user, element, dispatch)
+        } else if (isDocumentLocal(element)) {
+            deleteLocalDocument(user, element, dispatch)
+        } else if (!isSharedDocumentOwned(element)) {
+            deleteSharedDocument(user, element, true, dispatch)
+        } else if (isSharedDocumentOwned(element)){
+            deleteDocumentIfUnlocked(user, element, socket, dispatch)
         }
-    })
-}
-
-export const deleteLocalDocuments = (user, files) => {
-    files.forEach((file) => {
-        // Check if local document
-        if (!FileHelper.isDirectory(file) && !file.isShared) {
-            // Delete local document from user
-            deleteLocalDocument(user, file.id)
-        }
-    })
-}
-
-export const deleteSharedDocumentsForMe = (user, ownedDocuments) => {
-    ownedDocuments.forEach((document) => {
-        deleteSharedDocument(user, document, true)
-    })
-}
-
-export const deleteSharedDocumentsForAll = (user, fileSystem, ownedDocuments, socket, dispatch) => {
-    ownedDocuments.forEach((document) => {
-        deleteDocumentIfUnlocked(user, fileSystem, document, socket, dispatch)
-    })
+    })   
 }

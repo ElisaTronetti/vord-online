@@ -1,8 +1,7 @@
 import React, { useContext } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
-import { deleteFiles } from '../fileSystemUtils/modifyFileSystem'
-import { deleteLocalDocuments, deleteSharedDocumentsForMe, deleteSharedDocumentsForAll } from '../documentsUtils/modifyDocument'
+import { deleteElementsForMe, deleteElementsForAll } from '../documentsUtils/modifyDocument'
 import { SocketContext } from '../../util/socketContext'
 
 export default function DeleteSharedModal(props) {
@@ -11,30 +10,16 @@ export default function DeleteSharedModal(props) {
         token: useSelector(state => state.userData.token),
         email: useSelector(state => state.userData.email)
     }
-    const fileSystem = {
-        rootFolderId: useSelector(state => state.fileSystemData.rootFolderId),
-        fileMap: useSelector(state => state.fileSystemData.fileMap)
-    }
     const dispatch = useDispatch()
     const socket = useContext(SocketContext)
 
     function confirmDeleteElements(deleteForMe) {
         props.onHide()
-        // If there are not owned shared files
-        // Delete files from file system
-        const updatedFileSystem = deleteFiles(user, fileSystem, props.localElements.concat(props.sharedDocuments), dispatch)
-        // Delete local documents from user
-        deleteLocalDocuments(user, props.localElements)
-        // Delete shared documents
-        deleteSharedDocumentsForMe(user, props.sharedDocuments)
         if (deleteForMe) {
-            // Delete owned documents with correct option
-            deleteFiles(user, updatedFileSystem, props.ownedDocuments, dispatch)
-            deleteSharedDocumentsForMe(user, props.ownedDocuments)
+            deleteElementsForMe(user, props.deleteElements, dispatch)
         } else {
-            deleteSharedDocumentsForAll(user, updatedFileSystem, props.ownedDocuments, socket, dispatch)
+            deleteElementsForAll(user, props.deleteElements, socket, dispatch)
         }
-
     }
 
     return (

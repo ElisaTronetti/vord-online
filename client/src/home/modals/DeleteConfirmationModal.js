@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
-import { deleteElements } from '../documentsUtils/modifyDocument'
+import { deleteElementsForMe } from '../documentsUtils/modifyDocument'
+import { isSharedDocumentOwned } from '../documentsUtils/documentUtils'
 
 import DeleteSharedModal from './DeleteSharedModal'
 
@@ -14,12 +15,12 @@ export default function DeleteConfirmationModal(props) {
 
     const dispatch = useDispatch()
     const [showOwnedDocumentsDeleteOptions, setShowOwnedDocumentsDeleteOptions] = useState(undefined)
-    const ownedDocuments = props.deleteElements.filter(isSharedDocument).filter(isOwner)
+    const ownedDocuments = props.deleteElements.filter(isSharedDocumentOwned)
 
     function confirmDeleteElements() {
         if (!ownedDocuments.length) {
             // Delete elements
-            deleteElements(user, props.deleteElements, dispatch)
+            deleteElementsForMe(user, props.deleteElements, dispatch)
             props.onHide()
         } else {
             // Show modal to ask if the owned shared files 
@@ -51,7 +52,7 @@ export default function DeleteConfirmationModal(props) {
                     </div>
                 </Modal.Footer>
             </Modal>
-            <DeleteSharedModal show={showOwnedDocumentsDeleteOptions} onHide={() => { props.onHide(); setShowOwnedDocumentsDeleteOptions(false) }} deleteElements={deleteElements} ownedDocuments={ownedDocuments} />
+            <DeleteSharedModal show={showOwnedDocumentsDeleteOptions} onHide={() => { props.onHide(); setShowOwnedDocumentsDeleteOptions(false) }} deleteElements={props.deleteElements} />
         </div>
     )
 }
@@ -67,16 +68,4 @@ function deleteElementsMessage(deleteElements) {
         }
     }
     return message
-}
-
-function isSharedDocument(document) {
-    return document.isShared
-}
-
-function isOwner(document) {
-    if (document.role !== undefined) {
-        return document.role === 3
-    } else {
-        return false
-    }
 }
