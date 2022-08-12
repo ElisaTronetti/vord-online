@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Row from 'react-bootstrap/Row'
 
-import { getSharedGroup } from '../sharingRequests'
+import { getSharedGroup } from '../requests/sharingRequests'
 
 export default function HandleSharedGroupModal(props) {
     const initialState = [{

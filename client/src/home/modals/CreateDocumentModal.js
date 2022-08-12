@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 
-import { createNewDocument } from '../documentsUtils/documentRequests'
+import { createNewDocument } from '../requests/documentRequests'
 
 export default function CreateDocumentModal(props) {
     const [inputDocumentName, setInputDocumentName] = useState("")

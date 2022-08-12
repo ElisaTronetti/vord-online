@@ -9,7 +9,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Row from 'react-bootstrap/Row'
 
 import { createErrorToast } from '../../commonComponents/Toast'
-import { shareDocument } from '../sharingRequests'
+import { shareDocument } from '../requests/sharingRequests'
 
 export default function ShareDocumentModal(props) {
     const initialState = [{

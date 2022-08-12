@@ -1,5 +1,5 @@
 import { createErrorToast } from '../commonComponents/Toast'
-import { deleteSharedDocument } from '../home/documentsUtils/documentRequests'
+import { deleteSharedDocument } from '../home/requests/documentRequests'
 
 const DOCUMENT_LOCK_ENTER = 'document:lock:enter'
 const DOCUMENT_LOCK_LEAVE = 'document:lock:leave'

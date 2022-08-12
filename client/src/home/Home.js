@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { CreateDocument, CreateFolder, ShareDocument, CopyDocument, HandleSharedGroup } from './fileSystemUtils/actions'
-import { getFileSystem } from './fileSystemRequests'
+import { getFileSystem } from './requests/fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
 import { SocketContext } from '../util/socketContext'

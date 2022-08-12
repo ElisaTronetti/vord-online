@@ -2,8 +2,8 @@ import { ChonkyActions, FileHelper } from 'chonky'
 import { useCallback } from 'react'
 import { CopyDocument, CreateDocument, HandleSharedGroup, ShareDocument } from './actions'
 import { openDocumentIfUnlocked } from '../../util/resourcesLock'
-import { moveElements } from '../fileSystemRequests'
-import { copyDocument } from '../documentsUtils/documentRequests'
+import { moveElements } from '../requests/fileSystemRequests'
+import { copyDocument } from '../requests/documentRequests'
 
 // Check the action and perform the specified function
 export const useActionHandler = (user, socket,

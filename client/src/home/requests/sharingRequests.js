@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast, createSuccessToast } from "../commonComponents/Toast"
+import { createErrorToast, createSuccessToast } from "../../commonComponents/Toast"
 import { getFileSystem } from './fileSystemRequests'
 
 export function shareDocument(user, inputFields, document, props, resetInputFields, dispatch) {

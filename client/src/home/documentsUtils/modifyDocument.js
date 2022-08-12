@@ -1,5 +1,5 @@
-import { deleteSharedDocument, deleteLocalDocument } from './documentRequests'
-import { deleteFolder } from '../folderRequests'
+import { deleteSharedDocument, deleteLocalDocument } from '../requests/documentRequests'
+import { deleteFolder } from '../requests/folderRequests'
 import { deleteDocumentIfUnlocked } from '../../util/resourcesLock'
 import { isSharedDocumentOwned, isDocument, isDocumentLocal, isSharedDocument } from './documentUtils'
 
