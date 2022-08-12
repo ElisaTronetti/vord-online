@@ -165,7 +165,7 @@ async function deleteSharedDocumentForUser(uId, dId){
     try{
         const documentId = new ObjectId(dId)
         const userId = new ObjectId(uId)
-        let user = await findById(userId)
+        let user = await Users.findById(userId)
         const parentId = user.fileSystem.fileMap[dId].parentId
         
         //delete user from document's shared group
@@ -177,7 +177,7 @@ async function deleteSharedDocumentForUser(uId, dId){
         await FileSystemUtils.updateParent(uId, parentId, dId, false)
         
         //return updated user
-        user = await findById(userId)
+        user = await Users.findById(userId)
         return user
     } catch (err){
         throw err

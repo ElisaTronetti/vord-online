@@ -59,7 +59,7 @@ async function deleteFileSystemElement(userId, elementId){
         }
         
         //delete element from fileSystem and update parent
-        await findByIdAndUpdate(new ObjectId(userId), {$unset: { [path]: 1}})
+        await Users.findByIdAndUpdate(new ObjectId(userId), {$unset: { [path]: 1}})
         await updateParent(userId, parentId, elementId, false)
     } catch (err){
         throw err
