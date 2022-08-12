@@ -88,17 +88,22 @@ function createDeleteDocumentParams(id, documentId) {
     })
 }
 
-export function copyDocument(user, originalDocumentId, documentId, title) {
+export function copyDocument(user, originalDocument, dispatch) {
     $.ajax({
         contentType: 'application/json',
         headers: { 'token': user.token },
         dataType: 'json',
-        data: copyDocumentParams(user.id, originalDocumentId, documentId, title),
-        success: function () {
-            console.log("Copied document")
+        data: copyDocumentParams(user.id, originalDocument),
+        success: function (result) {
+            // Save new file system state
+            let id = result.fileSystem.rootFolderId
+            dispatch(setRootFolderId(id))
+            let fileMap = result.fileSystem.fileMap
+            dispatch(setFileMap(fileMap))
+            createSuccessToast('Local document ' + originalDocument.name + ' copied correctly')
         },
         error: function () {
-            createErrorToast('Error: impossible to copy document')
+            createErrorToast('Error: impossible to copy ' + originalDocument.name)
         },
         type: 'POST',
         url: process.env.REACT_APP_SERVER + 'document/createNewDocument'
@@ -106,12 +111,11 @@ export function copyDocument(user, originalDocumentId, documentId, title) {
 }
 
 // Create body params for copy document
-function copyDocumentParams(id, originalDocumentId, documentId, title) {
+function copyDocumentParams(id, originalDocument) {
     return JSON.stringify({
         _id: id,
-        originalDocumentId: originalDocumentId,
-        newDocumentId: documentId,
-        title: title,
+        originalDocumentId: originalDocument.id,
+        title: '(Copy)' + originalDocument.name.replace('.txt', ''),
         time: new Date().getTime(),
     })
 }

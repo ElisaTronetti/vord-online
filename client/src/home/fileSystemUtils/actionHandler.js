@@ -1,12 +1,12 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useCallback } from 'react'
-import { copyDocuments } from './modifyFileSystem'
 import { CopyDocument, CreateDocument, HandleSharedGroup, ShareDocument } from './actions'
 import { openDocumentIfUnlocked } from '../../util/resourcesLock'
 import { moveElements } from '../fileSystemRequests'
+import { copyDocument } from '../documentsUtils/documentRequests'
 
 // Check the action and perform the specified function
-export const useActionHandler = (user, fileSystem, socket,
+export const useActionHandler = (user, socket,
     setCreateFolderModalShow, setCreateDocumentModalShow, setDeleteElements,
     setShareDocument, setCurrentFolderId, setDocumentToOpen, setHandleSharedGroup, dispatch) => {
     return useCallback(
@@ -28,7 +28,7 @@ export const useActionHandler = (user, fileSystem, socket,
                 }
             } else if (data.id === CopyDocument.id) {
                 // Copy files
-                copyDocuments(user, fileSystem, data.state.selectedFilesForAction, dispatch)
+                copyDocument(user, data.state.selectedFilesForAction[0], dispatch)
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 setDeleteElements(data.state.selectedFilesForAction)
             } else if (data.id === ChonkyActions.MoveFiles.id) {
@@ -51,6 +51,6 @@ export const useActionHandler = (user, fileSystem, socket,
                 setHandleSharedGroup(data.state.selectedFilesForAction)
             }
         },
-        [user, fileSystem, socket, setHandleSharedGroup, setCurrentFolderId, setShareDocument, setDeleteElements, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentToOpen, dispatch]
+        [user, socket, setHandleSharedGroup, setCurrentFolderId, setShareDocument, setDeleteElements, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentToOpen, dispatch]
     )
 }

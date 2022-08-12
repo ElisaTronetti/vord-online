@@ -1,9 +1,6 @@
 import { setFileMap } from '../../redux/fileSystemData/actions'
-import { __assign, __spreadArray } from './dataStructureUtils'
-import ObjectID from 'bson-objectid'
 import { recreateFileSystem } from './fileSystemStructure'
 import { updateFileSystem } from '../fileSystemRequests'
-import { copyDocument } from '../documentsUtils/documentRequests'
 
 import { createSuccessToast } from '../../commonComponents/Toast'
 
@@ -33,34 +30,6 @@ export const deleteFiles = (user, fileSystem, files, dispatch) => {
         fileMap: newFileMap
     }
     return updatedFileSystem
-}
-
-export const copyDocuments = (user, fileSystem, files, dispatch) => {
-    // Create a copy of fileMap
-    const newFileMap = { ...fileSystem.fileMap }
-    files.forEach((file) => {
-        // Document name
-        let name = '(Copy)' + file.name
-        // Create the new document
-        let documentId = ObjectID().toHexString()
-        newFileMap[documentId] = {
-            id: documentId,
-            name: name,
-            parentId: file.parentId,
-            ext: '.txt',
-            isShared: false
-        }
-        // Update parent folder to reference the new folder
-        var parent = newFileMap[file.parentId]
-        var newDestinationChildrenIds = __spreadArray(__spreadArray([], parent.childrenIds, true), [documentId], false)
-        newFileMap[parent.id] = __assign(__assign({}, parent), { childrenIds: newDestinationChildrenIds, childrenCount: newDestinationChildrenIds.length })
-        // Create document copy
-        copyDocument(user, file.id, documentId, name)
-        createSuccessToast('Document ' + name + ' copied correctly')
-    })
-    // Update fileMap
-    dispatch(setFileMap(newFileMap))
-    update(user, fileSystem.rootFolderId, newFileMap)
 }
 
 function update(user, rootFolderId, fileMap) {

@@ -52,7 +52,6 @@ export default function Home() {
   const files = useFiles(fileSystem.fileMap, currentFolderId)
   const handleFileAction = useActionHandler(
     user,
-    fileSystem,
     socket,
     setCreateFolderModalShow,
     setCreateDocumentModalShow,
