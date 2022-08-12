@@ -2,21 +2,25 @@ import $ from 'jquery'
 import { setRootFolderId, setFileMap } from '../../redux/fileSystemData/actions'
 import { createErrorToast, createSuccessToast } from '../../commonComponents/Toast'
 
-export function deleteSharedDocument(user, document, deleteForMe) {
+export function deleteSharedDocument(user, document, deleteForMe, dispatch) {
     $.ajax({
         contentType: 'application/json',
         headers: { "token": user.token },
         dataType: 'json',
         data: createDeleteSharedDocument(user, document.id),
-        success: function () {
+        success: function (result) {
+            // Save new file system state
+            let id = result.fileSystem.rootFolderId
+            dispatch(setRootFolderId(id))
+            let fileMap = result.fileSystem.fileMap
+            dispatch(setFileMap(fileMap))
             createSuccessToast('The shared document ' + document.name + ' has been deleted correctly')
         },
-        error: function (err) {
-            console.log(err)
+        error: function () {
             createErrorToast('Error while deleting ' + document.name)
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + "sharedDocuments/" + ((deleteForMe) ? "deleteForMe" : "deleteForAll")
+        url: process.env.REACT_APP_SERVER + 'sharedDocuments/' + ((deleteForMe) ? 'deleteForMe' : 'deleteForAll')
     })
 }
 
@@ -31,12 +35,12 @@ function createDeleteSharedDocument(user, documentId) {
     })
 }
 
-export function createNewDocument(user, documentTitle, dispatch) {
+export function createNewDocument(user, parentId, documentTitle, dispatch) {
     $.ajax({
         contentType: 'application/json',
         headers: { 'token': user.token },
         dataType: 'json',
-        data: createDocumentParams(user.id, documentTitle),
+        data: createDocumentParams(user.id, documentTitle, parentId),
         success: function (result) {
             // Save new file system state
             let id = result.fileSystem.rootFolderId
@@ -54,25 +58,31 @@ export function createNewDocument(user, documentTitle, dispatch) {
 }
 
 // Create body params for create document
-function createDocumentParams(id, documentTitle) {
+function createDocumentParams(id, documentTitle, parentId) {
     return JSON.stringify({
         _id: id,
         title: documentTitle,
         time: new Date().getTime(),
+        parentId: parentId
     })
 }
 
-export function deleteLocalDocument(user, documentId) {
+export function deleteLocalDocument(user, document, dispatch) {
     $.ajax({
         contentType: 'application/json',
         headers: { 'token': user.token },
         dataType: 'json',
-        data: createDeleteDocumentParams(user.id, documentId),
-        success: function () {
-            console.log("Document deleted")
+        data: createDeleteDocumentParams(user.id, document.id),
+        success: function (result) {
+            // Save new file system state
+            let id = result.fileSystem.rootFolderId
+            dispatch(setRootFolderId(id))
+            let fileMap = result.fileSystem.fileMap
+            dispatch(setFileMap(fileMap))
+            createSuccessToast('Document ' + document.name + ' deleted correctly')
         },
         error: function () {
-            createErrorToast('Error: impossible to delete document')
+            createErrorToast('Error: impossible to delete ' + document.name)
         },
         type: 'POST',
         url: process.env.REACT_APP_SERVER + 'document/deleteDocument'
@@ -80,10 +90,10 @@ export function deleteLocalDocument(user, documentId) {
     console.log('Delete document')
 }
 
-// Create body params for delete document
-function createDeleteDocumentParams(id, documentId) {
+// Create body params for delete local document
+function createDeleteDocumentParams(userId, documentId) {
     return JSON.stringify({
-        userId: id,
+        userId: userId,
         documentId: documentId,
     })
 }
@@ -117,5 +127,6 @@ function copyDocumentParams(id, originalDocument) {
         originalDocumentId: originalDocument.id,
         title: '(Copy)' + originalDocument.name.replace('.txt', ''),
         time: new Date().getTime(),
+        parentId: originalDocument.parentId
     })
 }

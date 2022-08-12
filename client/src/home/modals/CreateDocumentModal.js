@@ -18,7 +18,7 @@ export default function CreateDocumentModal(props) {
     function tryCreateDocument() {
         if (inputDocumentName.trim() !== "") {
             // Trigger HTTP request to create document in the list of documents and in the filesystem
-            createNewDocument(user, inputDocumentName, dispatch)
+            createNewDocument(user, props.currentFolderId, inputDocumentName, dispatch)
             props.onHide()
         }
     }

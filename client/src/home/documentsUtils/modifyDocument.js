@@ -1,6 +1,27 @@
 import { deleteSharedDocument, deleteLocalDocument } from './documentRequests'
+import { deleteFolder } from '../folderRequests'
 import { deleteDocumentIfUnlocked } from '../../util/resourcesLock'
 import { FileHelper } from 'chonky'
+
+export const deleteElements = (user, elements, dispatch) => {
+    elements.forEach((element) => {
+        if (FileHelper.isDirectory(element)) {
+            deleteFolder(user, element, dispatch)
+        } else if (!FileHelper.isDirectory(element) && !element.isShared) {
+            deleteLocalDocument(user, element, dispatch)
+        } else if (!FileHelper.isDirectory(element) && element.isShared) {
+            deleteSharedDocument(user, element, true, dispatch)
+        }
+    })
+}
+
+export const deleteFolders = (user, files) => {
+    files.forEach((file) => {
+        if (FileHelper.isDirectory(file)) {
+            deleteFolder(user, document)
+        }
+    })
+}
 
 export const deleteLocalDocuments = (user, files) => {
     files.forEach((file) => {
