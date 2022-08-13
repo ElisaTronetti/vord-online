@@ -51,3 +51,23 @@ export function getSharedGroup(documentId, userId, setInputFields) {
         url: process.env.REACT_APP_SERVER + 'sharedDocuments/getSharedGroup'
     })
 }
+
+export function manageSharedGroup(user, inputFields, document, props, resetInputFields, dispatch) {
+    $.ajax({
+        contentType: 'application/json',
+        headers: { 'token': user.token },
+        dataType: 'json',
+        data: createShareDocumentParams(user, inputFields, document.id),
+        success: function () {
+            createSuccessToast('Shared group modified')
+            props.onHide()
+            resetInputFields()
+            getFileSystem(user, dispatch)
+        },
+        error: function () {
+            createErrorToast('Error: impossible modify the shared group')
+        },
+        type: 'POST',
+        url: process.env.REACT_APP_SERVER + 'sharedDocuments/manageSharedGroup'
+    })
+}

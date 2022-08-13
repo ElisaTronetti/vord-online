@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Row from 'react-bootstrap/Row'
 
-import { getSharedGroup } from '../requests/sharingRequests'
+import { getSharedGroup, manageSharedGroup } from '../requests/sharingRequests'
 
 export default function HandleSharedGroupModal(props) {
     const initialState = [{
@@ -25,9 +25,15 @@ export default function HandleSharedGroupModal(props) {
     useEffect(() => {
         if (props.document !== undefined) {
             getSharedGroup(props.document[0].id, user.id, setInputFields)
-        }  
+        }
     }, [props.document, user.id])
 
+    const addInputField = () => {
+        setInputFields([...inputFields, {
+            email: '',
+            role: ''
+        }])
+    }
     const removeInputFields = (index) => {
         const rows = [...inputFields]
         rows.splice(index, 1)
@@ -46,7 +52,12 @@ export default function HandleSharedGroupModal(props) {
     const dispatch = useDispatch()
 
     function modifySharedGroup() {
-        console.log("AA")
+        const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
+        if (!isEmpty) {
+            manageSharedGroup(user, inputFields, props.document, props, resetInputFields, dispatch)
+        } else {
+            createErrorToast('Insert all the required data')
+        } 
     }
 
     return (
@@ -106,6 +117,9 @@ export default function HandleSharedGroupModal(props) {
                                     )
                                 })
                             }
+                            <div>
+                                <Button className="btn btn-success" onClick={addInputField}>Add new</Button>
+                            </div>
                         </Col>
                     </Row>
                 </Container>
