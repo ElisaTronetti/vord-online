@@ -53,6 +53,9 @@ async function deleteFileSystemElement(userId, elementId){
                 if(child.isShared){
                     ShaDocUtils.deleteSharedDocumentForUser(userId, childId)
                 } else {
+                    if(!child.isShared && !child.isDir){
+                        await Users.findByIdAndUpdate(new ObjectId(userId), {$pull: {documents: {_id: childId}}})                       
+                    }
                     await deleteFileSystemElement(userId, childId)
                 }
             }
@@ -62,6 +65,28 @@ async function deleteFileSystemElement(userId, elementId){
         await Users.findByIdAndUpdate(new ObjectId(userId), {$unset: { [path]: 1}})
         await updateParent(userId, parentId, elementId, false)
     } catch (err){
+        throw err
+    }
+}
+
+async function findAllSharedDocumentsInFolder(userId, folderId)
+{
+    try{
+        const user = await Users.findById(new ObjectId(userId))
+        const childrenIds = user.fileSystem.fileMap[folderId].childrenIds
+        let child, result
+        for(let childId of childrenIds){
+            child = user.fileSystem.fileMap[childId]
+            if(childId.isDir){
+                result.concat(await findAllSharedDocumentsInFolder(userId, childId))
+            } else {
+                if(child.isShared === true){
+                    result.push(childId)
+                }
+            }
+        }
+        return result
+    } catch(err){
         throw err
     }
 }
@@ -106,4 +131,5 @@ async function updateParent(userId, parentId, fileId, bool){
 module.exports = {createFileSystemElement,
                   deleteFileSystemElement,
                   moveElements,
-                  updateParent}
+                  updateParent,
+                  findAllSharedDocumentsInFolder}

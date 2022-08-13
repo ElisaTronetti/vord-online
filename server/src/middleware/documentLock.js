@@ -5,6 +5,9 @@ const DOCUMENT_LOCK_ENTER = "document:lock:enter";
 const DOCUMENT_LOCK_LEAVE = "document:lock:leave";
 const DOCUMENT_LOCK_LIST = "document:lock:list";
 
+function getDocumentLocks(){
+  return documentLocks
+}
 // Handler called to broadcast when a change occurs in the lock list
 // Useful for UI changes (enable / disable buttons...)
 const emitDocumentLocksChange = socket => {
@@ -74,5 +77,6 @@ const documentSocketLockHandler = socket => {
 };
 
 module.exports = {
-  documentSocketLockHandler
+  documentSocketLockHandler,
+  getDocumentLocks
 }

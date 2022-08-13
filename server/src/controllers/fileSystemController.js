@@ -2,6 +2,8 @@ const ObjectId = require('mongoose').Types.ObjectId
 const Responses = require("./responses/response")
 const Users = require('../models/userModel')
 const FileSystemUtils = require("./fileSystemUtils")
+const DocumentLock = require("./middleware/documentLock")
+const ShaDocUtils = require("./shaDocUtils")
 
 async function updateFileSystem(req) {
     try {
@@ -30,10 +32,17 @@ async function createFolder(req, res){
 
 async function deleteFolder(req, res){
     try {
+        const sharedDocuments = await FileSystemUtils.findAllSharedDocumentsInFolder(req.body.userId, req.body.folderId)
+        const documentLocks = DocumentLock.getDocumentLocks()
+        const lockedDocuments =  documentLocks.filter(x => sharedDocuments.includes(x.documentId.toString()))
+        if(lockedDocuments.length !== 0){
+            const documentName = await Users.findById(new ObjectId(req.body.userId).fileSystem.fileMap[lockedDocuments[0].documentId].name)
+            Responses.ConflictError(res, {message:"Operation forbidden: "+documentName+" is a shared file and is opened by a user."})
+        }
         await FileSystemUtils.deleteFileSystemElement(req.body.userId, req.body.folderId)
         const user = await Users.findById(new ObjectId(req.body.userId))
         Responses.OkResponse(res, user);
-    } catch (err) {
+    } catch (err) { 
         Responses.ServerError(res, {message: err.message});
     }
 }
