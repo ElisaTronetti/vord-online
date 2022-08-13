@@ -48,6 +48,17 @@ async function moveElements(req, res){
     }
 }
 
+async function renameElement(req, res){
+    try {
+        const path = "fileSystem.fileMap."+req.body.elemId+".name"
+        await Users.findByIdAndUpdate(new ObjectId(req.userId), {$set: {[path]: req.body.newName}})
+        const user = await Users.findById(new ObjectId(req.body.userId))
+        Responses.OkResponse(res, user);
+    } catch (err) {
+        Responses.ServerError(res, {message: err.message});
+    }
+}
+
 async function getUserFileSystem(req, res){
     if(req.query._id === undefined){
         res.status(406).json({err: "missing user id"})
@@ -81,5 +92,6 @@ module.exports = {
     updateUserFileSystem,
     createFolder,
     deleteFolder,
-    moveElements
+    moveElements,
+    renameElement
 }
