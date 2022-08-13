@@ -4,8 +4,6 @@ const SharedDocuments = require('../models/sharedDocumentsModel')
 const SharedDocumentFactory = require('../models/factories/sharedDocument')
 const Utils = require("./shaDocUtils")
 const Users = require('../models/userModel')
-const { updateUserFileSystem } = require('./fileSystemController')
-const { findByIdAndUpdate } = require('../models/userModel')
 
 //share local document, create shared document, delete local document
 async function shareLocalDocument(req, res){
@@ -90,18 +88,18 @@ async function manageSharedGroup(req, res){
         } else {
             const docId = new ObjectId(doc._id)
            
-            const sharedGroup = await Utils.generateSharedGroup(userArray)
+            const sharedGroup = await Utils.generateSharedGroup(req.body.sharedWith)
             const alreadyPresent = await Utils.getSharedGroup(req.body.documentId)
 
             newEmails = sharedGroup.map(a => a.email);
             oldEmails = alreadyPresent.map(a => a.email);
-
             let toRemove = alreadyPresent.filter(x => !newEmails.includes(x.email))
-            let toUpdate = alreadyPresent.filter(x => newEmails.includes(x.email) && !sharedGroup.includes(x)) //exclude new users
+            let toUpdate = alreadyPresent.filter(x => newEmails.includes(x.email) &&
+                                                      sharedGroup.find(y => y.email === x.email).role !== x.role) //exclude new users
             console.log("sharedGroup: "+sharedGroup+"\n"+
                         "alreadyPresent: "+alreadyPresent+"\n"+
                         "toRemove: "+toRemove+"\n"+
-                        "toUpdate: "+toUpdate+"\n") 
+                        "toUpdate: "+toUpdate+"\n")
 
             let originalPathToMantain, index, updatedMember
             for(let userToUpdate of toUpdate){
@@ -140,7 +138,7 @@ async function manageSharedGroup(req, res){
             //update new and updated members's filesystems
             await Utils.updateUsersFileSystem(doc._id, sharedGroup)
 
-            const result = await Users.getById(new ObjectId(req.body.user._id))
+            const result = await Users.findById(new ObjectId(req.body.user._id))
             Responses.OkResponse(res, result)
         }
     } catch (err){

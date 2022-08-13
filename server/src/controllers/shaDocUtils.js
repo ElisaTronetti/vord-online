@@ -174,7 +174,6 @@ async function deleteSharedDocumentForUser(uId, dId){
         const path = "fileSystem.fileMap." + dId
         await Users.findByIdAndUpdate(userId, {$unset: {[path]: 1}})
         await updateParent(uId, parentId, dId, false)
-        
         //return updated user
         user = await Users.findById(userId)
         return user
@@ -284,7 +283,7 @@ async function updateParent(userId, parentId, fileId, bool){
             folder.childrenIds.splice(folder.childrenIds.indexOf(fileId))
             folder.childrenCount--
         }
-        await findByIdAndUpdate(new ObjectId(userId), {$set: { [path]: folder}})
+        await Users.findByIdAndUpdate(new ObjectId(userId), {$set: { [path]: folder}})
     } catch (err){
         throw err
     }
@@ -301,5 +300,4 @@ module.exports = {
     getSharedGroup,
     deleteSharedDocumentForUser,
     checkAndRestoreLocalDocument,
-    deleteFolder
 }
