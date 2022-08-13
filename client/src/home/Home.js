@@ -3,17 +3,17 @@ import React, { useState, useMemo, useEffect, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { CreateDocument, CreateFolder, ShareDocument, CopyDocument } from './fileSystemUtils/actions'
-import { getFileSystem, updateFileSystem } from './fileSystemRequests'
+import { CreateDocument, CreateFolder, ShareDocument, CopyDocument, HandleSharedGroup } from './fileSystemUtils/actions'
+import { getFileSystem } from './requests/fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
 import { SocketContext } from '../util/socketContext'
-import { recreateFileSystem } from './fileSystemUtils/fileSystemStructure'
 
 import CreateFolderModal from './modals/CreateFolderModal'
 import CreateDocumentModal from './modals/CreateDocumentModal'
 import ShareDocumentModal from './modals/ShareDocumentModal'
 import DeleteConfirmationModal from './modals/DeleteConfirmationModal'
+import HandleSharedGroupModal from './modals/HandleSharedGroup'
 
 export default function Home() {
   const user = {
@@ -26,18 +26,18 @@ export default function Home() {
   }
 
   const socket = useContext(SocketContext)
-
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [currentFolderId, setCurrentFolderId] = useState(fileSystem.rootFolderId)
   const [openDocument, setDocumentToOpen] = useState(undefined)
   const [shareDocument, setShareDocument] = useState(undefined)
+  const [handleSharedGroup, setHandleSharedGroup] = useState(undefined)
   const [deleteElements, setDeleteElements] = useState([])
   const [createFolderModalShow, setCreateFolderModalShow] = useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = useState(false)
 
   useEffect(() => {
-    updateFileSystem(user, recreateFileSystem(fileSystem.rootFolderId, fileSystem.fileMap))
+    //updateFileSystem(user, recreateFileSystem(fileSystem.rootFolderId, fileSystem.fileMap))
     // Ask periodically for the file system update
     const interval = setInterval(() => {
       getFileSystem(user, dispatch)
@@ -52,7 +52,6 @@ export default function Home() {
   const files = useFiles(fileSystem.fileMap, currentFolderId)
   const handleFileAction = useActionHandler(
     user,
-    fileSystem,
     socket,
     setCreateFolderModalShow,
     setCreateDocumentModalShow,
@@ -60,12 +59,13 @@ export default function Home() {
     setShareDocument,
     setCurrentFolderId,
     setDocumentToOpen,
+    setHandleSharedGroup,
     dispatch)
   const folderChain = useFolderChain(fileSystem.fileMap, currentFolderId)
 
   // Initialize actions
   const fileActions = useMemo(
-    () => [ChonkyActions.DeleteFiles, CreateFolder, CreateDocument, ShareDocument, CopyDocument],
+    () => [ChonkyActions.DeleteFiles, CreateFolder, CreateDocument, ShareDocument, CopyDocument, HandleSharedGroup],
     []
   )
 
@@ -83,6 +83,7 @@ export default function Home() {
       <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
       <ShareDocumentModal show={shareDocument !== undefined} onHide={() => setShareDocument(undefined)} shareDocument={shareDocument} />
       <DeleteConfirmationModal show={deleteElements.length} onHide={() => setDeleteElements([])} deleteElements={deleteElements} />
+      <HandleSharedGroupModal show={handleSharedGroup !== undefined} onHide={() => setHandleSharedGroup(undefined)} document={handleSharedGroup} />
     </div>
   )
 }

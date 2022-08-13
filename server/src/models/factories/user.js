@@ -12,7 +12,7 @@ function createUser(email, name, surname, password) {
           name: "Home",
           isShared: false,
           isDir: true,
-          childrenCounts: 0,
+          childrenCount: 0,
           childrenIds: []
         }
       }

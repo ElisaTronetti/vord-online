@@ -19,12 +19,11 @@ export function userLogin(email, password, dispatch) {
                 // Save email
                 let email = result.email
                 dispatch(setEmail(email))
-                // Save file system if it exists
-                if (result.fileSystem !== undefined) {
-                    let fileSystem = result.fileSystem
-                    dispatch(setRootFolderId(fileSystem.rootFolderId))
-                    dispatch(setFileMap(fileSystem.fileMap))
-                }
+                // Save file system 
+                let fileSystem = result.fileSystem
+                dispatch(setRootFolderId(fileSystem.rootFolderId))
+                dispatch(setFileMap(fileSystem.fileMap))
+                
                 createSuccessToast('Login successful!')
             },
             error: function () {
@@ -66,6 +65,11 @@ export function userSignup(name, surname, email, password, passwordConfirm, disp
                 // Save email
                 let email = result.email
                 dispatch(setEmail(email))
+                // Save file system
+                let fileSystem = result.fileSystem
+                dispatch(setRootFolderId(fileSystem.rootFolderId))
+                dispatch(setFileMap(fileSystem.fileMap))
+
                 createSuccessToast('Signup successful!')
             },
             error: function () {
@@ -79,11 +83,11 @@ export function userSignup(name, surname, email, password, passwordConfirm, disp
 
 // Checks if there are empty params
 function emptySignupParams(name, surname, email, password, passwordConfirm) {
-    return name === '' &&
-        surname === '' &&
-        email === '' &&
-        password === '' &&
-        passwordConfirm === ''
+    return name.trim() === '' &&
+        surname.trim() === '' &&
+        email.trim() === '' &&
+        password.trim() === '' &&
+        passwordConfirm.trim() === ''
 }
 
 // Create signup body params

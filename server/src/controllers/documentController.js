@@ -28,7 +28,7 @@ async function createNewDocument(req, res){
         await Users.findByIdAndUpdate(new ObjectId(req.body._id), { $push: { "documents": newDocument }})
         
         //create file 
-        FileSystemUtils.createFileSystemElement(req.body._id, user.fileSystem.rootFolderId, newDocument.title, newId.toString())
+        await FileSystemUtils.createFileSystemElement(req.body._id, req.body.parentId, newDocument.title, newId.toString())
 
         //get updated user and return it
         user = await Users.findById(new ObjectId(req.body._id))
@@ -59,9 +59,10 @@ async function deleteDocument(req, res){
 async function getDocument(req, res){
     try{
         Users
-        .findOne({id: req.body.userId})
+        .findOne({_id: req.query.userId})
         .select({ documents: {$elemMatch: {_id: req.query._id}}})
         .exec(function (err, result) {
+            console.log(result)
             Responses.OkResponse(res, result.documents[0]);
         });
         

@@ -1,13 +1,14 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useCallback } from 'react'
-import { moveFiles, copyDocuments } from './modifyFileSystem'
-import { CopyDocument, CreateDocument, ShareDocument } from './actions'
-import { checkDocumentLock } from '../../util/resourcesLock'
+import { CopyDocument, CreateDocument, HandleSharedGroup, ShareDocument } from './actions'
+import { openDocumentIfUnlocked } from '../../util/resourcesLock'
+import { moveElements } from '../requests/fileSystemRequests'
+import { copyDocument } from '../requests/documentRequests'
 
 // Check the action and perform the specified function
-export const useActionHandler = (user, fileSystem, socket,
+export const useActionHandler = (user, socket,
     setCreateFolderModalShow, setCreateDocumentModalShow, setDeleteElements,
-    setShareDocument, setCurrentFolderId, setDocumentToOpen, dispatch) => {
+    setShareDocument, setCurrentFolderId, setDocumentToOpen, setHandleSharedGroup, dispatch) => {
     return useCallback(
         data => {
             if (data.id === ChonkyActions.OpenFiles.id) {
@@ -22,20 +23,18 @@ export const useActionHandler = (user, fileSystem, socket,
                         // Open without lock checks if it is a local document
                         setDocumentToOpen(fileToOpen)
                     } else {
-                        checkDocumentLock(socket, fileToOpen, setDocumentToOpen)
+                        openDocumentIfUnlocked(socket, fileToOpen, setDocumentToOpen)
                     }
                 }
             } else if (data.id === CopyDocument.id) {
                 // Copy files
-                copyDocuments(user, fileSystem, data.state.selectedFilesForAction, dispatch)
+                copyDocument(user, data.state.selectedFilesForAction[0], dispatch)
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 setDeleteElements(data.state.selectedFilesForAction)
             } else if (data.id === ChonkyActions.MoveFiles.id) {
-                moveFiles(
+                moveElements(
                     user,
-                    fileSystem,
                     data.payload.files,
-                    data.payload.source,
                     data.payload.destination,
                     dispatch
                 )
@@ -48,8 +47,10 @@ export const useActionHandler = (user, fileSystem, socket,
             } else if (data.id === ShareDocument.id) {
                 // Show modal to share a document
                 setShareDocument(data.state.selectedFilesForAction)
+            } else if (data.id === HandleSharedGroup.id) {
+                setHandleSharedGroup(data.state.selectedFilesForAction)
             }
         },
-        [user, fileSystem, socket, setCurrentFolderId, setShareDocument, setDeleteElements, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentToOpen, dispatch]
+        [user, socket, setHandleSharedGroup, setCurrentFolderId, setShareDocument, setDeleteElements, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentToOpen, dispatch]
     )
 }

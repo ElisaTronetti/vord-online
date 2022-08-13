@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
-import { deleteFiles } from '../fileSystemUtils/modifyFileSystem'
-import { deleteLocalDocuments, deleteSharedDocuments } from '../documentsUtils/modifyDocument'
+import { deleteElementsForMe, deleteElementsForAll } from '../documentsUtils/modifyDocument'
+import { SocketContext } from '../../util/socketContext'
 
 export default function DeleteSharedModal(props) {
     const user = {
@@ -10,23 +10,16 @@ export default function DeleteSharedModal(props) {
         token: useSelector(state => state.userData.token),
         email: useSelector(state => state.userData.email)
     }
-    const fileSystem = {
-        rootFolderId: useSelector(state => state.fileSystemData.rootFolderId),
-        fileMap: useSelector(state => state.fileSystemData.fileMap)
-    }
     const dispatch = useDispatch()
+    const socket = useContext(SocketContext)
 
     function confirmDeleteElements(deleteForMe) {
         props.onHide()
-        // If there are not owned shared files
-        // Delete files from file system
-        deleteFiles(user, fileSystem, props.deleteElements, dispatch)
-        // Delete local documents from user
-        deleteLocalDocuments(user, props.deleteElements)
-        // Delete shared documents
-        deleteSharedDocuments(user, props.sharedDocuments, true)
-        // Delete owned documents with correct option
-        deleteSharedDocuments(user, props.ownedDocuments, deleteForMe)
+        if (deleteForMe) {
+            deleteElementsForMe(user, props.deleteElements, dispatch)
+        } else {
+            deleteElementsForAll(user, props.deleteElements, socket, dispatch)
+        }
     }
 
     return (

@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast, createSuccessToast } from "../commonComponents/Toast"
+import { createErrorToast, createSuccessToast } from "../../commonComponents/Toast"
 import { getFileSystem } from './fileSystemRequests'
 
 export function shareDocument(user, inputFields, document, props, resetInputFields, dispatch) {
@@ -32,5 +32,22 @@ function createShareDocumentParams(user, inputFields, documentId) {
         },
         sharedWith: inputFields,
         documentId: documentId,
+    })
+}
+
+export function getSharedGroup(documentId, userId, setInputFields) {
+    console.log(documentId)
+    console.log(userId)
+    $.ajax({
+        contentType: 'application/json',
+        headers: { 'userid': userId, 'documentid': documentId },
+        success: function (res) {
+            setInputFields(res)
+        },
+        error: function () {
+            createErrorToast('Error: impossible to retrieve the shared group')
+        },
+        type: 'GET',
+        url: process.env.REACT_APP_SERVER + 'sharedDocuments/getSharedGroup'
     })
 }

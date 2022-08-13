@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import { createErrorToast } from '../commonComponents/Toast'
-import { setRootFolderId, setFileMap } from '../redux/fileSystemData/actions'
+import { createErrorToast, createSuccessToast } from '../../commonComponents/Toast'
+import { setRootFolderId, setFileMap } from '../../redux/fileSystemData/actions'
 
 export function getFileSystem(user, dispatch) {
     $.ajax({
@@ -53,5 +53,39 @@ function createFileSystemParams(id, fileSystem) {
     return JSON.stringify({
         _id: id,
         fileSystem: fileSystem
+    })
+}
+
+export function moveElements(user, elements, destination, dispatch) {
+    const ids = elements.map(e => e.id)
+    const names = elements.map(e => e.name)
+    $.ajax({
+        contentType: 'application/json',
+        headers: { 'token': user.token },
+        dataType: 'json',
+        data: createMoveElementsParams(user.id, ids, destination.id),
+        success: function (result) {
+            console.log(result)
+            // Save new file system state
+            let id = result.fileSystem.rootFolderId
+            dispatch(setRootFolderId(id))
+            let fileMap = result.fileSystem.fileMap
+            dispatch(setFileMap(fileMap))
+            createSuccessToast('The elements ' + names + ' moved correctly in ' + destination.name)
+        },
+        error: function () {
+            createErrorToast('Error: move the elements ' + names + ' in ' + destination.name)
+        },
+        type: 'POST',
+        url: process.env.REACT_APP_SERVER + 'fileSystem/moveElements'
+    })
+}
+
+// Create body params for move elements
+function createMoveElementsParams(userId, ids, destinationId) {
+    return JSON.stringify({
+        userId: userId,
+        elementIds: ids,
+        destinationId: destinationId
     })
 }

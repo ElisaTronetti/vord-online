@@ -24,17 +24,19 @@ const EDITTOR_HOLDER_ID = 'editorjs'
 
 function Editor() {
   const [editorData, setEditorData] = useState(undefined)
-  let userId = useSelector(state => state.userData.id)
-  let token = useSelector(state => state.userData.token)
+  const user = {
+    id: useSelector(state => state.userData.id),
+    token: useSelector(state => state.userData.token)
+  }
   const document = useLocation().state.document
   const socket = useContext(SocketContext)
 
   if (editorData === undefined && document.isShared) {
     // Retrieve shared file
-    getSharedDocument(document.id, userId, setEditorData)
+    getSharedDocument(document.id, user.id, setEditorData)
   } else if (editorData === undefined && !document.isShared) {
     // Retrieve local file
-    getDocument(document.id, token, userId, setEditorData)
+    getDocument(document.id, user, setEditorData)
   }
   useEffect(() => {
     if (editorData !== undefined) initEditor()
@@ -58,10 +60,10 @@ function Editor() {
         // Logic to save this data to DB
         if (document.isShared) {
           // Save shared document
-          saveSharedDocument(userId, document.id, content.blocks)
+          saveSharedDocument(user.id, document.id, content.blocks)
         } else {
           // Save local document
-          saveDocument(userId, document.id, token, content.blocks)
+          saveDocument(user, document.id, content.blocks)
         }
       },
       autofocus: true,

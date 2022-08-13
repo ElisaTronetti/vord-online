@@ -1,22 +1,30 @@
-import { deleteSharedDocument, deleteLocalDocument } from './documentRequests'
-import { FileHelper } from 'chonky'
+import { deleteSharedDocument, deleteLocalDocument } from '../requests/documentRequests'
+import { deleteFolder } from '../requests/folderRequests'
+import { deleteDocumentIfUnlocked } from '../../util/resourcesLock'
+import { isSharedDocumentOwned, isDocument, isDocumentLocal, isSharedDocument } from './documentUtils'
 
-export const deleteLocalDocuments = (user, files) => {
-    files.forEach((file) => {
-        // Check if local document
-        if (!FileHelper.isDirectory(file) && !file.isShared) {
-            // Delete local document from user
-            deleteLocalDocument(user, file.id)
+export const deleteElementsForMe = (user, elements, dispatch) => {
+    elements.forEach((element) => {
+        if (!isDocument(element)) {
+            deleteFolder(user, element, dispatch)
+        } else if (isDocumentLocal(element)) {
+            deleteLocalDocument(user, element, dispatch)
+        } else if (isSharedDocument(element)) {
+            deleteSharedDocument(user, element, true, dispatch)
         }
     })
 }
 
-export const deleteSharedDocuments = (user, files, deleteForMe) => {
-    files.forEach((file) => {
-        // Check if shared document
-        if (!FileHelper.isDirectory(file) && file.isShared) {
-            // Delete shared document from user
-            deleteSharedDocument(user, file, deleteForMe)
+export const deleteElementsForAll = (user, elements, socket, dispatch) => {
+    elements.forEach((element) => {
+        if (!isDocument(element)) {
+            deleteFolder(user, element, dispatch)
+        } else if (isDocumentLocal(element)) {
+            deleteLocalDocument(user, element, dispatch)
+        } else if (!isSharedDocumentOwned(element)) {
+            deleteSharedDocument(user, element, true, dispatch)
+        } else if (isSharedDocumentOwned(element)){
+            deleteDocumentIfUnlocked(user, element, socket, dispatch)
         }
-    })
+    })   
 }

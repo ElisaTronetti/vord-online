@@ -38,9 +38,9 @@ async function deleteFolder(req, res){
     }
 }
 
-async function moveElement(req, res){
+async function moveElements(req, res){
     try {
-        await FileSystemUtils.moveElement(req.body.userId, req.body.elementId, req.body.destinationId)
+        await FileSystemUtils.moveElements(req.body.userId, req.body.elementIds, req.body.destinationId)
         const user = await Users.findById(new ObjectId(req.body.userId))
         Responses.OkResponse(res, user);
     } catch (err) {
@@ -92,6 +92,6 @@ module.exports = {
     updateUserFileSystem,
     createFolder,
     deleteFolder,
-    moveElement,
+    moveElements,
     renameElement
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -8,23 +8,27 @@ import Col from 'react-bootstrap/Col'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Row from 'react-bootstrap/Row'
 
-import { createErrorToast } from '../../commonComponents/Toast'
-import { shareDocument } from '../requests/sharingRequests'
+import { getSharedGroup } from '../requests/sharingRequests'
 
-export default function ShareDocumentModal(props) {
+export default function HandleSharedGroupModal(props) {
     const initialState = [{
         email: '',
         role: ''
     }]
-    const [inputFields, setInputFields] = useState(initialState)
-    const addInputField = () => {
-        setInputFields([...inputFields, {
-            email: '',
-            role: ''
-        }])
+    const user = {
+        id: useSelector(state => state.userData.id),
+        token: useSelector(state => state.userData.token),
+        email: useSelector(state => state.userData.email)
     }
+    const [inputFields, setInputFields] = useState(initialState)
+
+    useEffect(() => {
+        if (props.document !== undefined) {
+            getSharedGroup(props.document[0].id, user.id, setInputFields)
+        }  
+    }, [props.document, user.id])
+
     const removeInputFields = (index) => {
-        console.log(index)
         const rows = [...inputFields]
         rows.splice(index, 1)
         setInputFields(rows)
@@ -39,22 +43,10 @@ export default function ShareDocumentModal(props) {
         setInputFields(list)
     }
 
-    const user = {
-        id: useSelector(state => state.userData.id),
-        token: useSelector(state => state.userData.token),
-        email: useSelector(state => state.userData.email)
-    }
-
     const dispatch = useDispatch()
 
-    function tryShareDocument() {
-        const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
-        const document = props.shareDocument[0]
-        if (!isEmpty) {
-            shareDocument(user, inputFields, document, props, resetInputFields, dispatch)
-        } else {
-            createErrorToast('Insert all the required data')
-        }
+    function modifySharedGroup() {
+        console.log("AA")
     }
 
     return (
@@ -65,7 +57,7 @@ export default function ShareDocumentModal(props) {
             aria-labelledby="contained-modal-title-vcenter"
             centered>
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">Share document to:</Modal.Title>
+                <Modal.Title id="contained-modal-title-vcenter">Handle shared group:</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Container>
@@ -81,11 +73,10 @@ export default function ShareDocumentModal(props) {
                                                     <FloatingLabel controlId="floatingInputGrid" label="Email address">
                                                         <Form.Control
                                                             type="email"
-                                                            onChange={event => handleChange(index, event)}
                                                             value={email}
                                                             name="email"
-                                                            onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); tryShareDocument() } }}
-                                                            placeholder="name@example.com" />
+                                                            disabled
+                                                        />
                                                     </FloatingLabel>
                                                 </Form.Group>
                                             </Col>
@@ -99,7 +90,7 @@ export default function ShareDocumentModal(props) {
                                                             onChange={event => handleChange(index, event)}
                                                             value={role}
                                                             name="role"
-                                                            onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); tryShareDocument() } }}>
+                                                            onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); modifySharedGroup() } }}>
                                                             <option></option>
                                                             <option value="1">Read Only</option>
                                                             <option value="2">Editor</option>
@@ -109,21 +100,18 @@ export default function ShareDocumentModal(props) {
                                                 </Form.Group>
                                             </Col>
                                             <Col md={1} className="text-center">
-                                                {(inputFields.length !== 1) ? <Button className="btn btn-danger" onClick={() => removeInputFields(index)}>-</Button> : ''}
+                                                <Button className="btn btn-danger" onClick={() => removeInputFields(index)}>-</Button>
                                             </Col>
                                         </Row>
                                     )
                                 })
                             }
-                            <div>
-                                <Button className="btn btn-success" onClick={addInputField}>Add new</Button>
-                            </div>
                         </Col>
                     </Row>
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={tryShareDocument}>Share</Button>
+                <Button onClick={modifySharedGroup}>Modify</Button>
             </Modal.Footer>
         </Modal>
     )

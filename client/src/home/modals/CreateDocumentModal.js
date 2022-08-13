@@ -3,10 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import ObjectID from 'bson-objectid'
 
-import { createDocument } from '../fileSystemUtils/modifyFileSystem'
-import { createNewDocument } from '../documentsUtils/documentRequests'
+import { createNewDocument } from '../requests/documentRequests'
 
 export default function CreateDocumentModal(props) {
     const [inputDocumentName, setInputDocumentName] = useState("")
@@ -16,18 +14,11 @@ export default function CreateDocumentModal(props) {
         id: useSelector(state => state.userData.id),
         token: useSelector(state => state.userData.token)
     }
-    const fileSystem = {
-        rootFolderId: useSelector(state => state.fileSystemData.rootFolderId),
-        fileMap: useSelector(state => state.fileSystemData.fileMap)
-    }
 
     function tryCreateDocument() {
-        if (inputDocumentName !== "") {
-            let documentId = ObjectID().toHexString()
-            // Create document in the file system
-            createDocument(user, fileSystem, props.currentFolderId, documentId, inputDocumentName, dispatch)
-            // Trigger HTTP request to create document in the list of documents in the server
-            createNewDocument(user, documentId, inputDocumentName)
+        if (inputDocumentName.trim() !== "") {
+            // Trigger HTTP request to create document in the list of documents and in the filesystem
+            createNewDocument(user, props.currentFolderId, inputDocumentName, dispatch)
             props.onHide()
         }
     }

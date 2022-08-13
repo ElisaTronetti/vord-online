@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 
-import { createFolder } from '../fileSystemUtils/modifyFileSystem'
+import { createFolder } from '../requests/folderRequests'
 
 export default function CreateFolderModal(props) {
     const [inputFolderName, setInputFolderName] = useState("")
@@ -14,14 +14,10 @@ export default function CreateFolderModal(props) {
         id: useSelector(state => state.userData.id),
         token: useSelector(state => state.userData.token)
     }
-    const fileSystem = {
-        rootFolderId: useSelector(state => state.fileSystemData.rootFolderId),
-        fileMap: useSelector(state => state.fileSystemData.fileMap)
-    }
 
     function tryCreateFolder() {
-        if (inputFolderName !== "") {
-            createFolder(user, fileSystem, props.currentFolderId, inputFolderName, dispatch)
+        if (inputFolderName.trim() !== '') {
+            createFolder(user, props.currentFolderId, inputFolderName, dispatch)
             props.onHide()
         }
     }
