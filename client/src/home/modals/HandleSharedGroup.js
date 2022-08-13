@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Row from 'react-bootstrap/Row'
 
+import { createErrorToast } from '../../commonComponents/Toast'
 import { getSharedGroup, manageSharedGroup } from '../requests/sharingRequests'
 
 export default function HandleSharedGroupModal(props) {
@@ -54,7 +55,7 @@ export default function HandleSharedGroupModal(props) {
     function modifySharedGroup() {
         const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
         if (!isEmpty) {
-            manageSharedGroup(user, inputFields, props.document, props, resetInputFields, dispatch)
+            manageSharedGroup(user, inputFields, props.document[0], props, resetInputFields, dispatch)
         } else {
             createErrorToast('Insert all the required data')
         } 

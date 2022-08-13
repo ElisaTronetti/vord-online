@@ -36,8 +36,6 @@ function createShareDocumentParams(user, inputFields, documentId) {
 }
 
 export function getSharedGroup(documentId, userId, setInputFields) {
-    console.log(documentId)
-    console.log(userId)
     $.ajax({
         contentType: 'application/json',
         headers: { 'userid': userId, 'documentid': documentId },

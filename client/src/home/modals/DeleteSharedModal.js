@@ -22,6 +22,21 @@ export default function DeleteSharedModal(props) {
         }
     }
 
+    function deleteOwnerDocumentMessage() {
+        let message = 'You are the owner of '
+        for (let i = 0; i < props.ownedDocuments.length; i++) {
+            message = message + '"' + props.ownedDocuments[0].name + '"'
+            if (i === props.ownedDocuments.length - 1) {
+                message = message + '. '
+            } else {
+                message = message + ', '
+            }
+        }
+        message = message + 'You can delete ' + ((props.ownedDocuments.length === 1) ? 'it' : 'them')
+        message = message + ' only for you or for all the shared group.'
+        return message
+    }
+
     return (
         <Modal
             show={props.show}
@@ -32,7 +47,7 @@ export default function DeleteSharedModal(props) {
             <Modal.Header closeButton>
                 <Modal.Title>Delete Confirmation</Modal.Title>
             </Modal.Header>
-            <Modal.Body>{deleteOwnerDocumentMessage(props.ownedDocuments)}</Modal.Body>
+            <Modal.Body>{deleteOwnerDocumentMessage()}</Modal.Body>
             <Modal.Footer>
                 <div>
                     <Button variant="default me-1" onClick={props.onHide}>
@@ -48,19 +63,4 @@ export default function DeleteSharedModal(props) {
             </Modal.Footer>
         </Modal>
     )
-}
-
-function deleteOwnerDocumentMessage(ownedDocuments) {
-    let message = 'You are the owner of '
-    for (let i = 0; i < ownedDocuments.length; i++) {
-        message = message + '"' + ownedDocuments[0].name + '"'
-        if (i === ownedDocuments.length - 1) {
-            message = message + '. '
-        } else {
-            message = message + ', '
-        }
-    }
-    message = message + 'You can delete ' + ((ownedDocuments.length === 1) ? 'it' : 'them')
-    message = message + ' only for you or for all the shared group.'
-    return message
 }
