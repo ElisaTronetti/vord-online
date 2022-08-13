@@ -45,6 +45,6 @@ router.post("/sharedDocuments/deleteForMe", clearance(1), (req, res) => controll
 router.post("/sharedDocuments/deleteForAll", clearance(3), (req, res) => controller.deleteForAll(req, res));
 
 //user, folderId (body)
-router.post("/sharedDocuments/deleteFolder", (req, res) => controller.deleteFolder(req, res));
+//router.post("/sharedDocuments/deleteFolder", (req, res) => controller.deleteFolder(req, res));
 
 module.exports = router;

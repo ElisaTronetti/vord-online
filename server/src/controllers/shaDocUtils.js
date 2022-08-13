@@ -1,7 +1,6 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Users = require('../models/userModel')
 const SharedDocuments = require('../models/sharedDocumentsModel')
-const FileSystemUtils = require('./fileSystemUtils')
 const { findById } = require('../models/userModel')
 
 async function deleteDocument(userId, documentId){
@@ -174,7 +173,7 @@ async function deleteSharedDocumentForUser(uId, dId){
         //delete document from user's filesystem
         const path = "fileSystem.fileMap." + dId
         await Users.findByIdAndUpdate(userId, {$unset: {[path]: 1}})
-        await FileSystemUtils.updateParent(uId, parentId, dId, false)
+        await updateParent(uId, parentId, dId, false)
         
         //return updated user
         user = await findById(userId)
@@ -229,7 +228,7 @@ async function checkAndRestoreLocalDocument(dId){
         throw err
     }
 }
-
+/*
 async function deleteFolder(userId, folderId){
     try{
         let elem
@@ -269,8 +268,27 @@ async function deleteFolder(userId, folderId){
     } catch (err){
         Responses.ServerError(res, {message: err.message})
     }
-}
+}*/
 
+async function updateParent(userId, parentId, fileId, bool){
+    try{
+        const user = await Users.findById(new ObjectId(userId))
+        let folder = user.fileSystem.fileMap[parentId]
+        const path = "fileSystem.fileMap." + parentId
+
+        //if bool === true then add the file to the folder, else remove it
+        if(bool === true){
+            folder.childrenIds.push(fileId)
+            folder.childrenCount++
+        } else{
+            folder.childrenIds.splice(folder.childrenIds.indexOf(fileId))
+            folder.childrenCount--
+        }
+        await findByIdAndUpdate(new ObjectId(userId), {$set: { [path]: folder}})
+    } catch (err){
+        throw err
+    }
+}
 module.exports = {
     deleteDocument,
     deleteFile,

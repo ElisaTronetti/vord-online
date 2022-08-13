@@ -18,4 +18,7 @@ router.post("/fileSystem/deleteFolder", auth, (req, res) => controller.deleteFol
 //body param: userId, elementId, destinationId, token
 router.post("/fileSystem/moveElement", auth, (req, res) => controller.moveElement(req, res));
 
+//body param: userId, elementId, newName
+router.post("/fileSystem/renameElement", auth, (req, res) => controller.renameElement(req, res));
+
 module.exports = router;

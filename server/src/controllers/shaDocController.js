@@ -5,6 +5,7 @@ const SharedDocumentFactory = require('../models/factories/sharedDocument')
 const Utils = require("./shaDocUtils")
 const Users = require('../models/userModel')
 const { updateUserFileSystem } = require('./fileSystemController')
+const { findByIdAndUpdate } = require('../models/userModel')
 
 //share local document, create shared document, delete local document
 async function shareLocalDocument(req, res){
@@ -84,27 +85,59 @@ async function shareSharedDocument(req, res){
 async function manageSharedGroup(req, res){
     try{
         const doc = await Utils.getSharedDocument(req.body.documentId)
-        if(!doc || doc.alreadyOpen){
+        if(!doc){
             Responses.ServerError(res, {message: "File already opened or non existing"})
         } else {
             const docId = new ObjectId(doc._id)
-
-            //empty the shared group
-            await SharedDocuments.findByIdAndUpdate(docId, { $set: { "sharedGroup": [] } })
-            
-            //re-generate sharedGroup with the body.sharedWith array and the user who has used this operation. 
-            let i = 0, userArray = req.body.sharedWith
-            const role = 3, email = req.body.user.email
-            userArray.push({email, role})
+            userArray.push({email : req.body.user.email, role: 3})
             const sharedGroup = await Utils.generateSharedGroup(userArray)
+            const alreadyPresent = await Utils.getSharedGroup(req.body.documentId)
 
-            //update shared group and return it
-            while(sharedGroup[i] !== undefined){
-                await SharedDocuments.findByIdAndUpdate(docId, {$push: {"sharedGroup": sharedGroup[i] } } )
-                i++
+            newEmails = sharedGroup.map(a => a.email);
+            oldEmails = alreadyPresent.map(a => a.email);
+
+            let toRemove = alreadyPresent.filter(x => !newEmails.includes(x.email))
+            let toUpdate = alreadyPresent.filter(x => newEmails.includes(x.email))
+           // let toInsert = sharedGroup.filter(x => !oldEmails.includes(x.email))
+
+            let originalPathToMantain, index, updatedMember
+            for(let userToUpdate of toUpdate){
+                //remove users to update from shared group (will be reinserted with updated role)
+                //do not remove the file from their fileSystems, because il will be updated in the updateUsersFilesystems
+                alreadyPresent.splice(alreadyPresent.indexOf(userToUpdate))
+
+                //get the parent folder of the shared file in the user to update fileSystem
+                originalPathToMantain = await Users.findById(new ObjectId(userToUpdate._id))
+                originalPathToMantain = originalPathToMantain.fileSystem.fileMap[doc._id].parentId
+
+                //find the index of the user to update in the new shared group array, remove it and re add it with the orginalpath field
+                index = sharedGroup.map(object => object.email).indexOf(userToUpdate.email)
+                updatedMember = {_id: new ObjectId(userToUpdate._id), 
+                                 email: userToUpdate.email, 
+                                 role: sharedGroup[index].role, 
+                                 originalPath: originalPathToMantain
+                                }
+                sharedGroup.splice(index)
+                sharedGroup.push(updatedMember)
+            }
+
+            //overwrite the sharedGroup of the document in the db, mantaining only the members left untouched or that will be removed by this function
+            await SharedDocuments.findByIdAndUpdate(docId, {$set: {sharedGroup: alreadyPresent}})
+
+            //now remove both these users from the shared group of the document and the file from their fileSystems
+            for(let userToRemove of toRemove){
+                await Utils.deleteSharedDocumentForUser(userToRemove._id, docId.toString())
             }
             
-            const result = await Utils.getSharedGroup(req.body.documentId)
+            //get the remaining shared group saved on server and concat it to the shared group variable (that represents new AND updated members)
+            let updatedSharedGroup = await Utils.getSharedGroup(doc._id)
+            updatedSharedGroup.concat(sharedGroup)
+            await findByIdAndUpdate(docId, {$set: {sharedGroup: updatedSharedGroup}})
+
+            //update new and updated members's filesystems
+            await Utils.updateUsersFileSystem(doc._id, sharedGroup)
+
+            const result = await Users.getById(new ObjectId(req.body.user._id))
             Responses.OkResponse(res, result)
         }
     } catch (err){
