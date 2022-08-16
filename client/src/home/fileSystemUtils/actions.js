@@ -45,7 +45,7 @@ export const CopyDocument = defineFileAction({
 export const ShareDocument =  defineFileAction({
     id: 'share_document',
     requiresSelection: true,
-    fileFilter: file => file && !file.isDir,
+    fileFilter: file => (file && !file.isDir) && (!file.isShared || (file.isShared && file.role === 3)) ,
     button: {
         name: 'Share document',
         toolbar: true,
@@ -55,13 +55,13 @@ export const ShareDocument =  defineFileAction({
     },
 })
 
-// Custom action used to create handle the shared group of a document
-export const HandleSharedGroup =  defineFileAction({
-    id: 'handle_shared_group',
+// Custom action used to manage the shared group of a document
+export const ManageSharedGroup =  defineFileAction({
+    id: 'manage_shared_group',
     requiresSelection: true,
     fileFilter: file => file && !file.isDir && file.isShared,
     button: {
-        name: 'Handle shared group',
+        name: 'Manage shared group',
         toolbar: true,
         contextMenu: true,
         group: 'Actions',

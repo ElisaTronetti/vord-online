@@ -3,7 +3,7 @@ import React, { useState, useMemo, useEffect, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { CreateDocument, CreateFolder, ShareDocument, CopyDocument, HandleSharedGroup } from './fileSystemUtils/actions'
+import { CreateDocument, CreateFolder, ShareDocument, CopyDocument, ManageSharedGroup } from './fileSystemUtils/actions'
 import { getFileSystem } from './requests/fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
@@ -64,7 +64,7 @@ export default function Home() {
 
   // Initialize actions
   const fileActions = useMemo(
-    () => [ChonkyActions.DeleteFiles, CreateFolder, CreateDocument, ShareDocument, CopyDocument, HandleSharedGroup],
+    () => [ChonkyActions.DeleteFiles, CreateFolder, CreateDocument, ShareDocument, CopyDocument, ManageSharedGroup],
     []
   )
 

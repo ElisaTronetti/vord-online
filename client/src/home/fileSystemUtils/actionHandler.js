@@ -1,6 +1,6 @@
 import { ChonkyActions, FileHelper } from 'chonky'
 import { useCallback } from 'react'
-import { CopyDocument, CreateDocument, HandleSharedGroup, ShareDocument } from './actions'
+import { CopyDocument, CreateDocument, ManageSharedGroup, ShareDocument } from './actions'
 import { openDocumentIfUnlocked } from '../../util/resourcesLock'
 import { moveElements } from '../requests/fileSystemRequests'
 import { copyDocument } from '../requests/documentRequests'
@@ -47,7 +47,7 @@ export const useActionHandler = (user, socket,
             } else if (data.id === ShareDocument.id) {
                 // Show modal to share a document
                 setShareDocument(data.state.selectedFilesForAction)
-            } else if (data.id === HandleSharedGroup.id) {
+            } else if (data.id === ManageSharedGroup.id) {
                 setHandleSharedGroup(data.state.selectedFilesForAction)
             }
         },
