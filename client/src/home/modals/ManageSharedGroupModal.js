@@ -8,9 +8,10 @@ import Row from 'react-bootstrap/Row'
 
 import { createErrorToast } from '../../commonComponents/Toast'
 import { getSharedGroup, manageSharedGroup } from '../requests/sharingRequests'
+
 import ManageSharedGroupUserData from './utils/ManageSharedGroupUserData'
 import ManageSharedGroupOwner from './utils/ManageSharedGroupOwner'
-import { isPlainObject } from 'jquery'
+import ManageSharedGroupNonOwner from './utils/ManageSharedGroupNonOwner'
 
 export default function ManageSharedGroupModal(props) {
     const newUsersInitialState = []
@@ -53,7 +54,7 @@ export default function ManageSharedGroupModal(props) {
         }
     }
 
-    function updateData(inputFields, sharedGroupData){
+    function updateData(inputFields, sharedGroupData) {
         setInputFields(inputFields)
         setSharedGroupData(sharedGroupData)
     }
@@ -66,7 +67,7 @@ export default function ManageSharedGroupModal(props) {
             aria-labelledby="contained-modal-title-vcenter"
             centered>
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">Handle shared group:</Modal.Title>
+                <Modal.Title id="contained-modal-title-vcenter">Manage shared group:</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Container>
@@ -82,7 +83,11 @@ export default function ManageSharedGroupModal(props) {
                                     <ManageSharedGroupOwner inputFields={inputFields} sharedGroupData={sharedGroupData} updateData={updateData}></ManageSharedGroupOwner>
                                 )
                             }
-
+                            {
+                                sharedGroupData.user.length > 0 && sharedGroupData.user[0].role !== 3 && (
+                                    <ManageSharedGroupNonOwner sharedGroup={sharedGroupData.sharedGroup}></ManageSharedGroupNonOwner>
+                                )
+                            }
                         </Col>
                     </Row>
                 </Container>

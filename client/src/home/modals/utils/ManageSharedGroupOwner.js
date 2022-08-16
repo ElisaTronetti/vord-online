@@ -5,7 +5,6 @@ import Col from 'react-bootstrap/Col'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Row from 'react-bootstrap/Row'
 
-
 export default function ManageSharedGroupOwner(props) {
     const [inputFields, setInputFields] = useState(props.inputFields)
     const [sharedGroupData, setSharedGroupData] = useState(props.sharedGroupData)
