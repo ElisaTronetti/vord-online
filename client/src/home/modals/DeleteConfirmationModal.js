@@ -52,7 +52,7 @@ export default function DeleteConfirmationModal(props) {
                     </div>
                 </Modal.Footer>
             </Modal>
-            <DeleteSharedModal show={showOwnedDocumentsDeleteOptions} onHide={() => { props.onHide(); setShowOwnedDocumentsDeleteOptions(false) }} deleteElements={props.deleteElements} />
+            <DeleteSharedModal show={showOwnedDocumentsDeleteOptions} onHide={() => { props.onHide(); setShowOwnedDocumentsDeleteOptions(false) }} deleteElements={props.deleteElements} ownedDocuments={ownedDocuments} />
         </div>
     )
 }
