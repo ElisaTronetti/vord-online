@@ -1,64 +1,61 @@
-import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useState, useEffect } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Container from 'react-bootstrap/Container'
-import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
-import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Row from 'react-bootstrap/Row'
 
 import { createErrorToast } from '../../commonComponents/Toast'
 import { getSharedGroup, manageSharedGroup } from '../requests/sharingRequests'
+import ManageSharedGroupUserData from './utils/ManageSharedGroupUserData'
+import ManageSharedGroupOwner from './utils/ManageSharedGroupOwner'
+import { isPlainObject } from 'jquery'
 
 export default function ManageSharedGroupModal(props) {
-    const initialState = [{
-        email: '',
-        role: ''
-    }]
+    const newUsersInitialState = []
+    const oldSharedGroupInitialState = {
+        user: [],
+        sharedGroup: []
+    }
     const user = {
         id: useSelector(state => state.userData.id),
         token: useSelector(state => state.userData.token),
         email: useSelector(state => state.userData.email)
     }
-    const [inputFields, setInputFields] = useState(initialState)
+
+    const [inputFields, setInputFields] = useState(newUsersInitialState)
+    const [sharedGroupData, setSharedGroupData] = useState(oldSharedGroupInitialState)
 
     useEffect(() => {
         if (props.document !== undefined) {
-            getSharedGroup(props.document[0].id, user.id, setInputFields)
+            getSharedGroup(props.document[0].id, user.id, setSharedGroupData)
         }
     }, [props.document, user.id])
 
-    const addInputField = () => {
-        setInputFields([...inputFields, {
-            email: '',
-            role: ''
-        }])
-    }
-    const removeInputFields = (index) => {
-        const rows = [...inputFields]
-        rows.splice(index, 1)
-        setInputFields(rows)
-    }
     const resetInputFields = () => {
-        setInputFields(initialState)
-    }
-    const handleChange = (index, event) => {
-        const { name, value } = event.target
-        const list = [...inputFields]
-        list[index][name] = value
-        setInputFields(list)
+        setInputFields(newUsersInitialState)
+        setSharedGroupData(oldSharedGroupInitialState)
     }
 
     const dispatch = useDispatch()
 
     function modifySharedGroup() {
-        const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
-        if (!isEmpty) {
-            manageSharedGroup(user, inputFields, props.document[0], props, resetInputFields, dispatch)
+        console.log(inputFields)
+        console.log(sharedGroupData)
+        const areNewUsersEmpty = inputFields.length > 0 && Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
+        const areOldRolesEmpty = Object.values(sharedGroupData.sharedGroup).every(x => x.role === '')
+        if (!areNewUsersEmpty && !areOldRolesEmpty) {
+            let fullShareGroup = sharedGroupData.user.concat(sharedGroupData.sharedGroup).concat(inputFields)
+            manageSharedGroup(user, fullShareGroup, props.document[0], props, resetInputFields, dispatch)
         } else {
             createErrorToast('Insert all the required data')
-        } 
+        }
+    }
+
+    function updateData(inputFields, sharedGroupData){
+        setInputFields(inputFields)
+        setSharedGroupData(sharedGroupData)
     }
 
     return (
@@ -76,51 +73,16 @@ export default function ManageSharedGroupModal(props) {
                     <Row>
                         <Col className='sm-8'>
                             {
-                                inputFields.map((data, index) => {
-                                    const { email, role } = data
-                                    return (
-                                        <Row className="my-2 align-items-center" key={index}>
-                                            <Col>
-                                                <Form.Group controlId="formGridEmail">
-                                                    <FloatingLabel controlId="floatingInputGrid" label="Email address">
-                                                        <Form.Control
-                                                            type="email"
-                                                            value={email}
-                                                            name="email"
-                                                            disabled
-                                                        />
-                                                    </FloatingLabel>
-                                                </Form.Group>
-                                            </Col>
-                                            <Col>
-                                                <Form.Group controlId="formGridRole">
-                                                    <FloatingLabel
-                                                        controlId="floatingSelectGrid"
-                                                        label="Select role">
-                                                        <Form.Select
-                                                            aria-label=""
-                                                            onChange={event => handleChange(index, event)}
-                                                            value={role}
-                                                            name="role"
-                                                            onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); modifySharedGroup() } }}>
-                                                            <option></option>
-                                                            <option value="1">Read Only</option>
-                                                            <option value="2">Editor</option>
-                                                            <option value="3">Owner</option>
-                                                        </Form.Select>
-                                                    </FloatingLabel>
-                                                </Form.Group>
-                                            </Col>
-                                            <Col md={1} className="text-center">
-                                                <Button className="btn btn-danger" onClick={() => removeInputFields(index)}>-</Button>
-                                            </Col>
-                                        </Row>
-                                    )
-                                })
+                                sharedGroupData.user.length > 0 && (
+                                    <ManageSharedGroupUserData user={sharedGroupData.user}></ManageSharedGroupUserData>
+                                )
                             }
-                            <div>
-                                <Button className="btn btn-success" onClick={addInputField}>Add new</Button>
-                            </div>
+                            {
+                                sharedGroupData.user.length > 0 && sharedGroupData.user[0].role === 3 && (
+                                    <ManageSharedGroupOwner inputFields={inputFields} sharedGroupData={sharedGroupData} updateData={updateData}></ManageSharedGroupOwner>
+                                )
+                            }
+
                         </Col>
                     </Row>
                 </Container>

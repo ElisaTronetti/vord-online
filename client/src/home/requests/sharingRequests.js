@@ -3,6 +3,7 @@ import { createErrorToast, createSuccessToast } from "../../commonComponents/Toa
 import { getFileSystem } from './fileSystemRequests'
 
 export function shareDocument(user, inputFields, document, props, resetInputFields, dispatch) {
+    console.log(inputFields)
     $.ajax({
         contentType: 'application/json',
         headers: { "token": user.token },
@@ -35,12 +36,17 @@ function createShareDocumentParams(user, inputFields, documentId) {
     })
 }
 
-export function getSharedGroup(documentId, userId, setInputFields) {
+export function getSharedGroup(documentId, userId, setSharedGroupData) {
     $.ajax({
         contentType: 'application/json',
         headers: { 'userid': userId, 'documentid': documentId },
         success: function (res) {
-            setInputFields(res)
+            let userInfo = res.filter(entry => entry._id === userId)
+            let sharedGroup = res.filter(entry => entry._id !== userId)
+            setSharedGroupData({
+                user: userInfo,
+                sharedGroup: sharedGroup
+            })
         },
         error: function () {
             createErrorToast('Error: impossible to retrieve the shared group')
@@ -50,12 +56,13 @@ export function getSharedGroup(documentId, userId, setInputFields) {
     })
 }
 
-export function manageSharedGroup(user, inputFields, document, props, resetInputFields, dispatch) {
+export function manageSharedGroup(user, sharedGroup, document, props, resetInputFields, dispatch) {
+    console.log(sharedGroup)
     $.ajax({
         contentType: 'application/json',
         headers: { 'token': user.token },
         dataType: 'json',
-        data: createShareDocumentParams(user, inputFields, document.id),
+        data: createShareDocumentParams(user, sharedGroup, document.id),
         success: function () {
             createSuccessToast('Shared group modified')
             props.onHide()
