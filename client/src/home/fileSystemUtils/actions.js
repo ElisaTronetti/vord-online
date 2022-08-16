@@ -42,7 +42,7 @@ export const CopyDocument = defineFileAction({
 })
 
 // Custom action used to create the share document behavior only if a document is selected
-export const ShareDocument =  defineFileAction({
+export const ShareDocument = defineFileAction({
     id: 'share_document',
     requiresSelection: true,
     fileFilter: file => (file && !file.isDir) && (!file.isShared || (file.isShared && file.role === 3)) ,

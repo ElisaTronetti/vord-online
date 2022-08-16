@@ -13,7 +13,7 @@ import CreateFolderModal from './modals/CreateFolderModal'
 import CreateDocumentModal from './modals/CreateDocumentModal'
 import ShareDocumentModal from './modals/ShareDocumentModal'
 import DeleteConfirmationModal from './modals/DeleteConfirmationModal'
-import HandleSharedGroupModal from './modals/HandleSharedGroup'
+import ManageSharedGroupModal from './modals/ManageSharedGroupModal'
 
 export default function Home() {
   const user = {
@@ -82,7 +82,7 @@ export default function Home() {
       <CreateDocumentModal show={createDocumentModalShow} onHide={() => setCreateDocumentModalShow(false)} currentFolderId={currentFolderId} />
       <ShareDocumentModal show={shareDocument !== undefined} onHide={() => setShareDocument(undefined)} shareDocument={shareDocument} />
       <DeleteConfirmationModal show={deleteElements.length} onHide={() => setDeleteElements([])} deleteElements={deleteElements} />
-      <HandleSharedGroupModal show={handleSharedGroup !== undefined} onHide={() => setHandleSharedGroup(undefined)} document={handleSharedGroup} />
+      <ManageSharedGroupModal show={handleSharedGroup !== undefined} onHide={() => setHandleSharedGroup(undefined)} document={handleSharedGroup} />
     </div>
   )
 }

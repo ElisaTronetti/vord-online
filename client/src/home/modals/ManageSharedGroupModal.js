@@ -11,7 +11,7 @@ import Row from 'react-bootstrap/Row'
 import { createErrorToast } from '../../commonComponents/Toast'
 import { getSharedGroup, manageSharedGroup } from '../requests/sharingRequests'
 
-export default function HandleSharedGroupModal(props) {
+export default function ManageSharedGroupModal(props) {
     const initialState = [{
         email: '',
         role: ''
