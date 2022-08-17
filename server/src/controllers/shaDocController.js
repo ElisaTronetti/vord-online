@@ -122,18 +122,12 @@ async function manageSharedGroup(req, res){
                 sharedGroup.push(updatedMember)
             }
 
-            //overwrite the sharedGroup of the document in the db, mantaining only the members left untouched or that will be removed by this function
-            await SharedDocuments.findByIdAndUpdate(docId, {$set: {sharedGroup: alreadyPresent}})
-
             //now remove both these users from the shared group of the document and the file from their fileSystems
             for(let userToRemove of toRemove){
                 await Utils.deleteSharedDocumentForUser(userToRemove._id, docId.toString())
             }
-            
-            //get the remaining shared group saved on server and concat it to the shared group variable (that represents new AND updated members)
-            let updatedSharedGroup = await Utils.getSharedGroup(doc._id)
-            updatedSharedGroup.concat(sharedGroup)
-            await SharedDocuments.findByIdAndUpdate(docId, {$set: {sharedGroup: updatedSharedGroup}})
+
+            await SharedDocuments.findByIdAndUpdate(docId, {$set: {sharedGroup: sharedGroup}})
 
             //update new and updated members's filesystems
             await Utils.updateUsersFileSystem(doc._id, sharedGroup)
@@ -142,6 +136,7 @@ async function manageSharedGroup(req, res){
             Responses.OkResponse(res, result)
         }
     } catch (err){
+        console.log(err)
         Responses.ServerError(res, {message: err.message})
     }
 }
