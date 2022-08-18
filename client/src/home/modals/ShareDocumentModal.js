@@ -24,10 +24,8 @@ export default function ShareDocumentModal(props) {
         }])
     }
     const removeInputFields = (index) => {
-        console.log(index)
-        const rows = [...inputFields]
-        rows.splice(index, 1)
-        setInputFields(rows)
+        inputFields.splice(index, 1)
+        setInputFields(inputFields)
     }
     const resetInputFields = () => {
         setInputFields(initialState)
