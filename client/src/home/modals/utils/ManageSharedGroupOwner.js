@@ -16,10 +16,17 @@ export default function ManageSharedGroupOwner(props) {
         }])
         props.updateData(inputFields, sharedGroupData)
     }
-    const removeInputFields = (index) => {
-        const rows = [...inputFields]
-        rows.splice(index, 1)
-        setInputFields(rows)
+    const removeNewUsers = (index) => {
+        inputFields.splice(index, 1)
+        setInputFields(inputFields)
+        props.updateData(inputFields, sharedGroupData)
+    }
+    const removeOldUsers = (index) => {
+        sharedGroupData.sharedGroup.splice(index, 1)
+        setSharedGroupData({
+            user: sharedGroupData.user,
+            sharedGroup: sharedGroupData.sharedGroup
+        })
         props.updateData(inputFields, sharedGroupData)
     }
     const handleNewUsersChange = (index, event) => {
@@ -30,12 +37,11 @@ export default function ManageSharedGroupOwner(props) {
         props.updateData(inputFields, sharedGroupData)
     }
     const handleOldUsersChange = (index, event) => {
-        const prevUserState = [...sharedGroupData.user]
         const { name, value } = event.target
         const list = [...sharedGroupData.sharedGroup]
         list[index][name] = value
         setSharedGroupData({
-            user: prevUserState,
+            user: sharedGroupData.user,
             sharedGroup: list
         })
         props.updateData(inputFields, sharedGroupData)
@@ -79,7 +85,7 @@ export default function ManageSharedGroupOwner(props) {
                                 </Form.Group>
                             </Col>
                             <Col md={1} className="text-center">
-                                <Button className="btn btn-danger" onClick={() => removeInputFields(index)}>-</Button>
+                                <Button className="btn btn-danger" onClick={() => removeOldUsers(index)}>-</Button>
                             </Col>
                         </Row>
                     )
@@ -121,7 +127,7 @@ export default function ManageSharedGroupOwner(props) {
                                     </Form.Group>
                                 </Col>
                                 <Col md={1} className="text-center">
-                                    <Button className="btn btn-danger" onClick={() => removeInputFields(index)}>-</Button>
+                                    <Button className="btn btn-danger" onClick={() => removeNewUsers(index)}>-</Button>
                                 </Col>
                             </Row>
                         )
