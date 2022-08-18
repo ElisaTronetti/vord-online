@@ -87,7 +87,6 @@ async function manageSharedGroup(req, res){
             Responses.ServerError(res, {message: "File already opened or non existing"})
         } else {
             const docId = new ObjectId(doc._id)
-           
             const sharedGroup = await Utils.generateSharedGroup(req.body.sharedWith)
             const alreadyPresent = await Utils.getSharedGroup(req.body.documentId)
 
@@ -96,10 +95,6 @@ async function manageSharedGroup(req, res){
             let toRemove = alreadyPresent.filter(x => !newEmails.includes(x.email))
             let toUpdate = alreadyPresent.filter(x => newEmails.includes(x.email) &&
                                                       sharedGroup.find(y => y.email === x.email).role !== x.role) //exclude new users
-            console.log("sharedGroup: "+sharedGroup+"\n"+
-                        "alreadyPresent: "+alreadyPresent+"\n"+
-                        "toRemove: "+toRemove+"\n"+
-                        "toUpdate: "+toUpdate+"\n")
 
             let originalPathToMantain, index, updatedMember
             for(let userToUpdate of toUpdate){
@@ -130,13 +125,12 @@ async function manageSharedGroup(req, res){
             await SharedDocuments.findByIdAndUpdate(docId, {$set: {sharedGroup: sharedGroup}})
 
             //update new and updated members's filesystems
-            await Utils.updateUsersFileSystem(doc._id, sharedGroup)
+            await Utils.updateUsersFileSystem(sharedGroup, doc)
 
             const result = await Users.findById(new ObjectId(req.body.user._id))
             Responses.OkResponse(res, result)
         }
     } catch (err){
-        console.log(err)
         Responses.ServerError(res, {message: err.message})
     }
 }

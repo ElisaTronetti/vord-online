@@ -271,7 +271,6 @@ async function deleteFolder(userId, folderId){
 
 async function updateParent(userId, parentId, fileId, bool){
     try{
-        console.log(parentId)
         const user = await Users.findById(new ObjectId(userId))
         let folder = user.fileSystem.fileMap[parentId]
         const path = "fileSystem.fileMap." + parentId
