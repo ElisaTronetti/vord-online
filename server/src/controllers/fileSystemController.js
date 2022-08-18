@@ -36,7 +36,7 @@ async function deleteFolder(req, res){
         const documentLocks = DocumentLock.getDocumentLocks()
         const lockedDocuments =  documentLocks.filter(x => sharedDocuments.includes(x.documentId.toString()))
         if(lockedDocuments.length !== 0){
-            const documentName = await Users.findById(new ObjectId(req.body.userId).fileSystem.fileMap[lockedDocuments[0].documentId].name)
+            const documentName = await Users.findById(new ObjectId(req.body.userId)).fileSystem.fileMap[lockedDocuments[0].documentId].name
             Responses.ConflictError(res, {message:"Operation forbidden: "+documentName+" is a shared file and is opened by a user."})
         }
         await FileSystemUtils.deleteFileSystemElement(req.body.userId, req.body.folderId)

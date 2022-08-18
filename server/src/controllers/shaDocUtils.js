@@ -271,6 +271,7 @@ async function deleteFolder(userId, folderId){
 
 async function updateParent(userId, parentId, fileId, bool){
     try{
+        console.log(parentId)
         const user = await Users.findById(new ObjectId(userId))
         let folder = user.fileSystem.fileMap[parentId]
         const path = "fileSystem.fileMap." + parentId
@@ -280,7 +281,7 @@ async function updateParent(userId, parentId, fileId, bool){
             folder.childrenIds.push(fileId)
             folder.childrenCount++
         } else{
-            folder.childrenIds.splice(folder.childrenIds.indexOf(fileId))
+            folder.childrenIds.splice(folder.childrenIds.indexOf(fileId),1)
             folder.childrenCount--
         }
         await Users.findByIdAndUpdate(new ObjectId(userId), {$set: { [path]: folder}})

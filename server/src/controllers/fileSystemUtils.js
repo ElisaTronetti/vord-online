@@ -74,7 +74,8 @@ async function findAllSharedDocumentsInFolder(userId, folderId)
     try{
         const user = await Users.findById(new ObjectId(userId))
         const childrenIds = user.fileSystem.fileMap[folderId].childrenIds
-        let child, result
+        let child
+        const result = []
         for(let childId of childrenIds){
             child = user.fileSystem.fileMap[childId]
             if(childId.isDir){
