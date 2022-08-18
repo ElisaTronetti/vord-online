@@ -25,7 +25,7 @@ export default function ManageSharedGroupOwner(props) {
     const handleNewUsersChange = (index, event) => {
         const { name, value } = event.target
         const list = [...inputFields]
-        list[index][name] = parseInt(value, 10)
+        list[index][name] = value
         setInputFields(list)
         props.updateData(inputFields, sharedGroupData)
     }
@@ -33,7 +33,7 @@ export default function ManageSharedGroupOwner(props) {
         const prevUserState = [...sharedGroupData.user]
         const { name, value } = event.target
         const list = [...sharedGroupData.sharedGroup]
-        list[index][name] = parseInt(value, 10)
+        list[index][name] = value
         setSharedGroupData({
             user: prevUserState,
             sharedGroup: list
