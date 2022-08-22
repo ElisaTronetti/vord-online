@@ -60,7 +60,7 @@ async function moveElements(req, res){
 async function renameElement(req, res){
     try {
         const path = "fileSystem.fileMap."+req.body.elemId+".name"
-        await Users.findByIdAndUpdate(new ObjectId(req.userId), {$set: {[path]: req.body.newName}})
+        await Users.findByIdAndUpdate(new ObjectId(req.body.userId), {$set: {[path]: req.body.newName}})
         const user = await Users.findById(new ObjectId(req.body.userId))
         Responses.OkResponse(res, user);
     } catch (err) {
