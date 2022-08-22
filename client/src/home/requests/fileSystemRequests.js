@@ -65,7 +65,6 @@ export function moveElements(user, elements, destination, dispatch) {
         dataType: 'json',
         data: createMoveElementsParams(user.id, ids, destination.id),
         success: function (result) {
-            console.log(result)
             // Save new file system state
             let id = result.fileSystem.rootFolderId
             dispatch(setRootFolderId(id))
@@ -87,5 +86,37 @@ function createMoveElementsParams(userId, ids, destinationId) {
         userId: userId,
         elementIds: ids,
         destinationId: destinationId
+    })
+}
+
+export function renameElement(user, element, newName, dispatch, props) {
+    $.ajax({
+        contentType: 'application/json',
+        headers: { 'token': user.token },
+        dataType: 'json',
+        data: createRenameElementParams(user.id, element.id, newName),
+        success: function (result) {
+            // Save new file system state
+            let id = result.fileSystem.rootFolderId
+            dispatch(setRootFolderId(id))
+            let fileMap = result.fileSystem.fileMap
+            dispatch(setFileMap(fileMap))
+            createSuccessToast('The element ' + element.name + ' renamed correctly in ' + newName)
+            props.onHide()
+        },
+        error: function () {
+            createErrorToast('Error: impossible to rename ' + element.name + ' in ' + newName)
+        },
+        type: 'POST',
+        url: process.env.REACT_APP_SERVER + 'fileSystem/renameElement'
+    })
+}
+
+// Create body params for rename element
+function createRenameElementParams(userId, elementId, newName) {
+    return JSON.stringify({
+        userId: userId,
+        newName: newName,
+        elemId: elementId
     })
 }
