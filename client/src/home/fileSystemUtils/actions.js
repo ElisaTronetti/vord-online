@@ -68,3 +68,16 @@ export const ManageSharedGroup =  defineFileAction({
         icon: ChonkyIconName.config,
     },
 })
+
+// Custom action used to rename an element in the file system
+export const RenameElement =  defineFileAction({
+    id: 'rename_element',
+    requiresSelection: true,
+    button: {
+        name: 'Rename',
+        toolbar: true,
+        contextMenu: true,
+        group: 'Actions',
+        icon: ChonkyIconName.terminal,
+    },
+})

@@ -3,7 +3,7 @@ import React, { useState, useMemo, useEffect, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { CreateDocument, CreateFolder, ShareDocument, CopyDocument, ManageSharedGroup } from './fileSystemUtils/actions'
+import { CreateDocument, CreateFolder, ShareDocument, CopyDocument, ManageSharedGroup, RenameElement } from './fileSystemUtils/actions'
 import { getFileSystem } from './requests/fileSystemRequests'
 import { useFiles, useFolderChain } from './fileSystemUtils/fileSystemNavigator'
 import { useActionHandler } from './fileSystemUtils/actionHandler'
@@ -14,6 +14,7 @@ import CreateDocumentModal from './modals/CreateDocumentModal'
 import ShareDocumentModal from './modals/ShareDocumentModal'
 import DeleteConfirmationModal from './modals/DeleteConfirmationModal'
 import ManageSharedGroupModal from './modals/ManageSharedGroupModal'
+import RenameElementModal from './modals/RenameElementModal'
 
 export default function Home() {
   const user = {
@@ -35,6 +36,7 @@ export default function Home() {
   const [deleteElements, setDeleteElements] = useState([])
   const [createFolderModalShow, setCreateFolderModalShow] = useState(false)
   const [createDocumentModalShow, setCreateDocumentModalShow] = useState(false)
+  const [renameElement, setRenameElementModalShow] = useState(undefined)
 
   useEffect(() => {
     // Ask periodically for the file system update
@@ -54,6 +56,7 @@ export default function Home() {
     socket,
     setCreateFolderModalShow,
     setCreateDocumentModalShow,
+    setRenameElementModalShow,
     setDeleteElements,
     setShareDocument,
     setCurrentFolderId,
@@ -64,7 +67,7 @@ export default function Home() {
 
   // Initialize actions
   const fileActions = useMemo(
-    () => [ChonkyActions.DeleteFiles, CreateFolder, CreateDocument, ShareDocument, CopyDocument, ManageSharedGroup],
+    () => [ChonkyActions.DeleteFiles, CreateFolder, CreateDocument, ShareDocument, CopyDocument, ManageSharedGroup, RenameElement],
     []
   )
 
@@ -83,6 +86,7 @@ export default function Home() {
       <ShareDocumentModal show={shareDocument !== undefined} onHide={() => setShareDocument(undefined)} shareDocument={shareDocument} />
       <DeleteConfirmationModal show={deleteElements.length} onHide={() => setDeleteElements([])} deleteElements={deleteElements} />
       <ManageSharedGroupModal show={handleSharedGroup !== undefined} onHide={() => setHandleSharedGroup(undefined)} document={handleSharedGroup} />
+      <RenameElementModal show={renameElement !== undefined} onHide={() => setRenameElementModalShow(undefined)} element={renameElement} />
     </div>
   )
 }
