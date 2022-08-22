@@ -6,9 +6,7 @@ import { moveElements } from '../requests/fileSystemRequests'
 import { copyDocument } from '../requests/documentRequests'
 
 // Check the action and perform the specified function
-export const useActionHandler = (user, socket,
-    setCreateFolderModalShow, setCreateDocumentModalShow, setRenameElementModalShow, setDeleteElements,
-    setShareDocument, setCurrentFolderId, setDocumentToOpen, setHandleSharedGroup, dispatch) => {
+export const useActionHandler = (user, socket, setModalController, setCurrentFolderId, setDocumentToOpen, dispatch) => {
     return useCallback(
         data => {
             if (data.id === ChonkyActions.OpenFiles.id) {
@@ -30,7 +28,10 @@ export const useActionHandler = (user, socket,
                 // Copy files
                 copyDocument(user, data.state.selectedFilesForAction[0], dispatch)
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
-                setDeleteElements(data.state.selectedFilesForAction)
+                setModalController(prevState => ({
+                    ...prevState,
+                    deleteElements: data.state.selectedFilesForAction
+                }))
             } else if (data.id === ChonkyActions.MoveFiles.id) {
                 moveElements(
                     user,
@@ -40,19 +41,34 @@ export const useActionHandler = (user, socket,
                 )
             } else if (data.id === ChonkyActions.CreateFolder.id) {
                 // Show modal to create a new folder
-                setCreateFolderModalShow(true)
+                setModalController(prevState => ({
+                    ...prevState,
+                    createFolderModalShow: true
+                }))
             } else if (data.id === CreateDocument.id) {
                 // Show modal to create a new document
-                setCreateDocumentModalShow(true)
+                setModalController(prevState => ({
+                    ...prevState,
+                    createDocumentModalShow: true
+                }))
             } else if (data.id === ShareDocument.id) {
                 // Show modal to share a document
-                setShareDocument(data.state.selectedFilesForAction)
+                setModalController(prevState => ({
+                    ...prevState,
+                    shareDocument: data.state.selectedFilesForAction
+                }))
             } else if (data.id === ManageSharedGroup.id) {
-                setHandleSharedGroup(data.state.selectedFilesForAction)
+                setModalController(prevState => ({
+                    ...prevState,
+                    handleSharedGroup: data.state.selectedFilesForAction
+                }))
             } else if (data.id ===  RenameElement.id) {
-                setRenameElementModalShow(data.state.selectedFilesForAction[0])
+                setModalController(prevState => ({
+                    ...prevState,
+                    renameElement: data.state.selectedFilesForAction[0]
+                }))
             }
         },
-        [user, socket, setRenameElementModalShow, setHandleSharedGroup, setCurrentFolderId, setShareDocument, setDeleteElements, setCreateDocumentModalShow, setCreateFolderModalShow, setDocumentToOpen, dispatch]
+        [user, socket, setModalController, setCurrentFolderId, setDocumentToOpen, dispatch]
     )
 }
