@@ -22,32 +22,38 @@ export default function DeleteSharedModal(props) {
         }
     }
 
-    return (
-        <Modal
-            show={props.show}
-            onHide={props.onHide}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered>
-            <Modal.Header closeButton>
-                <Modal.Title>Delete Confirmation</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>{deleteOwnerDocumentMessage(props.ownedDocuments)}</Modal.Body>
-            <Modal.Footer>
-                <div>
-                    <Button variant="default me-1" onClick={props.onHide}>
-                        Cancel
-                    </Button>
-                    <Button variant="danger me-1" onClick={() => confirmDeleteElements(true)}>
-                        Delete for me
-                    </Button>
-                    <Button variant="danger me-1" onClick={() => confirmDeleteElements(false)}>
-                        Delete for all
-                    </Button>
-                </div>
-            </Modal.Footer>
-        </Modal>
-    )
+    if (props.ownedDocuments === undefined){
+        return (
+            <div></div>
+        )
+    } else {
+        return (
+            <Modal
+                show={props.show}
+                onHide={props.onHide}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete Confirmation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{deleteOwnerDocumentMessage(props.ownedDocuments)}</Modal.Body>
+                <Modal.Footer>
+                    <div>
+                        <Button variant="default me-1" onClick={props.onHide}>
+                            Cancel
+                        </Button>
+                        <Button variant="danger me-1" onClick={() => confirmDeleteElements(true)}>
+                            Delete for me
+                        </Button>
+                        <Button variant="danger me-1" onClick={() => confirmDeleteElements(false)}>
+                            Delete for all
+                        </Button>
+                    </div>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
 }
 
 function deleteOwnerDocumentMessage(ownedDocuments) {
