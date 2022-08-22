@@ -183,14 +183,13 @@ async function deleteForMe(req, res){
 async function deleteForAll(req, res){
     try{
         const sharedGroup = await Utils.getSharedGroup(req.body.documentId)
-        let user, result
-        
+                
         for (let member of sharedGroup) {
-            user = await Utils.deleteSharedDocumentForUser(member._id, req.body.documentId)
-            if(user._id === new ObjectId(req.body.user._id)){result = user}
+            await Utils.deleteSharedDocumentForUser(member._id, req.body.documentId)
         }
-        
+
         //return updated user
+        const result = await Users.findById(new ObjectId(req.body.user._id))
         Responses.OkResponse(res, result)
     } catch (err){
         Responses.ServerError(res, {message: err.message})
