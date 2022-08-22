@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form'
 import { createFolder } from '../requests/folderRequests'
 
 export default function CreateFolderModal(props) {
-    const [inputFolderName, setInputFolderName] = useState("")
+    const [inputFolderName, setInputFolderName] = useState('')
     const dispatch = useDispatch()
     const inputRef = useRef()
     const user = {
@@ -36,7 +36,6 @@ export default function CreateFolderModal(props) {
             <Modal.Body>
                 <Form>
                     <Form.Group className="mb-3" controlId="formFolderName">
-                        <Form.Label>Folder name</Form.Label>
                         <Form.Control
                             ref={inputRef}
                             onChange={input => setInputFolderName(input.target.value)}

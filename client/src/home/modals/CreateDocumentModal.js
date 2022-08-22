@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form'
 import { createNewDocument } from '../requests/documentRequests'
 
 export default function CreateDocumentModal(props) {
-    const [inputDocumentName, setInputDocumentName] = useState("")
+    const [inputDocumentName, setInputDocumentName] = useState('')
     const dispatch = useDispatch()
     const inputRef = useRef()
     const user = {
@@ -16,7 +16,7 @@ export default function CreateDocumentModal(props) {
     }
 
     function tryCreateDocument() {
-        if (inputDocumentName.trim() !== "") {
+        if (inputDocumentName.trim() !== '') {
             // Trigger HTTP request to create document in the list of documents and in the filesystem
             createNewDocument(user, props.currentFolderId, inputDocumentName, dispatch)
             props.onHide()
@@ -36,8 +36,7 @@ export default function CreateDocumentModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group className="mb-3" controlId="formFolderName">
-                        <Form.Label>Document name</Form.Label>
+                    <Form.Group className="mb-3" controlId="formDocumentName">
                         <Form.Control
                             ref={inputRef}
                             onChange={input => setInputDocumentName(input.target.value)}

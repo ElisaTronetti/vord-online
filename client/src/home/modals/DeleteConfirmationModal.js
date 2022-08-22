@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { deleteElementsForMe } from '../documentsUtils/modifyDocument'
@@ -12,10 +12,16 @@ export default function DeleteConfirmationModal(props) {
         token: useSelector(state => state.userData.token),
         email: useSelector(state => state.userData.email)
     }
-
-    const dispatch = useDispatch()
     const [showOwnedDocumentsDeleteOptions, setShowOwnedDocumentsDeleteOptions] = useState(undefined)
-    const ownedDocuments = props.deleteElements.filter(isSharedDocumentOwned)
+    const [ownedDocuments, setOwnedDocuments] = useState(undefined)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        // Update owned documents when the props is not undefined anymore
+        if (props.deleteElements !== undefined) {
+            setOwnedDocuments(props.deleteElements.filter(isSharedDocumentOwned))
+        }
+    }, [props.deleteElements])
 
     function confirmDeleteElements() {
         if (!ownedDocuments.length) {
@@ -29,32 +35,38 @@ export default function DeleteConfirmationModal(props) {
         }
     }
 
-    return (
-        <div>
-            <Modal
-                show={props.show}
-                onHide={props.onHide}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Delete Confirmation</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>{deleteElementsMessage(props.deleteElements)}</Modal.Body>
-                <Modal.Footer>
-                    <div>
-                        <Button variant="default me-1" onClick={props.onHide}>
-                            Cancel
-                        </Button>
-                        <Button variant="danger me-1" onClick={() => confirmDeleteElements()}>
-                            Delete
-                        </Button>
-                    </div>
-                </Modal.Footer>
-            </Modal>
-            <DeleteSharedModal show={showOwnedDocumentsDeleteOptions} onHide={() => { props.onHide(); setShowOwnedDocumentsDeleteOptions(false) }} deleteElements={props.deleteElements} ownedDocuments={ownedDocuments} />
-        </div>
-    )
+    if (props.deleteElements === undefined && props.ownedDocuments === undefined) {
+        return (
+            <div></div>
+        )
+    } else {
+        return (
+            <div>
+                <Modal
+                    show={props.show}
+                    onHide={props.onHide}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Delete Confirmation</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>{deleteElementsMessage(props.deleteElements)}</Modal.Body>
+                    <Modal.Footer>
+                        <div>
+                            <Button variant="default me-1" onClick={props.onHide}>
+                                Cancel
+                            </Button>
+                            <Button variant="danger me-1" onClick={() => confirmDeleteElements()}>
+                                Delete
+                            </Button>
+                        </div>
+                    </Modal.Footer>
+                </Modal>
+                <DeleteSharedModal show={showOwnedDocumentsDeleteOptions} onHide={() => { props.onHide(); setShowOwnedDocumentsDeleteOptions(false) }} deleteElements={props.deleteElements} ownedDocuments={ownedDocuments} />
+            </div>
+        )
+    }
 }
 
 function deleteElementsMessage(deleteElements) {
