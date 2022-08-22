@@ -172,8 +172,8 @@ async function deleteSharedDocumentForUser(uId, dId){
 
         //delete document from user's filesystem
         const path = "fileSystem.fileMap." + dId
-        await Users.findByIdAndUpdate(userId, {$unset: {[path]: 1}})
         await updateParent(uId, parentId, dId, false)
+        await Users.findByIdAndUpdate(userId, {$unset: {[path]: 1}})
         //return updated user
         user = await Users.findById(userId)
         return user
@@ -227,47 +227,6 @@ async function checkAndRestoreLocalDocument(dId){
         throw err
     }
 }
-/*
-async function deleteFolder(userId, folderId){
-    try{
-        let elem
-        const user = await Users.findById(new ObjectId(userId))
-        const childrenIds = user.fileSystem.fileMap[folderId].childrenIds
-        for(let elemId of childrenIds){
-            elem = user.fileSystem.fileMap[elemId]
-            if(elem.isDir === true){
-                deleteFolder(userId, elemId) //delete folder content
-                deleteFile(userId, elemId)
-            } else {
-                if(!elem.role){
-                    //delete local file
-                    await deleteDocument(userId, elemId)
-                    await deleteFile(userId, elemId)
-                } else {
-                    //delete shared file
-                    await deleteSharedDocumentForUser(userId, elemId)
-                    await checkAndRestoreLocalDocument(elemId)
-                }
-            }
-        }
-
-        //remove folder from parent
-        const parentId = user.fileSystem.fileMap[folderId].parentId
-        const parent = user.fileSystem.fileMap[parentId]
-
-        parent.childrenIds.splice(parent.childrenIds.indexOf(folderId))
-        parent.childrenCount--
-        const path = "fileSystem.fileMap." + parentId
-        
-        await Users.findByIdAndUpdate(userId, { $set: {[path]: parent}});
-
-        //delete folder
-        deleteFile(userId, folderId)
-
-    } catch (err){
-        Responses.ServerError(res, {message: err.message})
-    }
-}*/
 
 async function updateParent(userId, parentId, fileId, bool){
     try{
