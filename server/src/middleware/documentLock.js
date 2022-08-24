@@ -8,16 +8,15 @@ const DOCUMENT_LOCK_LIST = "document:lock:list";
 const USER_REGISTER = 'user:register';
 const USER_LOGOUT = "user:logout";
 
-const onLogin = () => ({ userId, socketId }) => {
+const onLogin = (socketId) => ({ userId }) => {
   currentSessions.push({ userId, socketId });
   console.log(currentSessions)
 };
 
-const onLogout = (socket, clientId) => ({ socketId }) => {
+const onLogout = (socket, clientId) => () => {
   const initialLength = documentLocks.length;
-
   documentLocks = documentLocks.filter(ld => !(ld.clientId === clientId));
-  currentSessions = currentSessions.filter(x => !(x.socketId === socketId));
+  currentSessions = currentSessions.filter(x => !(x.socketId === clientId));
 
   if (documentLocks.length !== initialLength) {
     emitDocumentLocksChange(socket);
@@ -74,11 +73,11 @@ const onDocumentLockLeave = (socket, clientId) => ({ documentId }) => {
 // => Handler broadcasts lock change if the document lock list has changed
 const onDisconnect = (socket, clientId) => () => {
   const initialLength = documentLocks.length;
-  console.log(socket.id)
 
   documentLocks = documentLocks.filter(ld => !(ld.clientId === clientId));
-  currentSessions = currentSessions.filter(x => !(x.socketId === socket.id));
+  currentSessions = currentSessions.filter(x => !(x.socketId === clientId));
   console.log(currentSessions)
+  console.log(documentLocks)
 
   if (documentLocks.length !== initialLength) {
     emitDocumentLocksChange(socket);
@@ -93,7 +92,7 @@ const documentSocketLockHandler = socket => {
     client.on(DOCUMENT_LOCK_ENTER, onDocumentLockEnter(socket, client.id));
     client.on(DOCUMENT_LOCK_LEAVE, onDocumentLockLeave(socket, client.id));
     client.on(DISCONNECT, onDisconnect(socket, client.id));
-    client.on(USER_REGISTER, onLogin());
+    client.on(USER_REGISTER, onLogin(client.id));
     client.on(USER_LOGOUT, onLogout(socket, client.id));
   });
 
