@@ -7,9 +7,6 @@ import { resetUser } from '../redux/userData/actions'
 import { SocketContext } from '../util/socketContext'
 import { resetFileSystem } from '../redux/fileSystemData/actions'
 import { LinkContainer } from 'react-router-bootstrap'
-import { RiHome2Fill } from 'react-icons/ri'
-import { MdNotifications } from 'react-icons/md'
-import { ImExit } from 'react-icons/im'
 import './CustomNavbar.css'
 import { logoutUser } from "../util/socketCommunication"
 
@@ -28,10 +25,10 @@ export default function CustomNavbar() {
   }
 
   return (
-    <Navbar className="color-nav">
+    <Navbar variant="light" className="color-nav">
       <Container fluid >
         <Navbar.Brand>
-          <img width="70" height="70" className="align-center" alt="logo" src='/logo512.png' />{' '}
+          <img  height="70" className="align-center" alt="logo" src='/logo_vord.png' />{' '}
         </Navbar.Brand>
         {
           user.token !== null && (
@@ -40,11 +37,11 @@ export default function CustomNavbar() {
               <Navbar.Collapse className="justify-content-end">
                 <Nav>
                   <LinkContainer to='/home'>
-                    <Nav.Link><RiHome2Fill size={40} color="white" /></Nav.Link>
+                    <Nav.Link>home</Nav.Link>
                   </LinkContainer>
-                  <Nav.Link><MdNotifications size={40} color="white" /></Nav.Link>
+                  
                   <LinkContainer to="/">
-                    <Nav.Link><ImExit size={40} color="white" onClick={logout} /></Nav.Link>
+                    <Nav.Link onClick={logout}> logout</Nav.Link>
                   </LinkContainer>
                 </Nav>
               </Navbar.Collapse>
@@ -55,3 +52,7 @@ export default function CustomNavbar() {
   )
 }
 
+function logout(dispatch) {
+  dispatch(resetUser())
+  dispatch(resetFileSystem())
+}

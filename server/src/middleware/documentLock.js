@@ -10,7 +10,6 @@ const USER_LOGOUT = "user:logout";
 
 const onLogin = (socketId) => ({ userId }) => {
   currentSessions.push({ userId, socketId });
-  console.log(currentSessions)
 };
 
 const onLogout = (socket, clientId) => () => {
@@ -76,8 +75,6 @@ const onDisconnect = (socket, clientId) => () => {
 
   documentLocks = documentLocks.filter(ld => !(ld.clientId === clientId));
   currentSessions = currentSessions.filter(x => !(x.socketId === clientId));
-  console.log(currentSessions)
-  console.log(documentLocks)
 
   if (documentLocks.length !== initialLength) {
     emitDocumentLocksChange(socket);

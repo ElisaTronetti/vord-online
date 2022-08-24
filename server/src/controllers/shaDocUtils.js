@@ -1,6 +1,7 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const Users = require('../models/userModel')
 const SharedDocuments = require('../models/sharedDocumentsModel')
+const FileSystemFactory = require('../models/factories/fileSystem')
 const { findById } = require('../models/userModel')
 
 async function deleteDocument(userId, documentId){
@@ -112,17 +113,8 @@ async function updateUsersFileSystem(sharedGroup, doc){
             if(sharedGroup[i].originalPath !== undefined){ folderId = sharedGroup[i].originalPath}
             else{folderId = user.fileSystem.rootFolderId}
             
-
-            newFile = {
-                id : fileId,
-                name: doc.title + ".txt",
-                parentId: folderId,
-                ext: ".txt",
-                isShared: true,
-                color: "#27c906",
-                role: sharedGroup[i].role
-            }
-
+            newFile = FileSystemFactory.createSharedDocument(fileId, doc.title, folderId, sharedGroup[i].role)
+            
             //insert new field in fileMap
             path = "fileSystem.fileMap." + fileId.toString()
             await Users.findByIdAndUpdate(userId, { $set: {[path]: newFile} });
@@ -205,13 +197,7 @@ async function checkAndRestoreLocalDocument(dId){
             user = await Users.findById(userId)
             const originalPath = user.fileSystem.fileMap[[dId]].parentId
 
-            const newFile = {
-                id : documentId,
-                name: doc.title,
-                parentId: originalPath,
-                ext: ".txt",
-                isShared: false
-            }
+            const newFile = FileSystemFactory.createLocalDocument(documentId, title, originalPath)
 
             //insert new field in fileMap
             const path = "fileSystem.fileMap." + documentId.toString()
