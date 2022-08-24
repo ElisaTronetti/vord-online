@@ -9,7 +9,6 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { SocketContext } from '../util/socketContext'
 
 import { userLogin } from './authenticationRequests'
-import { createWarningToast } from '../commonComponents/Toast'
 
 export default function Login() {
     const [inputEmail, setInputEmail] = useState('')
