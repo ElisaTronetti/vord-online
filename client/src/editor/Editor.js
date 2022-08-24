@@ -55,6 +55,7 @@ function Editor() {
     const editor = new EditorJS({
       holder: EDITTOR_HOLDER_ID,
       logLevel: "ERROR",
+      readOnly: document.role === 1,
       onChange: async () => {
         let content = await editor.saver.save()
         // Logic to save this data to DB
