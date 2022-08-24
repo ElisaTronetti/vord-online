@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
@@ -12,6 +12,7 @@ import { userSignup } from './authenticationRequests'
 export default function Signup() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const socket = useContext(SocketContext)
 
     const [inputName, setInputName] = useState("")
     const [inputSurname, setInputSurname] = useState("")
@@ -21,7 +22,7 @@ export default function Signup() {
 
     function trySignup() {
         // HTTP request to try the signup
-        userSignup(inputName, inputSurname, inputEmail, inputPassword, inputPasswordConfirm, dispatch)
+        userSignup(inputName, inputSurname, inputEmail, inputPassword, inputPasswordConfirm, dispatch, socket)
     }
 
     // Trigger redirect if the token changes and it is not null

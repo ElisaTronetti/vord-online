@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
@@ -8,17 +8,19 @@ import Container from 'react-bootstrap/Container'
 import { LinkContainer } from 'react-router-bootstrap'
 
 import { userLogin } from './authenticationRequests'
+import { createWarningToast } from '../commonComponents/Toast'
 
 export default function Login() {
+    const [inputEmail, setInputEmail] = useState('')
+    const [inputPassword, setInputPassword] = useState('')
+
+    const socket = useContext(SocketContext)
     const navigate = useNavigate()
-
     const dispatch = useDispatch()
-    const [inputEmail, setInputEmail] = useState(undefined)
-    const [inputPassword, setInputPassword] = useState(undefined)
 
-    function tryLogin() {
+    function tryLogin() {  
         // HTTP request to try the login
-        userLogin(inputEmail, inputPassword, dispatch)
+        userLogin(inputEmail, inputPassword, dispatch, socket)   
     }
 
     // Trigger redirect if the token changes and it is not null

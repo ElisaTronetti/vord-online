@@ -2,8 +2,9 @@ import $ from 'jquery'
 import { setToken, setId, setEmail } from '../redux/userData/actions'
 import { setRootFolderId, setFileMap } from '../redux/fileSystemData/actions'
 import { createSuccessToast, createErrorToast, createWarningToast } from '../commonComponents/Toast'
+import { registerUser } from '../util/socketCommunication'
 
-export function userLogin(email, password, dispatch) {
+export function userLogin(email, password, dispatch, socket) {
     if (email !== '' && password !== '') {
         $.ajax({
             contentType: 'application/json',
@@ -23,6 +24,9 @@ export function userLogin(email, password, dispatch) {
                 let fileSystem = result.fileSystem
                 dispatch(setRootFolderId(fileSystem.rootFolderId))
                 dispatch(setFileMap(fileSystem.fileMap))
+
+                // Register user in web socket
+                registerUser(socket, id)
                 
                 createSuccessToast('Login successful!')
             },
@@ -45,7 +49,7 @@ function createLoginParams(email, password) {
     })
 }
 
-export function userSignup(name, surname, email, password, passwordConfirm, dispatch) {
+export function userSignup(name, surname, email, password, passwordConfirm, dispatch, socket) {
     if (emptySignupParams(name, surname, email, password, passwordConfirm)) {
         createWarningToast('Missing required data')
     } else if (password.trim() !== passwordConfirm.trim()) {
@@ -69,6 +73,9 @@ export function userSignup(name, surname, email, password, passwordConfirm, disp
                 let fileSystem = result.fileSystem
                 dispatch(setRootFolderId(fileSystem.rootFolderId))
                 dispatch(setFileMap(fileSystem.fileMap))
+
+                // Register user in web socket
+                registerUser(socket, id)
 
                 createSuccessToast('Signup successful!')
             },
