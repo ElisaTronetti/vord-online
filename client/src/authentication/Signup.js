@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import { LinkContainer } from 'react-router-bootstrap'
+import { SocketContext } from '../util/socketContext'
 
 import { userSignup } from './authenticationRequests'
 

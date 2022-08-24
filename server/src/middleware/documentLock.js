@@ -1,9 +1,25 @@
 let documentLocks = [];
+let currentSessions = [];
 
 const DISCONNECT = "disconnect";
 const DOCUMENT_LOCK_ENTER = "document:lock:enter";
 const DOCUMENT_LOCK_LEAVE = "document:lock:leave";
 const DOCUMENT_LOCK_LIST = "document:lock:list";
+const USER_REGISTER = 'user:register';
+
+// Handler called when a client attempts to lock a resource
+// => Client passes the wanted "documentId" to lock and a callback named "notifyLocked" as argument
+// => Handler calls "notifyLocked" back with the lock information (already locked or not)
+// => Handler adds the lock to the lock list if needed, and broadcasts lock change
+const onLogin = (socket) => (
+  { userId, socketId }
+) => {
+  console.log(socketId)
+  currentSessions.push({ userId, socketId });
+  console.log(currentSessions)
+};
+
+
 
 function getDocumentLocks(){
   return documentLocks
@@ -71,6 +87,7 @@ const documentSocketLockHandler = socket => {
     client.on(DOCUMENT_LOCK_ENTER, onDocumentLockEnter(socket, client.id));
     client.on(DOCUMENT_LOCK_LEAVE, onDocumentLockLeave(socket, client.id));
     client.on(DISCONNECT, onDisconnect(socket, client.id));
+    client.on(USER_REGISTER, onLogin(socket));
   });
 
   return socket;
