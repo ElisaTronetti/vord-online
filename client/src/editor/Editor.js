@@ -20,6 +20,8 @@ import { getSharedDocument, saveSharedDocument } from './sharedDocumentEditorReq
 import { SocketContext } from '../util/socketContext'
 import { documentLockLeave } from '../util/resourcesLock'
 
+import './Editor.css'
+
 const EDITTOR_HOLDER_ID = 'editorjs'
 
 function Editor() {
@@ -45,10 +47,10 @@ function Editor() {
   // Editor closing effect
   useEffect(() => {
     return () => {
-        // Unlock document resource on editor closing
-        if (document.isShared) documentLockLeave(socket, document.id)
+      // Unlock document resource on editor closing
+      if (document.isShared) documentLockLeave(socket, document.id)
     }
-}, [document, socket])
+  }, [document, socket])
 
   // Editor configuration
   const initEditor = () => {
@@ -118,9 +120,11 @@ function Editor() {
   }
 
   return (
-    <React.Fragment>
-      <div id={EDITTOR_HOLDER_ID}> </div>
-    </React.Fragment>
+    <div className='editor-container'>
+      <div className='editor-page'>
+        <div id={EDITTOR_HOLDER_ID} className='editor'> </div>
+      </div>
+    </div>
   )
 }
 

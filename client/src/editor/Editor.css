@@ -1,0 +1,21 @@
+.editor-container {
+    max-width: 850px;
+    background-color:#eef5fa;
+    border-radius: 100px;
+    margin: 10px auto;
+    padding: 70px 60px;
+}
+
+.editor-page {
+    min-height: 450px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 24px 24px -18px rgba(69,104,129,.33),0 9px 45px 0 rgba(114,119,160,.12);
+    padding: 70px 50px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.editor {
+    font-size: 16px;
+}
