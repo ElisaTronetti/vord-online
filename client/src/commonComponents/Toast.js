@@ -8,6 +8,7 @@ const toastConfiguration = {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
+    theme: 'colored'
 }
 
 export const createSuccessToast = (message) => {
