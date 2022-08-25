@@ -8,6 +8,7 @@ import Container from 'react-bootstrap/Container'
 import { LinkContainer } from 'react-router-bootstrap'
 import { SocketContext } from '../util/socketContext'
 
+import './Authentication.css'
 import { createWarningToast } from '../commonComponents/Toast'
 import { userLogin } from './authenticationRequests'
 
@@ -58,7 +59,7 @@ export default function Login() {
                             <Button variant="primary" onClick={tryLogin}>Login</Button>
                             <p>Not a member?
                                 <LinkContainer to="/signup">
-                                    <a>Register</a>
+                                    <span className='link'>Register</span>
                                 </LinkContainer>
                             </p>
                         </div>
