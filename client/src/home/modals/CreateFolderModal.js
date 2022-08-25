@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 
 import { createFolder } from '../requests/folderRequests'
+import { createErrorToast } from '../../commonComponents/Toast'
 
 export default function CreateFolderModal(props) {
     const [inputFolderName, setInputFolderName] = useState('')
@@ -18,14 +19,17 @@ export default function CreateFolderModal(props) {
     function tryCreateFolder() {
         if (inputFolderName.trim() !== '') {
             createFolder(user, props.currentFolderId, inputFolderName, dispatch)
+            setInputFolderName('')
             props.onHide()
+        } else {
+            createErrorToast('Insert a non empty folder name')
         }
     }
 
     return (
         <Modal
             show={props.show}
-            onHide={props.onHide}
+            onHide={() => { props.onHide(); setInputFolderName('') }}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered

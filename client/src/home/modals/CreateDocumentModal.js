@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 
 import { createNewDocument } from '../requests/documentRequests'
+import { createErrorToast } from '../../commonComponents/Toast'
 
 export default function CreateDocumentModal(props) {
     const [inputDocumentName, setInputDocumentName] = useState('')
@@ -19,14 +20,17 @@ export default function CreateDocumentModal(props) {
         if (inputDocumentName.trim() !== '') {
             // Trigger HTTP request to create document in the list of documents and in the filesystem
             createNewDocument(user, props.currentFolderId, inputDocumentName, dispatch)
+            setInputDocumentName('')
             props.onHide()
+        } else {
+            createErrorToast('Insert a non empty document name')
         }
     }
 
     return (
         <Modal
             show={props.show}
-            onHide={props.onHide}
+            onHide={() => {props.onHide(); setInputDocumentName('') }}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
