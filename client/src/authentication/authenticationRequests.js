@@ -1,44 +1,25 @@
 import $ from 'jquery'
 import { setToken, setId, setEmail } from '../redux/userData/actions'
 import { setRootFolderId, setFileMap } from '../redux/fileSystemData/actions'
-import { createSuccessToast, createErrorToast, createWarningToast, createNotificationToast } from '../commonComponents/Toast'
+import { createSuccessToast, createErrorToast, createNotificationToast } from '../commonComponents/Toast'
 import { registerUser } from '../util/socketCommunication'
 
 export function userLogin(email, password, dispatch, socket) {
-    if (email !== '' && password !== '') {
-        $.ajax({
-            contentType: 'application/json',
-            dataType: 'json',
-            data: createLoginParams(email, password),
-            success: function (result) {
-                // Save token
-                let token = result.token
-                dispatch(setToken(token))
-                // Save user id
-                let id = result._id
-                dispatch(setId(id))
-                // Save email
-                let email = result.email
-                dispatch(setEmail(email))
-                // Save file system 
-                let fileSystem = result.fileSystem
-                dispatch(setRootFolderId(fileSystem.rootFolderId))
-                dispatch(setFileMap(fileSystem.fileMap))
-
-                // Register user in web socket
-                registerUser(socket, id)
-                
-                createNotificationToast('Login successful!')
-            },
-            error: function () {
-                createErrorToast('Error: unable to login')
-            },
-            type: 'POST',
-            url: process.env.REACT_APP_SERVER + 'auth/login'
-        })
-    } else {
-        createWarningToast('Missing required data')
-    }
+    $.ajax({
+        contentType: 'application/json',
+        dataType: 'json',
+        data: createLoginParams(email, password),
+        success: function (result) {
+            // Save data in redux store
+            saveData(result.token, result._id, result.email, result.fileSystem, dispatch, socket)
+            createNotificationToast('Login successful!')
+        },
+        error: function () {
+            createErrorToast('Error: unable to login')
+        },
+        type: 'POST',
+        url: process.env.REACT_APP_SERVER + 'auth/login'
+    })
 }
 
 // Create login body params
@@ -49,52 +30,22 @@ function createLoginParams(email, password) {
     })
 }
 
-export function userSignup(name, surname, email, password, passwordConfirm, dispatch, socket) {
-    if (emptySignupParams(name, surname, email, password, passwordConfirm)) {
-        createWarningToast('Missing required data')
-    } else if (password.trim() !== passwordConfirm.trim()) {
-        createWarningToast('Passwords do not match')
-    } else {
-        $.ajax({
-            contentType: 'application/json',
-            dataType: 'json',
-            data: createSignupParams(name, surname, email, password),
-            success: function (result) {
-                // Save token
-                let token = result.token
-                dispatch(setToken(token))
-                // Save user id
-                let id = result._id
-                dispatch(setId(id))
-                // Save email
-                let email = result.email
-                dispatch(setEmail(email))
-                // Save file system
-                let fileSystem = result.fileSystem
-                dispatch(setRootFolderId(fileSystem.rootFolderId))
-                dispatch(setFileMap(fileSystem.fileMap))
-
-                // Register user in web socket
-                registerUser(socket, id)
-
-                createSuccessToast('Signup successful!')
-            },
-            error: function () {
-                createErrorToast('Error: unable to signup')
-            },
-            type: 'POST',
-            url: process.env.REACT_APP_SERVER + 'auth/signup'
-        })
-    }
-}
-
-// Checks if there are empty params
-function emptySignupParams(name, surname, email, password, passwordConfirm) {
-    return name.trim() === '' &&
-        surname.trim() === '' &&
-        email.trim() === '' &&
-        password.trim() === '' &&
-        passwordConfirm.trim() === ''
+export function userSignup(name, surname, email, password, dispatch, socket) {
+    $.ajax({
+        contentType: 'application/json',
+        dataType: 'json',
+        data: createSignupParams(name, surname, email, password),
+        success: function (result) {
+            // Save data in redux store
+            saveData(result.token, result._id, result.email, result.fileSystem, dispatch, socket)
+            createSuccessToast('Signup successful!')
+        },
+        error: function () {
+            createErrorToast('Error: unable to signup')
+        },
+        type: 'POST',
+        url: process.env.REACT_APP_SERVER + 'auth/signup'
+    })
 }
 
 // Create signup body params
@@ -105,4 +56,19 @@ function createSignupParams(name, surname, email, password) {
         email: email.trim(),
         password: password,
     })
+}
+
+function saveData(token, id, email, fileSystem, dispatch, socket) {
+    // Save token
+    dispatch(setToken(token))
+    // Save user id
+    dispatch(setId(id))
+    // Save email
+    dispatch(setEmail(email))
+    // Save file system
+    dispatch(setRootFolderId(fileSystem.rootFolderId))
+    dispatch(setFileMap(fileSystem.fileMap))
+
+    // Register user in web socket
+    registerUser(socket, id)
 }

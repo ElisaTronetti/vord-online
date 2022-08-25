@@ -8,6 +8,7 @@ import Container from 'react-bootstrap/Container'
 import { LinkContainer } from 'react-router-bootstrap'
 import { SocketContext } from '../util/socketContext'
 
+import { createWarningToast } from '../commonComponents/Toast'
 import { userLogin } from './authenticationRequests'
 
 export default function Login() {
@@ -19,8 +20,12 @@ export default function Login() {
     const dispatch = useDispatch()
 
     function tryLogin() {  
-        // HTTP request to try the login
-        userLogin(inputEmail, inputPassword, dispatch, socket)   
+        if (inputEmail.trim() !== '' && inputPassword.trim() !== '') {
+            // HTTP request to try the login
+            userLogin(inputEmail, inputPassword, dispatch, socket)   
+        } else {
+            createWarningToast('Missing required data')
+        }
     }
 
     // Trigger redirect if the token changes and it is not null

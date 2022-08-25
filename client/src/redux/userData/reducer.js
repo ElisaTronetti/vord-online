@@ -1,7 +1,6 @@
 var initialState = {
     id: null,
     email: null,
-    username: null,
     token: null
 }
 
@@ -12,9 +11,6 @@ const userDataReducer = (state = initialState, action) => {
         })
         case 'SET_EMAIL': return Object.assign({}, state, {
             email: action.payload
-        })
-        case 'SET_USERNAME': return Object.assign({}, state, {
-            username: action.payload
         })
         case 'SET_TOKEN': return Object.assign({}, state, {
             token: action.payload

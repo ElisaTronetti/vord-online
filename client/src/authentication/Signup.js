@@ -8,6 +8,7 @@ import Container from 'react-bootstrap/Container'
 import { LinkContainer } from 'react-router-bootstrap'
 import { SocketContext } from '../util/socketContext'
 
+import { createWarningToast } from '../commonComponents/Toast'
 import { userSignup } from './authenticationRequests'
 
 export default function Signup() {
@@ -15,15 +16,30 @@ export default function Signup() {
     const dispatch = useDispatch()
     const socket = useContext(SocketContext)
 
-    const [inputName, setInputName] = useState("")
-    const [inputSurname, setInputSurname] = useState("")
-    const [inputEmail, setInputEmail] = useState("")
-    const [inputPassword, setInputPassword] = useState("")
-    const [inputPasswordConfirm, setInputPasswordConfirm] = useState("")
+    const [inputName, setInputName] = useState('')
+    const [inputSurname, setInputSurname] = useState('')
+    const [inputEmail, setInputEmail] = useState('')
+    const [inputPassword, setInputPassword] = useState('')
+    const [inputPasswordConfirm, setInputPasswordConfirm] = useState('')
 
     function trySignup() {
-        // HTTP request to try the signup
-        userSignup(inputName, inputSurname, inputEmail, inputPassword, inputPasswordConfirm, dispatch, socket)
+        if (emptySignupParams()) {
+            createWarningToast('Missing required data')
+        } else if (inputPassword.trim() !== inputPasswordConfirm.trim()) {
+            createWarningToast('Passwords do not match')
+        } else {
+            // HTTP request to try the signup
+            userSignup(inputName, inputSurname, inputEmail, inputPassword, dispatch, socket)
+        }
+    }
+
+    // Checks if there are empty params
+    function emptySignupParams() {
+        return inputName.trim() === '' &&
+            inputSurname.trim() === '' &&
+            inputEmail.trim() === '' &&
+            inputPassword.trim() === '' &&
+            inputPasswordConfirm.trim() === ''
     }
 
     // Trigger redirect if the token changes and it is not null
