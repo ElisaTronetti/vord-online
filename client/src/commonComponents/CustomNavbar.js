@@ -25,7 +25,7 @@ export default function CustomNavbar() {
   }
 
   return (
-    <Navbar variant="light" className="color-nav">
+    <Navbar collapseOnSelect expand="lg" variant="light" className="color-nav">
       <Container fluid >
         <Navbar.Brand>
           <img  height="70" className="align-center" alt="logo" src='/logo_vord.png' />{' '}
@@ -33,13 +33,12 @@ export default function CustomNavbar() {
         {
           user.token !== null && (
             <>
-              <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-              <Navbar.Collapse className="justify-content-end">
-                <Nav>
+              <Navbar.Toggle aria-controls="navbarScroll" />
+              <Navbar.Collapse id="navbarScroll" className="justify-content-end">
+                <Nav navbarScroll>
                   <LinkContainer to='/home'>
                     <Nav.Link>home</Nav.Link>
                   </LinkContainer>
-                  
                   <LinkContainer to="/">
                     <Nav.Link onClick={logout}> logout</Nav.Link>
                   </LinkContainer>
