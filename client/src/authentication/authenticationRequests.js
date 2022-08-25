@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import { setToken, setId, setEmail } from '../redux/userData/actions'
 import { setRootFolderId, setFileMap } from '../redux/fileSystemData/actions'
-import { createSuccessToast, createErrorToast, createWarningToast } from '../commonComponents/Toast'
+import { createSuccessToast, createErrorToast, createWarningToast, createNotificationToast } from '../commonComponents/Toast'
 import { registerUser } from '../util/socketCommunication'
 
 export function userLogin(email, password, dispatch, socket) {
@@ -28,7 +28,7 @@ export function userLogin(email, password, dispatch, socket) {
                 // Register user in web socket
                 registerUser(socket, id)
                 
-                createSuccessToast('Login successful!')
+                createNotificationToast('Login successful!')
             },
             error: function () {
                 createErrorToast('Error: unable to login')

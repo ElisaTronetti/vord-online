@@ -12,13 +12,17 @@ const toastConfiguration = {
 }
 
 export const createSuccessToast = (message) => {
-    toast.success(message, toastConfiguration);
+    toast.success(message, toastConfiguration)
 }
 
 export const createErrorToast = (message) => {
-    toast.error(message, toastConfiguration);
+    toast.error(message, toastConfiguration)
 }
 
 export const createWarningToast = (message) => {
-    toast.warn(message, toastConfiguration);
+    toast.warn(message, toastConfiguration)
+}
+
+export const createNotificationToast = (message) => {
+    toast.info(message, toastConfiguration)
 }
