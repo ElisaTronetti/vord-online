@@ -50,8 +50,3 @@ export default function CustomNavbar() {
     </Navbar>
   )
 }
-
-function logout(dispatch) {
-  dispatch(resetUser())
-  dispatch(resetFileSystem())
-}
