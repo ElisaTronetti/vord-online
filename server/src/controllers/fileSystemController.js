@@ -5,20 +5,7 @@ const FileSystemUtils = require("./fileSystemUtils")
 const DocumentLock = require("../middleware/documentLock")
 const ShaDocUtils = require("./shaDocUtils")
 
-async function updateFileSystem(req) {
-    try {
-        const filter = { _id: new ObjectId(req.body._id) } //userId
-        const update = {fileSystem: req.body.fileSystem}
 
-        let result = await Users.findOneAndUpdate(filter, update, {
-            new: true
-        });
-
-        return result
-    } catch (err) {
-       throw err;
-    }
-  }
 
 async function createFolder(req, res){
     try {
@@ -73,24 +60,23 @@ async function getUserFileSystem(req, res){
         res.status(406).json({err: "missing user id"})
     } else {
         try{
-            const user = await Users.findById(req.query._id)
+            //retrieve the user and the list of locked documents. 
+            let user = await Users.findById(req.query._id)
+            let documentLocks = DocumentLock.getDocumentLocks()
+            documentLocks = documentLocks.map(d => d.documentId)
+            const fileMapAsArray =  Object.keys(user.fileSystem.fileMap)
+
+            //find all locked documents in the user's filesystem and mark them as such in the data structure that will be sent to the client
+            for (let elem of fileMapAsArray){console.log(elem)}
+            const lockedDocsTheUserPossess = fileMapAsArray.filter(fsElem => documentLocks.includes(fsElem))
+           
+            for(let elem of lockedDocsTheUserPossess){
+                user.fileSystem.fileMap[elem].isEncrypted = true
+            }
             Responses.OkResponse(res, user.fileSystem);
                 
         } catch(err){
-            Responses.ServerError(res, {message: err.message});
-        }
-    }
-}
-
-async function updateUserFileSystem(req, res){
-    if(req.body._id === undefined){
-        res.status(406).json({err: "missing user id"})
-    } else {
-        try {
-            let updatedFS = await updateFileSystem(req)
-    
-            Responses.OkResponse(res, updatedFS.fileSystem)
-        } catch (err) {
+            console.log(err)
             Responses.ServerError(res, {message: err.message});
         }
     }
@@ -98,7 +84,6 @@ async function updateUserFileSystem(req, res){
 
 module.exports = {
     getUserFileSystem,
-    updateUserFileSystem,
     createFolder,
     deleteFolder,
     moveElements,
