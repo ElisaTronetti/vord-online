@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import EditorJS from '@editorjs/editorjs'
@@ -26,34 +26,21 @@ const EDITTOR_HOLDER_ID = 'editorjs'
 
 function Editor() {
   const [editorData, setEditorData] = useState(undefined)
-  const user = {
-    id: useSelector(state => state.userData.id),
-    token: useSelector(state => state.userData.token)
-  }
+  const userId = useSelector(state => state.userData.id)
+  const token = useSelector(state => state.userData.token)
   const document = useLocation().state.document
   const socket = useContext(SocketContext)
 
   if (editorData === undefined && document.isShared) {
-    // Retrieve shared file
-    getSharedDocument(document.id, user.id, setEditorData)
+    // Retrieve shared document
+    getSharedDocument(document.id, userId, setEditorData)
   } else if (editorData === undefined && !document.isShared) {
-    // Retrieve local file
-    getDocument(document.id, user, setEditorData)
+    // Retrieve local document
+    getDocument(document.id, userId, token, setEditorData)
   }
-  useEffect(() => {
-    if (editorData !== undefined) initEditor()
-  }, [editorData])
-
-  // Editor closing effect
-  useEffect(() => {
-    return () => {
-      // Unlock document resource on editor closing
-      if (document.isShared) documentLockLeave(socket, document.id)
-    }
-  }, [document, socket])
 
   // Editor configuration
-  const initEditor = () => {
+  const initEditor = useCallback(() => {
     const editor = new EditorJS({
       holder: EDITTOR_HOLDER_ID,
       logLevel: "ERROR",
@@ -63,10 +50,10 @@ function Editor() {
         // Logic to save this data to DB
         if (document.isShared) {
           // Save shared document
-          saveSharedDocument(user.id, document.id, content.blocks)
+          saveSharedDocument(userId, document.id, content.blocks)
         } else {
           // Save local document
-          saveDocument(user, document.id, content.blocks)
+          saveDocument(userId, token, document.id, content.blocks)
         }
       },
       autofocus: true,
@@ -117,7 +104,20 @@ function Editor() {
       .catch((reason) => {
         console.log(`Editor.js initialization failed because of ${reason}`)
       })
-  }
+  }, [userId, token, document, editorData])
+
+  // Editor initialization if the data is not defined
+  useEffect(() => {
+    if (editorData !== undefined) initEditor()
+  }, [editorData, initEditor])
+
+  // Editor closing effect
+  useEffect(() => {
+    return () => {
+      // Unlock document resource on editor closing
+      if (document.isShared) documentLockLeave(socket, document.id)
+    }
+  }, [document, socket])
 
   return (
     <div className='editor-component'>
@@ -127,7 +127,6 @@ function Editor() {
         </div>
       </div>
     </div>
-
   )
 }
 
