@@ -1,6 +1,12 @@
+.editor-component {
+    background-image: linear-gradient(0deg,#fff,#eef7ff);
+    margin: 0px auto;
+    padding: 30px 20px;
+}
+
 .editor-container {
-    max-width: 850px;
-    background-color:#eef5fa;
+    max-width:900px;
+    background-color:#dcedf9;
     border-radius: 100px;
     margin: 10px auto;
     padding: 70px 60px;

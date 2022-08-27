@@ -120,11 +120,14 @@ function Editor() {
   }
 
   return (
-    <div className='editor-container'>
-      <div className='editor-page'>
-        <div id={EDITTOR_HOLDER_ID} className='editor'> </div>
+    <div className='editor-component'>
+      <div className='editor-container'>
+        <div className='editor-page'>
+          <div id={EDITTOR_HOLDER_ID} className='editor'> </div>
+        </div>
       </div>
     </div>
+
   )
 }
 
