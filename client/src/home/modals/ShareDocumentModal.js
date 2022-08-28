@@ -74,9 +74,9 @@ export default function ShareDocumentModal(props) {
                                     const { email, role } = data
                                     return (
                                         <Row className="my-2 align-items-center" key={index}>
-                                            <Col>
+                                            <Col xs={6}>
                                                 <Form.Group controlId="formGridEmail">
-                                                    <FloatingLabel controlId="floatingInputGrid" label="Email address">
+                                                    <FloatingLabel controlId="floatingInputGrid" label="Email">
                                                         <Form.Control
                                                             type="email"
                                                             onChange={event => handleChange(index, event)}
@@ -87,7 +87,7 @@ export default function ShareDocumentModal(props) {
                                                     </FloatingLabel>
                                                 </Form.Group>
                                             </Col>
-                                            <Col>
+                                            <Col xs={5}>
                                                 <Form.Group controlId="formGridRole">
                                                     <FloatingLabel
                                                         controlId="floatingSelectGrid"
@@ -106,7 +106,7 @@ export default function ShareDocumentModal(props) {
                                                     </FloatingLabel>
                                                 </Form.Group>
                                             </Col>
-                                            <Col md={1} className="text-center">
+                                            <Col xs={1} className="text-center">
                                                 {(inputFields.length !== 1) ? <Button className="btn btn-danger" onClick={() => removeInputFields(index)}>-</Button> : ''}
                                             </Col>
                                         </Row>

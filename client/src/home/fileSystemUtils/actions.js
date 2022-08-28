@@ -56,7 +56,7 @@ export const ShareDocument = defineFileAction({
 })
 
 // Custom action used to manage the shared group of a document
-export const ManageSharedGroup =  defineFileAction({
+export const ManageSharedGroup = defineFileAction({
     id: 'manage_shared_group',
     requiresSelection: true,
     fileFilter: file => file && !file.isDir && file.isShared,
