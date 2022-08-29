@@ -116,7 +116,7 @@ export function renameElement(user, element, newName, dispatch, props) {
 function createRenameElementParams(userId, elementId, newName) {
     return JSON.stringify({
         userId: userId,
-        newName: newName,
+        newName: newName + '.txt',
         elemId: elementId
     })
 }

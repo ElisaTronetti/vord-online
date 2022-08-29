@@ -17,7 +17,7 @@ export default function RenameElementModal(props) {
 
     useEffect(() => {
         if (props.element !== undefined) {
-            setInputName(props.element.name)
+            setInputName(props.element.name.replace('.txt', ''))
         }
     }, [props.element])
 
