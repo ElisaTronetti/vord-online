@@ -1,6 +1,6 @@
 var initialState = {
-    rootFolderId: undefined,
-    fileMap: undefined
+    rootFolderId: null,
+    fileMap: null
 }
 
 const fileSystemReducer = (state = initialState, action) => {
