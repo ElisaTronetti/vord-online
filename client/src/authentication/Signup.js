@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Container from 'react-bootstrap/Container'
-import DefaultButton from '../commonComponents/DefaultButton'
+import { DefaultButton } from '../commonComponents/buttons/Buttons'
 import { LinkContainer } from 'react-router-bootstrap'
 import { SocketContext } from '../util/socketContext'
 

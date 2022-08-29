@@ -1,11 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect } from 'react'
-import Modal from 'react-bootstrap/Modal'
-import Container from 'react-bootstrap/Container'
-import Col from 'react-bootstrap/Col'
-import Row from 'react-bootstrap/Row'
-import DefaultButton from '../../commonComponents/DefaultButton'
-
+import { Modal, Container, Col, Row } from 'react-bootstrap'
+import { DefaultButton } from '../../commonComponents/buttons/Buttons'
 import { createErrorToast } from '../../commonComponents/Toast'
 import { getSharedGroup, manageSharedGroup } from '../requests/sharingRequests'
 

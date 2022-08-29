@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import DefaultButton from '../../commonComponents/DefaultButton'
+import { DefaultButton } from '../../commonComponents/buttons/Buttons'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import { createWarningToast } from '../../commonComponents/Toast'
@@ -51,7 +51,7 @@ export default function RenameElementModal(props) {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group className="mb-3" controlId="formFolderName">
+                        <Form.Group className="mb-3">
                             <Form.Label>{'You can rename ' + props.element.name + ' by writing the new name below'}</Form.Label>
                             <Form.Control
                                 ref={inputRef}

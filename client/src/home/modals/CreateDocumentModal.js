@@ -2,8 +2,7 @@ import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import DefaultButton from '../../commonComponents/DefaultButton'
-
+import { DefaultButton }from '../../commonComponents/buttons/Buttons'
 import { createNewDocument } from '../requests/documentRequests'
 import { createErrorToast } from '../../commonComponents/Toast'
 
@@ -36,11 +35,11 @@ export default function CreateDocumentModal(props) {
             centered
             onShow={() => { inputRef.current.focus() }}>
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">Create document</Modal.Title>
+                <Modal.Title>Create document</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group className="mb-3" controlId="formDocumentName">
+                    <Form.Group className="mb-3">
                         <Form.Control
                             ref={inputRef}
                             onChange={input => setInputDocumentName(input.target.value)}

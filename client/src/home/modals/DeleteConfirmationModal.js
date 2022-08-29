@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
+import { CancelButton, DeleteButton } from '../../commonComponents/buttons/Buttons'
 import { useSelector, useDispatch } from 'react-redux'
 import { deleteElementsForMe } from '../documentsUtils/modifyDocument'
 import { isSharedDocumentOwned } from '../documentsUtils/documentUtils'
@@ -54,12 +55,8 @@ export default function DeleteConfirmationModal(props) {
                     <Modal.Body>{deleteElementsMessage(props.deleteElements)}</Modal.Body>
                     <Modal.Footer>
                         <div>
-                            <Button variant="default me-1" onClick={props.onHide}>
-                                Cancel
-                            </Button>
-                            <Button variant="danger me-1" onClick={() => confirmDeleteElements()}>
-                                Delete
-                            </Button>
+                            <CancelButton onClick={props.onHide} text={'Cancel'}/>
+                            <DeleteButton onClick={() => confirmDeleteElements()} text={'Delete'}/>
                         </div>
                     </Modal.Footer>
                 </Modal>

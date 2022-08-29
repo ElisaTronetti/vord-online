@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
+import { CancelButton, DeleteButton } from '../../commonComponents/buttons/Buttons'
 import { useSelector, useDispatch } from 'react-redux'
 import { deleteElementsForMe, deleteElementsForAll } from '../documentsUtils/modifyDocument'
 import { SocketContext } from '../../util/socketContext'
@@ -40,15 +41,9 @@ export default function DeleteSharedModal(props) {
                 <Modal.Body>{deleteOwnerDocumentMessage(props.ownedDocuments)}</Modal.Body>
                 <Modal.Footer>
                     <div>
-                        <Button variant="default me-1" onClick={props.onHide}>
-                            Cancel
-                        </Button>
-                        <Button variant="danger me-1" onClick={() => confirmDeleteElements(true)}>
-                            Delete for me
-                        </Button>
-                        <Button variant="danger me-1" onClick={() => confirmDeleteElements(false)}>
-                            Delete for all
-                        </Button>
+                        <CancelButton onClick={props.onHide} text={'Cancel'}/>
+                        <DeleteButton onClick={() => confirmDeleteElements(true)} text={'Delete for me'}/>
+                        <DeleteButton onClick={() => confirmDeleteElements(false)} text={'Delete for all'}/>
                     </div>
                 </Modal.Footer>
             </Modal>

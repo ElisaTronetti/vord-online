@@ -1,16 +1,9 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import Button from 'react-bootstrap/Button'
-import Modal from 'react-bootstrap/Modal'
-import Container from 'react-bootstrap/Container'
-import Form from 'react-bootstrap/Form'
-import Col from 'react-bootstrap/Col'
-import FloatingLabel from 'react-bootstrap/FloatingLabel'
-import Row from 'react-bootstrap/Row'
-
+import { Modal, Container, Form, Col, Row, FloatingLabel } from 'react-bootstrap'
+import { DefaultButton, AddButton, DeleteButton } from '../../commonComponents/buttons/Buttons'
 import { createErrorToast } from '../../commonComponents/Toast'
 import { shareDocument } from '../requests/sharingRequests'
-import DefaultButton from '../../commonComponents/DefaultButton'
 
 export default function ShareDocumentModal(props) {
     const initialState = [{
@@ -109,14 +102,14 @@ export default function ShareDocumentModal(props) {
                                                 </Form.Group>
                                             </Col>
                                             <Col xs={1} className="text-center">
-                                                {(inputFields.length !== 1) ? <Button className="btn btn-danger" onClick={() => removeInputFields(index)}>-</Button> : ''}
+                                                {(inputFields.length !== 1) ? <DeleteButton onClick={() => removeInputFields(index)} text={'-'}/> : ''}
                                             </Col>
                                         </Row>
                                     )
                                 })
                             }
                             <div>
-                                <Button className="btn btn-success" onClick={addInputField}>Add new</Button>
+                                <AddButton onClick={addInputField} text={'Add new'}/>
                             </div>
                         </Col>
                     </Row>
