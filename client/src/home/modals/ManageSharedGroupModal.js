@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect } from 'react'
-import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
+import DefaultButton from '../../commonComponents/DefaultButton'
 
 import { createErrorToast } from '../../commonComponents/Toast'
 import { getSharedGroup, manageSharedGroup } from '../requests/sharingRequests'
@@ -91,7 +91,7 @@ export default function ManageSharedGroupModal(props) {
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={modifySharedGroup}>Modify</Button>
+                <DefaultButton onClick={modifySharedGroup} text={"Modify"}/>
             </Modal.Footer>
         </Modal>
     )

@@ -10,6 +10,7 @@ import Row from 'react-bootstrap/Row'
 
 import { createErrorToast } from '../../commonComponents/Toast'
 import { shareDocument } from '../requests/sharingRequests'
+import DefaultButton from '../../commonComponents/DefaultButton'
 
 export default function ShareDocumentModal(props) {
     const initialState = [{
@@ -122,7 +123,7 @@ export default function ShareDocumentModal(props) {
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={tryShareDocument}>Share</Button>
+                <DefaultButton onClick={tryShareDocument} text={"Share"}/>
             </Modal.Footer>
         </Modal>
     )

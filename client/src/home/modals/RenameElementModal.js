@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import Button from 'react-bootstrap/Button'
+import DefaultButton from '../../commonComponents/DefaultButton'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import { createWarningToast } from '../../commonComponents/Toast'
@@ -63,7 +63,7 @@ export default function RenameElementModal(props) {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={tryRenameElement}>Save</Button>
+                    <DefaultButton onClick={tryRenameElement} text={"Save"}/>
                 </Modal.Footer>
             </Modal>
         )
