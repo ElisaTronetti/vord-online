@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import DefaultButton from '../../commonComponents/DefaultButton'
