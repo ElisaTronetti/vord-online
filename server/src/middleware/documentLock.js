@@ -80,7 +80,6 @@ const onDocumentLockLeave = (socket, clientId) => ({ documentId }) => {
 // => Handler broadcasts lock change if the document lock list has changed
 const onDisconnect = (socket, clientId) => () => {
   const oldDocumentLocks = [...documentLocks];
-  const oldSession = [...currentSessions];
   currentSessions = currentSessions.filter(x => !(x.socketId === clientId));
   const unlockedDocument = oldDocumentLocks.find(ld => ld.clientId === clientId);
 
