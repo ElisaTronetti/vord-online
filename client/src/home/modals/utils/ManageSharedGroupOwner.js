@@ -54,9 +54,9 @@ export default function ManageSharedGroupOwner(props) {
                     const { email, role } = data
                     return (
                         <Row className="my-2 align-items-center" key={index}>
-                            <Col>
+                            <Col xs={6}>
                                 <Form.Group controlId="formGridEmail">
-                                    <FloatingLabel controlId="floatingInputGrid" label="Email address">
+                                    <FloatingLabel controlId="floatingInputGrid" label="Email">
                                         <Form.Control
                                             type="email"
                                             value={email}
@@ -66,7 +66,7 @@ export default function ManageSharedGroupOwner(props) {
                                     </FloatingLabel>
                                 </Form.Group>
                             </Col>
-                            <Col>
+                            <Col xs={5}>
                                 <Form.Group controlId="formGridRole">
                                     <FloatingLabel
                                         controlId="floatingSelectGrid"
@@ -84,7 +84,7 @@ export default function ManageSharedGroupOwner(props) {
                                     </FloatingLabel>
                                 </Form.Group>
                             </Col>
-                            <Col md={1} className="text-center">
+                            <Col xs={1} className="text-center">
                                 <Button className="btn btn-danger" onClick={() => removeOldUsers(index)}>-</Button>
                             </Col>
                         </Row>
@@ -96,7 +96,7 @@ export default function ManageSharedGroupOwner(props) {
                         const { email, role } = data
                         return (
                             <Row className="my-2 align-items-center" key={index}>
-                                <Col>
+                                <Col xs={6}>
                                     <Form.Group controlId="formGridEmail">
                                         <FloatingLabel controlId="floatingInputGrid" label="Email address">
                                             <Form.Control
@@ -108,7 +108,7 @@ export default function ManageSharedGroupOwner(props) {
                                         </FloatingLabel>
                                     </Form.Group>
                                 </Col>
-                                <Col>
+                                <Col xs={5}>
                                     <Form.Group controlId="formGridRole">
                                         <FloatingLabel
                                             controlId="floatingSelectGrid"
@@ -126,7 +126,7 @@ export default function ManageSharedGroupOwner(props) {
                                         </FloatingLabel>
                                     </Form.Group>
                                 </Col>
-                                <Col md={1} className="text-center">
+                                <Col xs={1} className="text-center">
                                     <Button className="btn btn-danger" onClick={() => removeNewUsers(index)}>-</Button>
                                 </Col>
                             </Row>

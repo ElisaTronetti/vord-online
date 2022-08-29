@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import DefaultButton from '../../commonComponents/DefaultButton'
 
 import { createFolder } from '../requests/folderRequests'
 import { createErrorToast } from '../../commonComponents/Toast'
@@ -49,7 +49,7 @@ export default function CreateFolderModal(props) {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={tryCreateFolder}>Save</Button>
+                <DefaultButton onClick={tryCreateFolder} text={"Save"}/>
             </Modal.Footer>
         </Modal>
     )

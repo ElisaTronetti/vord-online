@@ -8,7 +8,7 @@ export function openDocumentIfUnlocked(socket, document, setDocumentToOpen) {
     let documentId = document.id
     socket.emit(DOCUMENT_LOCK_ENTER, { documentId }, function (isDocumentLocked) {
         if (isDocumentLocked) {
-            createErrorToast('The document select is corrently opened by someone else')
+            createErrorToast('The document ' + document.name + ' is corrently opened by someone else')
         } else {
             setDocumentToOpen(document)
         }

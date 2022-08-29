@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
-import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
+import DefaultButton from '../commonComponents/DefaultButton'
 import { LinkContainer } from 'react-router-bootstrap'
 import { SocketContext } from '../util/socketContext'
 
@@ -56,7 +56,7 @@ export default function Login() {
                                 placeholder="Password" />
                         </Form.Group>
                         <div className="text-center">
-                            <Button variant="primary" onClick={tryLogin}>Login</Button>
+                            <DefaultButton variant="primary" onClick={tryLogin} text={"Login"}/>
                             <p>Not a member?
                                 <LinkContainer to="/signup">
                                     <span className='link'>Register</span>

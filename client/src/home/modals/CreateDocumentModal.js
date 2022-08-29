@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import DefaultButton from '../../commonComponents/DefaultButton'
 
 import { createNewDocument } from '../requests/documentRequests'
 import { createErrorToast } from '../../commonComponents/Toast'
@@ -50,7 +51,7 @@ export default function CreateDocumentModal(props) {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={tryCreateDocument}>Save</Button>
+                <DefaultButton onClick={tryCreateDocument} text={'Save'}/>
             </Modal.Footer>
         </Modal>
     )

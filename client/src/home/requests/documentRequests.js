@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import { setRootFolderId, setFileMap } from '../../redux/fileSystemData/actions'
 import { createErrorToast, createSuccessToast } from '../../commonComponents/Toast'
+import { updateFileSystem } from './requestsUtil'
 
 export function deleteSharedDocument(user, document, deleteForMe, dispatch) {
     $.ajax({
@@ -10,14 +10,11 @@ export function deleteSharedDocument(user, document, deleteForMe, dispatch) {
         data: createDeleteSharedDocument(user, document.id),
         success: function (result) {
             // Save new file system state
-            let id = result.fileSystem.rootFolderId
-            dispatch(setRootFolderId(id))
-            let fileMap = result.fileSystem.fileMap
-            dispatch(setFileMap(fileMap))
+            updateFileSystem(dispatch, result)
             createSuccessToast('The shared document ' + document.name + ' has been deleted correctly')
         },
         error: function () {
-            createErrorToast('Error while deleting ' + document.name)
+            createErrorToast('Error: impossible to delete ' + document.name)
         },
         type: 'POST',
         url: process.env.REACT_APP_SERVER + 'sharedDocuments/' + ((deleteForMe) ? 'deleteForMe' : 'deleteForAll')
@@ -43,10 +40,7 @@ export function createNewDocument(user, parentId, documentTitle, dispatch) {
         data: createDocumentParams(user.id, documentTitle, parentId),
         success: function (result) {
             // Save new file system state
-            let id = result.fileSystem.rootFolderId
-            dispatch(setRootFolderId(id))
-            let fileMap = result.fileSystem.fileMap
-            dispatch(setFileMap(fileMap))
+            updateFileSystem(dispatch, result)
             createSuccessToast('Document ' + documentTitle + '.txt created correctly')
         },
         error: function () {
@@ -75,10 +69,7 @@ export function deleteLocalDocument(user, document, dispatch) {
         data: createDeleteDocumentParams(user.id, document.id),
         success: function (result) {
             // Save new file system state
-            let id = result.fileSystem.rootFolderId
-            dispatch(setRootFolderId(id))
-            let fileMap = result.fileSystem.fileMap
-            dispatch(setFileMap(fileMap))
+            updateFileSystem(dispatch, result)
             createSuccessToast('Document ' + document.name + ' deleted correctly')
         },
         error: function () {
@@ -87,7 +78,6 @@ export function deleteLocalDocument(user, document, dispatch) {
         type: 'POST',
         url: process.env.REACT_APP_SERVER + 'document/deleteDocument'
     })
-    console.log('Delete document')
 }
 
 // Create body params for delete local document
@@ -106,10 +96,7 @@ export function copyDocument(user, originalDocument, dispatch) {
         data: copyDocumentParams(user.id, originalDocument),
         success: function (result) {
             // Save new file system state
-            let id = result.fileSystem.rootFolderId
-            dispatch(setRootFolderId(id))
-            let fileMap = result.fileSystem.fileMap
-            dispatch(setFileMap(fileMap))
+            updateFileSystem(dispatch, result)
             createSuccessToast('Local document ' + originalDocument.name + ' copied correctly')
         },
         error: function () {

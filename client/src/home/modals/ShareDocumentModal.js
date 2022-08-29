@@ -10,6 +10,7 @@ import Row from 'react-bootstrap/Row'
 
 import { createErrorToast } from '../../commonComponents/Toast'
 import { shareDocument } from '../requests/sharingRequests'
+import DefaultButton from '../../commonComponents/DefaultButton'
 
 export default function ShareDocumentModal(props) {
     const initialState = [{
@@ -24,8 +25,9 @@ export default function ShareDocumentModal(props) {
         }])
     }
     const removeInputFields = (index) => {
-        inputFields.splice(index, 1)
-        setInputFields(inputFields)
+        const rows = [...inputFields]
+        rows.splice(index, 1)
+        setInputFields(rows)
     }
     const resetInputFields = () => {
         setInputFields(initialState)
@@ -58,7 +60,7 @@ export default function ShareDocumentModal(props) {
     return (
         <Modal
             show={props.show}
-            onHide={props.onHide}
+            onHide={() => { props.onHide(); resetInputFields() }}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered>
@@ -74,9 +76,9 @@ export default function ShareDocumentModal(props) {
                                     const { email, role } = data
                                     return (
                                         <Row className="my-2 align-items-center" key={index}>
-                                            <Col>
+                                            <Col xs={6}>
                                                 <Form.Group controlId="formGridEmail">
-                                                    <FloatingLabel controlId="floatingInputGrid" label="Email address">
+                                                    <FloatingLabel controlId="floatingInputGrid" label="Email">
                                                         <Form.Control
                                                             type="email"
                                                             onChange={event => handleChange(index, event)}
@@ -87,7 +89,7 @@ export default function ShareDocumentModal(props) {
                                                     </FloatingLabel>
                                                 </Form.Group>
                                             </Col>
-                                            <Col>
+                                            <Col xs={5}>
                                                 <Form.Group controlId="formGridRole">
                                                     <FloatingLabel
                                                         controlId="floatingSelectGrid"
@@ -106,7 +108,7 @@ export default function ShareDocumentModal(props) {
                                                     </FloatingLabel>
                                                 </Form.Group>
                                             </Col>
-                                            <Col md={1} className="text-center">
+                                            <Col xs={1} className="text-center">
                                                 {(inputFields.length !== 1) ? <Button className="btn btn-danger" onClick={() => removeInputFields(index)}>-</Button> : ''}
                                             </Col>
                                         </Row>
@@ -121,7 +123,7 @@ export default function ShareDocumentModal(props) {
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={tryShareDocument}>Share</Button>
+                <DefaultButton onClick={tryShareDocument} text={"Share"}/>
             </Modal.Footer>
         </Modal>
     )

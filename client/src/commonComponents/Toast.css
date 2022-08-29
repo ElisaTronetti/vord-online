@@ -1,3 +1,9 @@
+/* Used to modify the color of a notification toast*/
 .Toastify__toast-theme--colored.Toastify__toast--info {
-    color: #252244
+    color: #252244;
+}
+
+/* Used to modify the color of a success toast*/
+.Toastify__toast-theme--colored.Toastify__toast--success {
+    color: #252244;
 }
