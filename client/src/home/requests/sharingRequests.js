@@ -10,14 +10,14 @@ export function shareDocument(user, inputFields, document, props, resetInputFiel
         dataType: 'json',
         data: createShareDocumentParams(user, inputFields, document.id),
         success: function () {
-            createSuccessToast("Document shared correctly")
+            createSuccessToast('Document ' + document.name + ' shared correctly')
             props.onHide()
             resetInputFields()
             getFileSystem(user, dispatch)
         },
         error: function () {
             //TODO check if unauthorized and create a different error message
-            createErrorToast('Error: impossible to share the document')
+            createErrorToast('Error: impossible to share the document ' + document.name)
         },
         type: 'POST',
         url: process.env.REACT_APP_SERVER + (document.isShared ? 'sharedDocuments/shareSharedDocument' : 'sharedDocuments/shareLocalDocument')
@@ -57,20 +57,19 @@ export function getSharedGroup(documentId, userId, setSharedGroupData) {
 }
 
 export function manageSharedGroup(user, sharedGroup, document, props, resetInputFields, dispatch) {
-    console.log(sharedGroup)
     $.ajax({
         contentType: 'application/json',
         headers: { 'token': user.token },
         dataType: 'json',
         data: createShareDocumentParams(user, sharedGroup, document.id),
         success: function () {
-            createSuccessToast('Shared group modified')
+            createSuccessToast('Shared group modified for ' + document.name)
             props.onHide()
             resetInputFields()
             getFileSystem(user, dispatch)
         },
         error: function () {
-            createErrorToast('Error: impossible modify the shared group')
+            createErrorToast('Error: impossible modify the shared group for ' + document.name)
         },
         type: 'POST',
         url: process.env.REACT_APP_SERVER + 'sharedDocuments/manageSharedGroup'
