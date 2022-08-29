@@ -1,58 +1,21 @@
 import $ from 'jquery'
 import { createErrorToast, createSuccessToast } from '../../commonComponents/Toast'
-import { setRootFolderId, setFileMap } from '../../redux/fileSystemData/actions'
+import { updateFileSystem } from './requestsUtil'
 
 export function getFileSystem(user, dispatch) {
     $.ajax({
         contentType: 'application/json',
-        headers: { "token": user.token },
-        dataType: 'json',
-        data: createGetFileSystemParams(user.id),
-        success: function (result) {
-            // No need to check the similarity
-            // A component will not rerender if the state is the same
-            let id = result.rootFolderId
-            dispatch(setRootFolderId(id))
-            let fileMap = result.fileMap
-            dispatch(setFileMap(fileMap))
-        },
-        error: function () {
-            console.log('error')
-        },
-        type: 'GET',
-        url: process.env.REACT_APP_SERVER + "fileSystem/getUserFileSystem?_id=" + user.id
-    })
-}
-
-// Create body params for get file system
-function createGetFileSystemParams(id) {
-    return JSON.stringify({
-        _id: id
-    })
-}
-
-export function updateFileSystem(user, fileSystem) {
-    $.ajax({
-        contentType: 'application/json',
         headers: { 'token': user.token },
         dataType: 'json',
-        data: createFileSystemParams(user.id, fileSystem),
-        success: function () {
-            console.log("Updated file system")
+        success: function (result) {
+            // No need to check the similarity: a component will not rerender if the state is the same
+            updateFileSystem(dispatch, result)
         },
         error: function () {
-            createErrorToast('Error: impossible to update the file system')
+            console.log('Error: impossible to get the user file system')
         },
-        type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'fileSystem/updateUserFileSystem'
-    })
-}
-
-// Create body params for file system
-function createFileSystemParams(id, fileSystem) {
-    return JSON.stringify({
-        _id: id,
-        fileSystem: fileSystem
+        type: 'GET',
+        url: process.env.REACT_APP_SERVER + 'fileSystem/getUserFileSystem?_id=' + user.id
     })
 }
 
@@ -66,14 +29,11 @@ export function moveElements(user, elements, destination, dispatch) {
         data: createMoveElementsParams(user.id, ids, destination.id),
         success: function (result) {
             // Save new file system state
-            let id = result.fileSystem.rootFolderId
-            dispatch(setRootFolderId(id))
-            let fileMap = result.fileSystem.fileMap
-            dispatch(setFileMap(fileMap))
+            updateFileSystem(dispatch, result)
             createSuccessToast('The elements ' + names + ' moved correctly in ' + destination.name)
         },
         error: function () {
-            createErrorToast('Error: move the elements ' + names + ' in ' + destination.name)
+            createErrorToast('Error: impossible to move the elements ' + names + ' in ' + destination.name)
         },
         type: 'POST',
         url: process.env.REACT_APP_SERVER + 'fileSystem/moveElements'
@@ -97,10 +57,7 @@ export function renameElement(user, element, newName, dispatch, props) {
         data: createRenameElementParams(user.id, element.id, newName),
         success: function (result) {
             // Save new file system state
-            let id = result.fileSystem.rootFolderId
-            dispatch(setRootFolderId(id))
-            let fileMap = result.fileSystem.fileMap
-            dispatch(setFileMap(fileMap))
+            updateFileSystem(dispatch, result)
             createSuccessToast('The element ' + element.name + ' renamed correctly in ' + newName)
             props.onHide()
         },
