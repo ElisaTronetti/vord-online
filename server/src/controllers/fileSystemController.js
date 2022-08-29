@@ -73,7 +73,7 @@ async function getUserFileSystem(req, res){
             for(let elem of lockedDocsTheUserPossess){
                 user.fileSystem.fileMap[elem].isEncrypted = true
             }
-            Responses.OkResponse(res, user.fileSystem);
+            Responses.OkResponse(res, user);
                 
         } catch(err){
             console.log(err)
