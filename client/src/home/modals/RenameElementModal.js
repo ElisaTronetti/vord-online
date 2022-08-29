@@ -26,8 +26,10 @@ export default function RenameElementModal(props) {
             createWarningToast('The name can not be empty')
         } else if (inputName.trim() === props.element.name) {
             props.onHide()
-        } else {
+        } else if(props.element.isDir){
             renameElement(user, props.element, inputName, dispatch, props)
+        } else {
+            renameElement(user, props.element, inputName + '.txt', dispatch, props)
         }
     }
 
