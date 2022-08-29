@@ -62,7 +62,6 @@ async function getDocument(req, res){
         .findOne({_id: req.query.userId})
         .select({ documents: {$elemMatch: {_id: req.query._id}}})
         .exec(function (err, result) {
-            console.log(result)
             Responses.OkResponse(res, result.documents[0]);
         });
         

@@ -67,7 +67,6 @@ async function getUserFileSystem(req, res){
             const fileMapAsArray =  Object.keys(user.fileSystem.fileMap)
 
             //find all locked documents in the user's filesystem and mark them as such in the data structure that will be sent to the client
-            for (let elem of fileMapAsArray){console.log(elem)}
             const lockedDocsTheUserPossess = fileMapAsArray.filter(fsElem => documentLocks.includes(fsElem))
            
             for(let elem of lockedDocsTheUserPossess){
