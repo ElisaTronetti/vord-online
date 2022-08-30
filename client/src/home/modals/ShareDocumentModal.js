@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Modal, Container, Form, Col, Row, FloatingLabel } from 'react-bootstrap'
 import { DefaultButton, AddButton, DeleteButton } from '../../commonComponents/buttons/Buttons'
 import { createErrorToast } from '../../commonComponents/Toast'
 import { shareDocument } from '../requests/sharingRequests'
+import { SocketContext } from '../../util/socketContext'
 
 export default function ShareDocumentModal(props) {
     const initialState = [{
@@ -39,12 +40,13 @@ export default function ShareDocumentModal(props) {
     }
 
     const dispatch = useDispatch()
+    const socket = useContext(SocketContext)
 
     function tryShareDocument() {
         const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
         const document = props.shareDocument[0]
         if (!isEmpty) {
-            shareDocument(user, inputFields, document, props, resetInputFields, dispatch)
+            shareDocument(user, inputFields, document, props, resetInputFields, dispatch, socket)   
         } else {
             createErrorToast('Insert all the required data')
         }

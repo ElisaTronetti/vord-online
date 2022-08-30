@@ -1,9 +1,9 @@
 import $ from 'jquery'
 import { createErrorToast, createSuccessToast } from "../../commonComponents/Toast"
 import { getFileSystem } from './fileSystemRequests'
+import { notifyShareDocument } from '../../util/socketCommunication'
 
-export function shareDocument(user, inputFields, document, props, resetInputFields, dispatch) {
-    console.log(inputFields)
+export function shareDocument(user, inputFields, document, props, resetInputFields, dispatch, socket) {
     $.ajax({
         contentType: 'application/json',
         headers: { "token": user.token },
@@ -11,6 +11,7 @@ export function shareDocument(user, inputFields, document, props, resetInputFiel
         data: createShareDocumentParams(user, inputFields, document.id),
         success: function () {
             createSuccessToast('Document ' + document.name + ' shared correctly')
+            notifyShareDocument(socket, user.id, document.id, inputFields)
             props.onHide()
             resetInputFields()
             getFileSystem(user, dispatch)
@@ -56,14 +57,15 @@ export function getSharedGroup(documentId, userId, setSharedGroupData) {
     })
 }
 
-export function manageSharedGroup(user, sharedGroup, document, props, resetInputFields, dispatch) {
+export function manageSharedGroup(user, alreadyPresentSharedGroup, addedToSharedGroup, document, props, resetInputFields, dispatch, socket) {
     $.ajax({
         contentType: 'application/json',
         headers: { 'token': user.token },
         dataType: 'json',
-        data: createShareDocumentParams(user, sharedGroup, document.id),
+        data: createShareDocumentParams(user, alreadyPresentSharedGroup.concat(addedToSharedGroup), document.id),
         success: function () {
             createSuccessToast('Shared group modified for ' + document.name)
+            notifyShareDocument(socket, user.id, document.id, addedToSharedGroup)
             props.onHide()
             resetInputFields()
             getFileSystem(user, dispatch)

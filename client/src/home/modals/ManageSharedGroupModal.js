@@ -1,9 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Modal, Container, Col, Row } from 'react-bootstrap'
 import { DefaultButton } from '../../commonComponents/buttons/Buttons'
 import { createErrorToast } from '../../commonComponents/Toast'
 import { getSharedGroup, manageSharedGroup } from '../requests/sharingRequests'
+import { SocketContext } from '../../util/socketContext'
 
 import ManageSharedGroupUserData from './utils/ManageSharedGroupUserData'
 import ManageSharedGroupOwner from './utils/ManageSharedGroupOwner'
@@ -36,13 +37,14 @@ export default function ManageSharedGroupModal(props) {
     }
 
     const dispatch = useDispatch()
+    const socket = useContext(SocketContext)
 
     function modifySharedGroup() {
         const areNewUsersEmpty = inputFields.length > 0 && Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
         const areOldRolesEmpty = Object.values(sharedGroupData.sharedGroup).every(x => x.role === '')
         if (!areNewUsersEmpty && !areOldRolesEmpty) {
-            let fullShareGroup = sharedGroupData.user.concat(sharedGroupData.sharedGroup).concat(inputFields)
-            manageSharedGroup(user, fullShareGroup, props.document[0], props, resetInputFields, dispatch)
+            let alreadyPresentSharedGroup = sharedGroupData.user.concat(sharedGroupData.sharedGroup)
+            manageSharedGroup(user, alreadyPresentSharedGroup, inputFields, props.document[0], props, resetInputFields, dispatch, socket)
         } else {
             createErrorToast('Insert all the required data')
         }
