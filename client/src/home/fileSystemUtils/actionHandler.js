@@ -17,8 +17,8 @@ export const useActionHandler = (user, socket, setModalController, setCurrentFol
                     setCurrentFolderId(fileToOpen.id)
                 } else {
                     // Open document
-                    if (!fileToOpen.isShared) {
-                        // Open without lock checks if it is a local document
+                    if (!fileToOpen.isShared || fileToOpen.role === 1) {
+                        // Open without lock checks if it is a local document or if it is open in read only mode
                         setDocumentToOpen(fileToOpen)
                     } else {
                         openDocumentIfUnlocked(socket, fileToOpen, setDocumentToOpen)
