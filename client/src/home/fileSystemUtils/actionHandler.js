@@ -25,7 +25,7 @@ export const useActionHandler = (user, socket, setModalController, setCurrentFol
                     }
                 }
             } else if (data.id === CopyDocument.id) {
-                // Copy files
+                // Copy files //TODO
                 copyDocument(user, data.state.selectedFilesForAction[0], dispatch)
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
                 setModalController(prevState => ({
@@ -52,17 +52,19 @@ export const useActionHandler = (user, socket, setModalController, setCurrentFol
                     createDocumentModalShow: true
                 }))
             } else if (data.id === ShareDocument.id) {
-                // Show modal to share a document
+                // Show modal to share a document //TODO
                 setModalController(prevState => ({
                     ...prevState,
                     shareDocument: data.state.selectedFilesForAction
                 }))
             } else if (data.id === ManageSharedGroup.id) {
+                // TODO
                 setModalController(prevState => ({
                     ...prevState,
                     handleSharedGroup: data.state.selectedFilesForAction
                 }))
             } else if (data.id ===  RenameElement.id) {
+                // TODO
                 setModalController(prevState => ({
                     ...prevState,
                     renameElement: data.state.selectedFilesForAction[0]
