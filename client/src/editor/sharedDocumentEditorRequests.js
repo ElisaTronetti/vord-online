@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast, createSuccessToast } from '../commonComponents/Toast'
+import { createErrorToast, createSuccessToast } from '../commonComponents/toast/Toast'
 
 export function getSharedDocument(documentId, userId, token, setEditorData) {
     $.ajax({

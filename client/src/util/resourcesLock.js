@@ -1,4 +1,4 @@
-import { createErrorToast } from '../commonComponents/Toast'
+import { createErrorToast } from '../commonComponents/toast/Toast'
 import { deleteSharedDocument } from '../home/requests/documentRequests'
 
 const DOCUMENT_LOCK_ENTER = 'document:lock:enter'

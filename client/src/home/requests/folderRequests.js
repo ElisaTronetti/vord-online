@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast, createSuccessToast } from '../../commonComponents/Toast'
+import { createErrorToast, createSuccessToast } from '../../commonComponents/toast/Toast'
 import { updateFileSystem } from './requestsUtil'
 
 export function createFolder(user, parentId, folderName, dispatch) {

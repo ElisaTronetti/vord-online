@@ -3,12 +3,12 @@ import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import { useSelector, useDispatch } from 'react-redux'
 import { useContext } from 'react'
-import { resetUser } from '../redux/userData/actions'
-import { SocketContext } from '../util/socketContext'
-import { resetFileSystem } from '../redux/fileSystemData/actions'
+import { resetUser } from '../../redux/userData/actions'
+import { SocketContext } from '../../util/socketContext'
+import { resetFileSystem } from '../../redux/fileSystemData/actions'
 import { LinkContainer } from 'react-router-bootstrap'
 
-import { logoutUser } from "../util/socketCommunication"
+import { logoutUser } from "../../util/socketCommunication"
 
 import './CustomNavbar.css'
 

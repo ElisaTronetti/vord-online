@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { DefaultButton } from '../../commonComponents/buttons/Buttons'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import { createErrorToast } from '../../commonComponents/Toast'
+import { createErrorToast } from '../../commonComponents/toast/Toast'
 import { renameElement } from '../requests/fileSystemRequests'
 
 export default function RenameElementModal(props) {

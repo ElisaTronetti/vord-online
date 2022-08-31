@@ -8,7 +8,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 
 import { SocketContext } from '../util/socketContext'
 import { DefaultButton } from '../commonComponents/buttons/Buttons'
-import { createErrorToast } from '../commonComponents/Toast'
+import { createErrorToast } from '../commonComponents/toast/Toast'
 import { userLogin } from './authenticationRequests'
 import './Authentication.css'
 

@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form'
 import { DefaultButton }from '../../commonComponents/buttons/Buttons'
 
 import { createFolder } from '../requests/folderRequests'
-import { createErrorToast } from '../../commonComponents/Toast'
+import { createErrorToast } from '../../commonComponents/toast/Toast'
 
 export default function CreateFolderModal(props) {
     const [inputFolderName, setInputFolderName] = useState('')

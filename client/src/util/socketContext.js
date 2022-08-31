@@ -1,6 +1,6 @@
 import { createContext } from "react"
 import io from 'socket.io-client'
-import { createNotificationToast } from '../commonComponents/Toast'
+import { createNotificationToast } from '../commonComponents/toast/Toast'
 
 const DOCUMENT_UNLOCK_NOTIFICATION = 'document:unlock:notification'
 const DOCUMENT_SHARE_NOTIFICATION = 'document:share:notification'

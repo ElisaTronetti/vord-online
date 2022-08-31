@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast, createSuccessToast } from "../../commonComponents/Toast"
+import { createErrorToast, createSuccessToast } from "../../commonComponents/toast/Toast"
 import { getFileSystem } from './fileSystemRequests'
 import { notifyShareDocument } from '../../util/socketCommunication'
 

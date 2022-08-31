@@ -13,7 +13,7 @@ import Home from './home/Home'
 import Login from './authentication/Login'
 import Signup from './authentication/Signup'
 import Editor from './editor/Editor'
-import CustomNavbar from './commonComponents/CustomNavbar'
+import CustomNavbar from './commonComponents/navbar/CustomNavbar'
 
 setChonkyDefaults({ iconComponent: ChonkyIconFA })
 
