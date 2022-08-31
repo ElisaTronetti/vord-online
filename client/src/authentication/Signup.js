@@ -51,7 +51,7 @@ export default function Signup() {
         <div className='auth-background'>
             <Container>
                 <Row className="justify-content-center">
-                    <div className="form-background my-5 container col-lg-3 col-9 border border-success trnsp">
+                    <div className="form-background my-5 container col-lg-3 col-9">
                         <Form className="mt-1 mb-3">
                             <h1 className="d-flex justify-content-center">Signup</h1>
                             <Form.Group className="mb-3" controlId="formBasicName">
