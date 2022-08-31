@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast, createSuccessToast } from '../commonComponents/toast/Toast'
+import { createErrorToast } from '../commonComponents/toast/Toast'
 
 export function getSharedDocument(documentId, userId, token, setEditorData) {
     $.ajax({
@@ -7,7 +7,6 @@ export function getSharedDocument(documentId, userId, token, setEditorData) {
         headers: { 'token': token, 'userid': userId, 'documentid': documentId },
         success: function (res) {
             setEditorData(res)
-            createSuccessToast("Opening document")
         },
         error: function () {
             createErrorToast('Error: impossible to retrieve the document')

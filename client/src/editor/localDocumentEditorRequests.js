@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast, createSuccessToast } from '../commonComponents/toast/Toast'
+import { createErrorToast } from '../commonComponents/toast/Toast'
 
 export function getDocument(documentId, userId, token, setEditorData) {
     $.ajax({
@@ -7,7 +7,6 @@ export function getDocument(documentId, userId, token, setEditorData) {
         headers: { 'token': token },
         success: function (res) {
             setEditorData(res)
-            createSuccessToast("Opening document")
         },
         error: function (err) {
             console.log(err)

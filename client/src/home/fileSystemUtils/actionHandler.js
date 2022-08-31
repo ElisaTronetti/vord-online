@@ -4,7 +4,7 @@ import { CopyDocument, CreateDocument, ManageSharedGroup, RenameElement, ShareDo
 import { openDocumentIfUnlocked } from '../../util/resourcesLock'
 import { moveElements } from '../requests/fileSystemRequests'
 import { copyDocument } from '../requests/documentRequests'
-import { createErrorToast } from '../../commonComponents/toast/Toast'
+import { createErrorToast, createSuccessToast } from '../../commonComponents/toast/Toast'
 import { isSharedDocumentOwned } from '../documentsUtils/documentUtils'
 
 // Check the action and perform the specified function
@@ -19,9 +19,13 @@ export const useActionHandler = (user, socket, setModalController, setCurrentFol
                     setCurrentFolderId(fileToOpen.id)
                 } else {
                     // Open document
-                    if (!fileToOpen.isShared || fileToOpen.role === 1) {
-                        // Open without lock checks if it is a local document or if it is open in read only mode
+                    if (!fileToOpen.isShared) {
+                        // Open without lock checks if it is a local document
                         setDocumentToOpen(fileToOpen)
+                    } else if (fileToOpen.role === 1) {
+                        // Open without lock checks if it is a read only document
+                        setDocumentToOpen(fileToOpen)
+                        createSuccessToast('Opening document in read only mode')
                     } else {
                         openDocumentIfUnlocked(socket, fileToOpen, setDocumentToOpen)
                     }
