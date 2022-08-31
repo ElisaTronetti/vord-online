@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import { setToken, setId, setEmail } from '../redux/userData/actions'
 import { setRootFolderId, setFileMap } from '../redux/fileSystemData/actions'
-import { createSuccessToast, createErrorToast, createNotificationToast } from '../commonComponents/Toast'
+import { createSuccessToast, createErrorToast } from '../commonComponents/Toast'
 import { registerUser } from '../util/socketCommunication'
 
 export function userLogin(email, password, dispatch, socket) {
@@ -12,7 +12,7 @@ export function userLogin(email, password, dispatch, socket) {
         success: function (result) {
             // Save data in redux store
             saveData(result.token, result._id, result.email, result.fileSystem, dispatch, socket)
-            createNotificationToast('Login successful!')
+            createSuccessToast('Login successful!')
         },
         error: function () {
             createErrorToast('Error: unable to login')
