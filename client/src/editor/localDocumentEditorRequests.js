@@ -14,7 +14,7 @@ export function getDocument(documentId, userId, token, setEditorData) {
             createErrorToast('Error: impossible to retrieve the document')
         },
         type: 'GET',
-        url: process.env.REACT_APP_SERVER + 'document/getDocument?_id='+documentId+'&userId='+userId
+        url: process.env.REACT_APP_SERVER + '/document/getDocument?_id='+documentId+'&userId='+userId
     })
 }
 
@@ -29,7 +29,7 @@ export function saveDocument(userId, token, documentId, blocks) {
             createErrorToast('Error: impossible to save the document')
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'document/saveDocument'
+        url: process.env.REACT_APP_SERVER + '/document/saveDocument'
     })
 }
 

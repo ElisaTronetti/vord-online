@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   server:
     build:
@@ -7,32 +5,24 @@ services:
       dockerfile: Dockerfile
     image: server
     ports:
-      - 3001:3001
-    networks:
-      - internal
-  mongodb:
+      - "3001:3001"
+    environment:
+      TOKEN_KEY: "verykooltoken"
+      DB_CONNECTION_STRING: "mongodb://database:27017/test"
+      PORT: 3001
+  database:
     image: mongo
-    ports:
-      - 27017-27019:27017-27019
-    networks:
-      - internal
     volumes:
-      - mongodb_data:/data/db
+      - database_data:/data/db
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
+      args:
+        REACT_APP_SERVER: "http://localhost:3001"
     image: client
     ports:
-      - 3000:3000
-    networks:
-      - internal
+      - "3000:3000"
 
-networks:
-  internal:
-    driver: bridge
-    driver_opts:
-       com.docker.network.bridge.name: "brinterna"
-       
 volumes:
-  mongodb_data:
+  database_data: { }
