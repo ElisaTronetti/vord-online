@@ -22,7 +22,6 @@ const onLogin = (socketId) => ({ userId }) => {
 
 const onLogout = (socket, clientId) => () => {
   const oldDocumentLocks = [...documentLocks];
-  const oldSession = [...currentSessions];
   // Remove the user from the current session
   currentSessions = currentSessions.filter(x => !(x.socketId === clientId));
   // Check if with the logout a document has been unlocked
@@ -30,16 +29,16 @@ const onLogout = (socket, clientId) => () => {
   if (unlockedDocument !== undefined) {
     // Update documents lock data structure
     documentLocks = documentLocks.filter(ld => (ld.documentId === unlockedDocument.documentId && ld.clientId !== unlockedDocument.clientId))
-    emitDocumentLocksChange(socket, unlockedDocument.documentId, oldSession);
+    emitDocumentLocksChange(socket, clientId, unlockedDocument.documentId);
   }
 }
 
 // Handler called to send notification when a change occurs in the lock list
-const emitDocumentLocksChange = (socket, unlockedDocument) => {
+const emitDocumentLocksChange = (socket, clientId, unlockedDocument) => {
   Utils.getSharedDocument(unlockedDocument).then((sharedDocument) => {
     const sharedGroup = sharedDocument.sharedGroup.map(member => member._id.toString());
     // Find olny the user in the current session (actually online)
-    const notificationGroup = currentSessions.filter(user => sharedGroup.includes(user.userId));
+    const notificationGroup = currentSessions.filter(user => sharedGroup.includes(user.userId) && user.socketId !== clientId);
     notificationGroup.forEach(member => {
       socket.to(member.socketId).emit(DOCUMENT_UNLOCK_NOTIFICATION, 'Document ' + sharedDocument.title + ' unlocked')
     });
@@ -68,7 +67,7 @@ const onDocumentLockLeave = (socket, clientId) => ({ documentId }) => {
   if (unlockedDocument !== undefined) {
     // Remove from locks the document
     documentLocks = documentLocks.filter(ld => (ld.documentId === unlockedDocument.documentId && ld.clientId !== unlockedDocument.clientId))
-    emitDocumentLocksChange(socket, unlockedDocument.documentId);
+    emitDocumentLocksChange(socket, clientId, unlockedDocument.documentId);
   }
 }
 
@@ -82,7 +81,7 @@ const onDisconnect = (socket, clientId) => () => {
   if (unlockedDocument !== undefined) {
     // Update document locks data structure
     documentLocks = documentLocks.filter(ld => (ld.documentId === unlockedDocument.documentId && ld.clientId !== unlockedDocument.clientId))
-    emitDocumentLocksChange(socket, unlockedDocument.documentId);
+    emitDocumentLocksChange(socket, clientId, unlockedDocument.documentId);
   }
 }
 
@@ -104,7 +103,7 @@ const onDocumentShare = (socket) => ({ documentId, sharedEmails }) => {
 }
 
 // This function is responsible for the websocket event registration on all lock commands
-const documentSocketLockHandler = socket => {
+const socketHandler = socket => {
   socket.on("connection", client => {
     client.on(DOCUMENT_LOCK_ENTER, onDocumentLockEnter(client.id));
     client.on(DOCUMENT_LOCK_LEAVE, onDocumentLockLeave(socket, client.id));
@@ -117,6 +116,6 @@ const documentSocketLockHandler = socket => {
 }
 
 module.exports = {
-  documentSocketLockHandler,
+  socketHandler,
   getDocumentLocks
 }

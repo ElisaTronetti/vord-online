@@ -2,10 +2,8 @@ const ObjectId = require('mongoose').Types.ObjectId
 const Responses = require("./responses/response")
 const Users = require('../models/userModel')
 const FileSystemUtils = require("./fileSystemUtils")
-const DocumentLock = require("../middleware/documentLock")
+const DocumentLock = require("../middleware/socket")
 const ShaDocUtils = require("./shaDocUtils")
-
-
 
 async function createFolder(req, res){
     try {
