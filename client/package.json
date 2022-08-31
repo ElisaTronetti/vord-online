@@ -12,7 +12,6 @@
     "@editorjs/marker": "^1.2.2",
     "@editorjs/nested-list": "^1.0.2",
     "@editorjs/quote": "^2.4.0",
-    "@editorjs/simple-image": "^1.4.1",
     "@editorjs/table": "^2.0.2",
     "@editorjs/underline": "^1.0.0",
     "@stfy/react-editor.js": "^1.0.3",
@@ -56,5 +55,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@editorjs/simple-image": "^1.4.1"
   }
 }

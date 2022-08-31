@@ -70,7 +70,10 @@ function Editor() {
           class: NestedList,
           inlineToolbar: true
         },
-        image: SimpleImage,
+        image: {
+          class: SimpleImage,
+          inlineToolbar: true
+        },
         checklist: {
           class: Checklist,
           inlineToolbar: true
