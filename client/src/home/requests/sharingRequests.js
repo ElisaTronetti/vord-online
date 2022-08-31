@@ -53,7 +53,7 @@ export function getSharedGroup(documentId, userId, setSharedGroupData) {
             createErrorToast('Error: impossible to retrieve the shared group')
         },
         type: 'GET',
-        url: process.env.REACT_APP_SERVER + 'sharedDocuments/getSharedGroup'
+        url: process.env.REACT_APP_SERVER + '/sharedDocuments/getSharedGroup'
     })
 }
 
@@ -74,6 +74,6 @@ export function manageSharedGroup(user, alreadyPresentSharedGroup, addedToShared
             createErrorToast('Error: impossible modify the shared group for ' + document.name)
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'sharedDocuments/manageSharedGroup'
+        url: process.env.REACT_APP_SERVER + '/sharedDocuments/manageSharedGroup'
     })
 }

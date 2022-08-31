@@ -17,7 +17,7 @@ export function deleteSharedDocument(user, document, deleteForMe, dispatch) {
             createErrorToast('Error: impossible to delete ' + document.name)
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'sharedDocuments/' + ((deleteForMe) ? 'deleteForMe' : 'deleteForAll')
+        url: process.env.REACT_APP_SERVER + '/sharedDocuments/' + ((deleteForMe) ? 'deleteForMe' : 'deleteForAll')
     })
 }
 
@@ -47,7 +47,7 @@ export function createNewDocument(user, parentId, documentTitle, dispatch) {
             createErrorToast('Error: impossible to create the new document ' + documentTitle + '.txt')
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'document/createNewDocument'
+        url: process.env.REACT_APP_SERVER + '/document/createNewDocument'
     })
 }
 
@@ -76,7 +76,7 @@ export function deleteLocalDocument(user, document, dispatch) {
             createErrorToast('Error: impossible to delete ' + document.name)
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'document/deleteDocument'
+        url: process.env.REACT_APP_SERVER + '/document/deleteDocument'
     })
 }
 
@@ -103,7 +103,7 @@ export function copyDocument(user, originalDocument, dispatch) {
             createErrorToast('Error: impossible to copy ' + originalDocument.name)
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'document/createNewDocument'
+        url: process.env.REACT_APP_SERVER + '/document/createNewDocument'
     })
 }
 

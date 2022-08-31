@@ -15,7 +15,7 @@ export function getFileSystem(user, dispatch) {
             console.log('Error: impossible to get the user file system')
         },
         type: 'GET',
-        url: process.env.REACT_APP_SERVER + 'fileSystem/getUserFileSystem?_id=' + user.id
+        url: process.env.REACT_APP_SERVER + '/fileSystem/getUserFileSystem?_id=' + user.id
     })
 }
 
@@ -36,7 +36,7 @@ export function moveElements(user, elements, destination, dispatch) {
             createErrorToast('Error: impossible to move the elements ' + names + ' in ' + destination.name)
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'fileSystem/moveElements'
+        url: process.env.REACT_APP_SERVER + '/fileSystem/moveElements'
     })
 }
 
@@ -65,7 +65,7 @@ export function renameElement(user, element, newName, dispatch, props) {
             createErrorToast('Error: impossible to rename ' + element.name + ' in ' + newName)
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'fileSystem/renameElement'
+        url: process.env.REACT_APP_SERVER + '/fileSystem/renameElement'
     })
 }
 

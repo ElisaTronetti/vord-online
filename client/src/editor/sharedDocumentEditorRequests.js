@@ -13,7 +13,7 @@ export function getSharedDocument(documentId, userId, setEditorData) {
             createErrorToast('Error: impossible to retrieve the document')
         },
         type: 'GET',
-        url: process.env.REACT_APP_SERVER + 'sharedDocuments/getSharedDocument'
+        url: process.env.REACT_APP_SERVER + '/sharedDocuments/getSharedDocument'
     })
 }
 
@@ -28,7 +28,7 @@ export function saveSharedDocument(userId, documentId, blocks) {
             createErrorToast('Error: impossible to save the document')
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'sharedDocuments/saveSharedDocument'
+        url: process.env.REACT_APP_SERVER + '/sharedDocuments/saveSharedDocument'
     })
 }
 

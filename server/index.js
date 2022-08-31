@@ -1,5 +1,5 @@
 const io = require('socket.io');
-const { documentSocketLockHandler } = require("./src/middleware/documentLock.js");
+const {documentSocketLockHandler} = require("./src/middleware/documentLock.js");
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();

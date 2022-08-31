@@ -17,7 +17,7 @@ export function createFolder(user, parentId, folderName, dispatch) {
             createErrorToast('Error: impossible to create the folder ' + folderName)
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'fileSystem/createFolder'
+        url: process.env.REACT_APP_SERVER + '/fileSystem/createFolder'
     })
 }
 
@@ -45,7 +45,7 @@ export function deleteFolder(user, folder, dispatch) {
             createErrorToast('Error: impossible to delete the folder ' + folder.name)
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'fileSystem/deleteFolder'
+        url: process.env.REACT_APP_SERVER + '/fileSystem/deleteFolder'
     })
 }
 

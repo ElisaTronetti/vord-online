@@ -18,7 +18,7 @@ export function userLogin(email, password, dispatch, socket) {
             createErrorToast('Error: unable to login')
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'auth/login'
+        url: process.env.REACT_APP_SERVER + '/auth/login'
     })
 }
 
@@ -44,7 +44,7 @@ export function userSignup(name, surname, email, password, dispatch, socket) {
             createErrorToast('Error: unable to signup')
         },
         type: 'POST',
-        url: process.env.REACT_APP_SERVER + 'auth/signup'
+        url: process.env.REACT_APP_SERVER + '/auth/signup'
     })
 }
 
