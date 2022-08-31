@@ -55,42 +55,48 @@ export default function ManageSharedGroupModal(props) {
         setSharedGroupData(sharedGroupData)
     }
 
-    return (
-        <Modal
-            show={props.show}
-            onHide={() => { props.onHide(); resetInputFields() }}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered>
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">Manage shared group:</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Container>
-                    <Row>
-                        <Col className='sm-8'>
-                            {
-                                sharedGroupData.user.length > 0 && (
-                                    <ManageSharedGroupUserData user={sharedGroupData.user}></ManageSharedGroupUserData>
-                                )
-                            }
-                            {
-                                sharedGroupData.user.length > 0 && sharedGroupData.user[0].role === 3 && (
-                                    <ManageSharedGroupOwner inputFields={inputFields} sharedGroupData={sharedGroupData} updateData={updateData}></ManageSharedGroupOwner>
-                                )
-                            }
-                            {
-                                sharedGroupData.user.length > 0 && sharedGroupData.user[0].role !== 3 && (
-                                    <ManageSharedGroupNonOwner sharedGroup={sharedGroupData.sharedGroup}></ManageSharedGroupNonOwner>
-                                )
-                            }
-                        </Col>
-                    </Row>
-                </Container>
-            </Modal.Body>
-            <Modal.Footer>
-                <DefaultButton onClick={modifySharedGroup} text={"Modify"}/>
-            </Modal.Footer>
-        </Modal>
-    )
+    if (props.document === undefined) {
+        return (
+            <div></div>
+        )
+    } else {
+        return (
+            <Modal
+                show={props.show}
+                onHide={() => { props.onHide(); resetInputFields() }}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered>
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">{'Manage shared group of ' + props.document.name + ':'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Container>
+                        <Row>
+                            <Col className='sm-8'>
+                                {
+                                    sharedGroupData.user.length > 0 && (
+                                        <ManageSharedGroupUserData user={sharedGroupData.user}></ManageSharedGroupUserData>
+                                    )
+                                }
+                                {
+                                    sharedGroupData.user.length > 0 && sharedGroupData.user[0].role === 3 && (
+                                        <ManageSharedGroupOwner inputFields={inputFields} sharedGroupData={sharedGroupData} updateData={updateData}></ManageSharedGroupOwner>
+                                    )
+                                }
+                                {
+                                    sharedGroupData.user.length > 0 && sharedGroupData.user[0].role !== 3 && (
+                                        <ManageSharedGroupNonOwner sharedGroup={sharedGroupData.sharedGroup}></ManageSharedGroupNonOwner>
+                                    )
+                                }
+                            </Col>
+                        </Row>
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer>
+                    <DefaultButton onClick={modifySharedGroup} text={"Modify"} />
+                </Modal.Footer>
+            </Modal>
+        )
+    }
 }
