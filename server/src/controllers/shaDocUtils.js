@@ -197,7 +197,7 @@ async function checkAndRestoreLocalDocument(dId){
             user = await Users.findById(userId)
             const originalPath = user.fileSystem.fileMap[[dId]].parentId
 
-            const newFile = FileSystemFactory.createLocalDocument(documentId, title, originalPath)
+            const newFile = FileSystemFactory.createLocalDocument(documentId, doc.title, originalPath)
 
             //insert new field in fileMap
             const path = "fileSystem.fileMap." + documentId.toString()
