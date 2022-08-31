@@ -23,9 +23,6 @@ export function saveDocument(userId, token, documentId, blocks) {
         contentType: 'application/json',
         headers: { 'token': token },
         data: createDocumentParams(userId, documentId, token, blocks),
-        success: function (res) {
-            createSuccessToast("Document saved")
-        },
         error: function () {
             createErrorToast('Error: impossible to save the document')
         },

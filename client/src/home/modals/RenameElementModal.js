@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { DefaultButton } from '../../commonComponents/buttons/Buttons'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import { createWarningToast } from '../../commonComponents/Toast'
+import { createErrorToast } from '../../commonComponents/Toast'
 import { renameElement } from '../requests/fileSystemRequests'
 
 export default function RenameElementModal(props) {
@@ -23,7 +23,7 @@ export default function RenameElementModal(props) {
 
     function tryRenameElement() {
         if (inputName.trim() === '') {
-            createWarningToast('The name can not be empty')
+            createErrorToast('The name can not be empty')
         } else if (inputName.trim() === props.element.name) {
             props.onHide()
         } else if(props.element.isDir){
