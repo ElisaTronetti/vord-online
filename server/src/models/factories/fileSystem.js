@@ -6,11 +6,11 @@ function createLocalDocument(id, name, parentId) {
         isShared: false,
         parentId: parentId,
         ext: ".txt",
-        color: "#081269"
+        color: "#3C47CB"
     }
 }
 
-function createFolder(id, name, parentId) {
+function createFolder(id, name, parentId) { 
     return {
         id: id,
         name: name,
@@ -30,7 +30,7 @@ function createSharedDocument(id, title, parentId, role){
         parentId: parentId,
         ext: ".txt",
         isShared: true,
-        color: "#8e00a8",
+        color: "#41014d",//"#8e00a8",
         role: role
     }
 }
