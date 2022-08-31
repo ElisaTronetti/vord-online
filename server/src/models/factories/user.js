@@ -17,7 +17,6 @@ function createUser(email, name, surname, password) {
         }
       }
     }
-    console.log(fileSystem)
     return new User({
         email: email,
         name: name,
