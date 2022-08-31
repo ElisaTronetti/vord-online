@@ -6,7 +6,7 @@ import { notifyShareDocument } from '../../util/socketCommunication'
 export function shareDocument(user, inputFields, document, props, resetInputFields, dispatch, socket) {
     $.ajax({
         contentType: 'application/json',
-        headers: { "token": user.token },
+        headers: { 'token': user.token },
         dataType: 'json',
         data: createShareDocumentParams(user, inputFields, document.id),
         success: function () {
@@ -37,10 +37,10 @@ function createShareDocumentParams(user, inputFields, documentId) {
     })
 }
 
-export function getSharedGroup(documentId, userId, setSharedGroupData) {
+export function getSharedGroup(documentId, userId, token, setSharedGroupData) {
     $.ajax({
         contentType: 'application/json',
-        headers: { 'userid': userId, 'documentid': documentId },
+        headers: { 'token': token, 'userid': userId, 'documentid': documentId },
         success: function (res) {
             let userInfo = res.filter(entry => entry._id === userId)
             let sharedGroup = res.filter(entry => entry._id !== userId)

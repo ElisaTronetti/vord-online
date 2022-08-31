@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Container from 'react-bootstrap/Container'
-import { DefaultButton } from '../commonComponents/buttons/Buttons'
 import { LinkContainer } from 'react-router-bootstrap'
-import { SocketContext } from '../util/socketContext'
 
-import './Authentication.css'
-import { createWarningToast } from '../commonComponents/Toast'
+import { SocketContext } from '../util/socketContext'
+import { DefaultButton } from '../commonComponents/buttons/Buttons'
+import { createErrorToast } from '../commonComponents/Toast'
 import { userLogin } from './authenticationRequests'
+import './Authentication.css'
 
 export default function Login() {
     const [inputEmail, setInputEmail] = useState('')
@@ -25,7 +25,7 @@ export default function Login() {
             // HTTP request to try the login
             userLogin(inputEmail, inputPassword, dispatch, socket)
         } else {
-            createWarningToast('Missing required data')
+            createErrorToast('Missing required data')
         }
     }
 

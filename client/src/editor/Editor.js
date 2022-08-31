@@ -33,7 +33,7 @@ function Editor() {
 
   if (editorData === undefined && document.isShared) {
     // Retrieve shared document
-    getSharedDocument(document.id, userId, setEditorData)
+    getSharedDocument(document.id, userId, token, setEditorData)
   } else if (editorData === undefined && !document.isShared) {
     // Retrieve local document
     getDocument(document.id, userId, token, setEditorData)
@@ -50,7 +50,7 @@ function Editor() {
         // Logic to save this data to DB
         if (document.isShared) {
           // Save shared document
-          saveSharedDocument(userId, document.id, content.blocks)
+          saveSharedDocument(userId, token, document.id, content.blocks)
         } else {
           // Save local document
           saveDocument(userId, token, document.id, content.blocks)
@@ -126,7 +126,7 @@ function Editor() {
     <div className='editor-component'>
       <div className='editor-container'>
         <div className='editor-page'>
-          <div id={EDITTOR_HOLDER_ID} className='editor'> </div>
+          <div id={EDITTOR_HOLDER_ID} className='editor'></div>
         </div>
       </div>
     </div>

@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Container from 'react-bootstrap/Container'
-import { DefaultButton } from '../commonComponents/buttons/Buttons'
 import { LinkContainer } from 'react-router-bootstrap'
-import { SocketContext } from '../util/socketContext'
 
-import './Authentication.css'
-import { createWarningToast } from '../commonComponents/Toast'
+import { SocketContext } from '../util/socketContext'
+import { DefaultButton } from '../commonComponents/buttons/Buttons'
+import { createErrorToast } from '../commonComponents/Toast'
 import { userSignup } from './authenticationRequests'
+import './Authentication.css'
 
 export default function Signup() {
     const navigate = useNavigate()
@@ -25,9 +25,9 @@ export default function Signup() {
 
     function trySignup() {
         if (emptySignupParams()) {
-            createWarningToast('Missing required data')
+            createErrorToast('Missing required data')
         } else if (inputPassword.trim() !== inputPasswordConfirm.trim()) {
-            createWarningToast('Passwords do not match')
+            createErrorToast('Passwords do not match')
         } else {
             // HTTP request to try the signup
             userSignup(inputName, inputSurname, inputEmail, inputPassword, dispatch, socket)
