@@ -27,7 +27,7 @@ export default function ManageSharedGroupModal(props) {
 
     useEffect(() => {
         if (props.document !== undefined) {
-            getSharedGroup(props.document[0].id, user.id, user.token, setSharedGroupData)
+            getSharedGroup(props.document.id, user.id, user.token, setSharedGroupData)
         }
     }, [props.document, user.id, user.token])
 
@@ -44,7 +44,7 @@ export default function ManageSharedGroupModal(props) {
         const areOldRolesEmpty = Object.values(sharedGroupData.sharedGroup).every(x => x.role === '')
         if (!areNewUsersEmpty && !areOldRolesEmpty) {
             let alreadyPresentSharedGroup = sharedGroupData.user.concat(sharedGroupData.sharedGroup)
-            manageSharedGroup(user, alreadyPresentSharedGroup, inputFields, props.document[0], props, resetInputFields, dispatch, socket)
+            manageSharedGroup(user, alreadyPresentSharedGroup, inputFields, props.document, props, resetInputFields, dispatch, socket)
         } else {
             createErrorToast('Insert all the required data')
         }

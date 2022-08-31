@@ -44,7 +44,7 @@ export default function ShareDocumentModal(props) {
 
     function tryShareDocument() {
         const isEmpty = Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
-        const document = props.shareDocument[0]
+        const document = props.shareDocument
         if (!isEmpty) {
             shareDocument(user, inputFields, document, props, resetInputFields, dispatch, socket)   
         } else {

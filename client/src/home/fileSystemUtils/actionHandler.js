@@ -66,23 +66,33 @@ export const useActionHandler = (user, socket, setModalController, setCurrentFol
                     createDocumentModalShow: true
                 }))
             } else if (data.id === ShareDocument.id) {
-                // Show modal to share a document //TODO
-                setModalController(prevState => ({
-                    ...prevState,
-                    shareDocument: data.state.selectedFilesForAction
-                }))
+                // Show modal to share a document
+                if (data.state.selectedFilesForAction.length > 1) {
+                    createErrorToast('Multi document share is not supported')
+                } else {
+                    setModalController(prevState => ({
+                        ...prevState,
+                        shareDocument: data.state.selectedFilesForAction[0]
+                    }))
+                }
             } else if (data.id === ManageSharedGroup.id) {
-                // TODO
-                setModalController(prevState => ({
-                    ...prevState,
-                    handleSharedGroup: data.state.selectedFilesForAction
-                }))
+                if (data.state.selectedFilesForAction.length > 1) {
+                    createErrorToast('Multi document manage share is not supported')
+                } else {
+                    setModalController(prevState => ({
+                        ...prevState,
+                        handleSharedGroup: data.state.selectedFilesForAction[0]
+                    }))
+                }
             } else if (data.id === RenameElement.id) {
-                // TODO
-                setModalController(prevState => ({
-                    ...prevState,
-                    renameElement: data.state.selectedFilesForAction[0]
-                }))
+                if (data.state.selectedFilesForAction.length > 1) {
+                    createErrorToast('Multi document rename is not supported')
+                } else {
+                    setModalController(prevState => ({
+                        ...prevState,
+                        renameElement: data.state.selectedFilesForAction[0]
+                    }))
+                }
             }
         },
         [user, socket, setModalController, setCurrentFolderId, setDocumentToOpen, dispatch]
