@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import { setToken, setId, setEmail } from '../redux/userData/actions'
 import { setRootFolderId, setFileMap } from '../redux/fileSystemData/actions'
-import { createSuccessToast, createErrorToast } from '../commonComponents/Toast'
+import { createSuccessToast, createErrorToast } from '../commonComponents/toast/Toast'
 import { registerUser } from '../util/socketCommunication'
 
 export function userLogin(email, password, dispatch, socket) {

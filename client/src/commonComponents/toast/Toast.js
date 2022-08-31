@@ -20,10 +20,6 @@ export const createErrorToast = (message) => {
     toast.error(message, toastConfiguration)
 }
 
-export const createWarningToast = (message) => {
-    toast.warn(message, toastConfiguration)
-}
-
 export const createNotificationToast = (message) => {
     toast.info(message, toastConfiguration)
 }

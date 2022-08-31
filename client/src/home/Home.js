@@ -13,6 +13,7 @@ import CreateFolderModal from './modals/CreateFolderModal'
 import CreateDocumentModal from './modals/CreateDocumentModal'
 import ShareDocumentModal from './modals/ShareDocumentModal'
 import DeleteConfirmationModal from './modals/DeleteConfirmationModal'
+import DeleteSharedModal from './modals/DeleteSharedModal'
 import ManageSharedGroupModal from './modals/ManageSharedGroupModal'
 import RenameElementModal from './modals/RenameElementModal'
 
@@ -31,7 +32,8 @@ export default function Home() {
   const [modalController, setModalController] = useState({
     shareDocument: undefined,
     handleSharedGroup: undefined,
-    deleteElements: undefined,
+    deleteElement: undefined,
+    deleteOwnedElement: undefined,
     createFolderModalShow: false,
     createDocumentModalShow: false,
     renameElement: undefined
@@ -84,7 +86,8 @@ export default function Home() {
       <CreateFolderModal show={modalController.createFolderModalShow} onHide={() => setModalController(prevState => ({...prevState, createFolderModalShow: false}))} currentFolderId={currentFolderId} />
       <CreateDocumentModal show={modalController.createDocumentModalShow} onHide={() => setModalController(prevState => ({...prevState, createDocumentModalShow: false}))} currentFolderId={currentFolderId} />
       <ShareDocumentModal show={modalController.shareDocument !== undefined} onHide={() => setModalController(prevState => ({...prevState, shareDocument: undefined}))} shareDocument={modalController.shareDocument} />
-      <DeleteConfirmationModal show={modalController.deleteElements !== undefined} onHide={() => setModalController(prevState => ({...prevState, deleteElements: undefined}))} deleteElements={modalController.deleteElements} />
+      <DeleteConfirmationModal show={modalController.deleteElement !== undefined} onHide={() => setModalController(prevState => ({...prevState, deleteElement: undefined}))} deleteElement={modalController.deleteElement} />
+      <DeleteSharedModal show={modalController.deleteOwnedElement !== undefined} onHide={() => setModalController(prevState => ({...prevState, deleteOwnedElement: undefined}))} deleteElement={modalController.deleteOwnedElement} />
       <ManageSharedGroupModal show={modalController.handleSharedGroup !== undefined} onHide={() => setModalController(prevState => ({...prevState, handleSharedGroup: undefined}))} document={modalController.handleSharedGroup} />
       <RenameElementModal show={modalController.renameElement !== undefined} onHide={() => setModalController(prevState => ({...prevState, renameElement: undefined}))} element={modalController.renameElement} />
     </div>

@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { createErrorToast, createSuccessToast } from '../commonComponents/Toast'
+import { createErrorToast, createSuccessToast } from '../commonComponents/toast/Toast'
 
 export function getDocument(documentId, userId, token, setEditorData) {
     $.ajax({
@@ -23,9 +23,6 @@ export function saveDocument(userId, token, documentId, blocks) {
         contentType: 'application/json',
         headers: { 'token': token },
         data: createDocumentParams(userId, documentId, token, blocks),
-        success: function (res) {
-            createSuccessToast("Document saved")
-        },
         error: function () {
             createErrorToast('Error: impossible to save the document')
         },

@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect, useContext } from 'react'
 import { Modal, Container, Col, Row } from 'react-bootstrap'
 import { DefaultButton } from '../../commonComponents/buttons/Buttons'
-import { createErrorToast } from '../../commonComponents/Toast'
+import { createErrorToast } from '../../commonComponents/toast/Toast'
 import { getSharedGroup, manageSharedGroup } from '../requests/sharingRequests'
 import { SocketContext } from '../../util/socketContext'
 

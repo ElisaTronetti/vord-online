@@ -2,7 +2,7 @@ import { useState, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Modal, Container, Form, Col, Row, FloatingLabel } from 'react-bootstrap'
 import { DefaultButton, AddButton, DeleteButton } from '../../commonComponents/buttons/Buttons'
-import { createErrorToast } from '../../commonComponents/Toast'
+import { createErrorToast } from '../../commonComponents/toast/Toast'
 import { shareDocument } from '../requests/sharingRequests'
 import { SocketContext } from '../../util/socketContext'
 
