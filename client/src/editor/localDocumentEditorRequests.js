@@ -21,6 +21,7 @@ export function getDocument(documentId, userId, token, setEditorData) {
 export function saveDocument(userId, token, documentId, blocks) {
     $.ajax({
         contentType: 'application/json',
+        headers: { 'token': token },
         data: createDocumentParams(userId, documentId, token, blocks),
         success: function (res) {
             createSuccessToast("Document saved")

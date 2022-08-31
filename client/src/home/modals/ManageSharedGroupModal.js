@@ -27,9 +27,9 @@ export default function ManageSharedGroupModal(props) {
 
     useEffect(() => {
         if (props.document !== undefined) {
-            getSharedGroup(props.document[0].id, user.id, setSharedGroupData)
+            getSharedGroup(props.document[0].id, user.id, user.token, setSharedGroupData)
         }
-    }, [props.document, user.id])
+    }, [props.document, user.id, user.token])
 
     const resetInputFields = () => {
         setInputFields(newUsersInitialState)

@@ -7,8 +7,10 @@ import { resetUser } from '../redux/userData/actions'
 import { SocketContext } from '../util/socketContext'
 import { resetFileSystem } from '../redux/fileSystemData/actions'
 import { LinkContainer } from 'react-router-bootstrap'
-import './CustomNavbar.css'
+
 import { logoutUser } from "../util/socketCommunication"
+
+import './CustomNavbar.css'
 
 export default function CustomNavbar() {
   const dispatch = useDispatch()
@@ -26,9 +28,16 @@ export default function CustomNavbar() {
 
   return (
     <Navbar collapseOnSelect expand="lg" variant="light" className="color-nav">
-      <Container fluid >
+      <Container fluid>
         <Navbar.Brand>
-          <img  height="70" className="align-center" alt="logo" src='/logo_vord.png' />{' '}
+          {user.token !== null && (
+            <LinkContainer to='/home'>
+              <Nav.Link><img height="70" className="align-center" alt="logo" src='/logo_vord.png' /></Nav.Link>
+            </LinkContainer>
+          )}
+          {user.token === null && (
+            <img height="70" className="align-center" alt="logo" src='/logo_vord.png' />
+          )}
         </Navbar.Brand>
         {
           user.token !== null && (

@@ -1,10 +1,10 @@
 import $ from 'jquery'
 import { createErrorToast, createSuccessToast } from '../commonComponents/Toast'
 
-export function getSharedDocument(documentId, userId, setEditorData) {
+export function getSharedDocument(documentId, userId, token, setEditorData) {
     $.ajax({
         contentType: 'application/json',
-        headers: { 'userid': userId, 'documentid': documentId },
+        headers: { 'token': token, 'userid': userId, 'documentid': documentId },
         success: function (res) {
             setEditorData(res)
             createSuccessToast("Opening document")
@@ -17,9 +17,10 @@ export function getSharedDocument(documentId, userId, setEditorData) {
     })
 }
 
-export function saveSharedDocument(userId, documentId, blocks) {
+export function saveSharedDocument(userId, token, documentId, blocks) {
     $.ajax({
         contentType: 'application/json',
+        headers: { 'token': token },
         data: createDocumentParams(userId, documentId, blocks),
         success: function () {
             createSuccessToast("Document saved")
