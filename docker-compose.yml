@@ -6,9 +6,10 @@ services:
     image: server
     ports:
       - "3001:3001"
-    secrets:
-      - source: env_server
-        target: /app/.env
+    environment:
+      TOKEN_KEY: "verykooltoken"
+      DB_CONNECTION_STRING: "mongodb://database:27017/test"
+      PORT: 3001
   database:
     image: mongo
     volumes:
@@ -25,7 +26,3 @@ services:
 
 volumes:
   database_data: { }
-
-secrets:
-  env_server:
-    file: server/.env
