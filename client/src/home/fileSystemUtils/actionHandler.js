@@ -4,6 +4,8 @@ import { CopyDocument, CreateDocument, ManageSharedGroup, RenameElement, ShareDo
 import { openDocumentIfUnlocked } from '../../util/resourcesLock'
 import { moveElements } from '../requests/fileSystemRequests'
 import { copyDocument } from '../requests/documentRequests'
+import { createErrorToast } from '../../commonComponents/toast/Toast'
+import { isSharedDocumentOwned } from '../documentsUtils/documentUtils'
 
 // Check the action and perform the specified function
 export const useActionHandler = (user, socket, setModalController, setCurrentFolderId, setDocumentToOpen, dispatch) => {
@@ -25,13 +27,25 @@ export const useActionHandler = (user, socket, setModalController, setCurrentFol
                     }
                 }
             } else if (data.id === CopyDocument.id) {
-                // Copy files //TODO
-                copyDocument(user, data.state.selectedFilesForAction[0], dispatch)
+                if (data.state.selectedFilesForAction.length > 1) {
+                    createErrorToast('Multi document copy is not supported')
+                } else {
+                    copyDocument(user, data.state.selectedFilesForAction[0], dispatch)
+                }
             } else if (data.id === ChonkyActions.DeleteFiles.id) {
-                setModalController(prevState => ({
-                    ...prevState,
-                    deleteElements: data.state.selectedFilesForAction
-                }))
+                if (data.state.selectedFilesForAction.length > 1) {
+                    createErrorToast('Multi document delete is not supported')
+                } else if (isSharedDocumentOwned(data.state.selectedFilesForAction[0])) {
+                    setModalController(prevState => ({
+                        ...prevState,
+                        deleteOwnedElement: data.state.selectedFilesForAction[0]
+                    }))
+                } else {
+                    setModalController(prevState => ({
+                        ...prevState,
+                        deleteElement: data.state.selectedFilesForAction[0]
+                    }))
+                }
             } else if (data.id === ChonkyActions.MoveFiles.id) {
                 moveElements(
                     user,
@@ -63,7 +77,7 @@ export const useActionHandler = (user, socket, setModalController, setCurrentFol
                     ...prevState,
                     handleSharedGroup: data.state.selectedFilesForAction
                 }))
-            } else if (data.id ===  RenameElement.id) {
+            } else if (data.id === RenameElement.id) {
                 // TODO
                 setModalController(prevState => ({
                     ...prevState,
