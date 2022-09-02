@@ -94,7 +94,11 @@ export default function ManageSharedGroupModal(props) {
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
-                    <DefaultButton onClick={modifySharedGroup} text={"Modify"} />
+                    {
+                        props.document.role === 3 && (
+                            <DefaultButton onClick={modifySharedGroup} text={"Modify"} />
+                        )
+                    }
                 </Modal.Footer>
             </Modal>
         )
