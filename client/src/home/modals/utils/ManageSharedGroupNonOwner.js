@@ -1,8 +1,5 @@
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import Col from 'react-bootstrap/Col'
-import FloatingLabel from 'react-bootstrap/FloatingLabel'
-import Row from 'react-bootstrap/Row'
+import { Form, Col, Row, FloatingLabel } from 'react-bootstrap'
+import { DeleteButton } from '../../../commonComponents/buttons/Buttons'
 
 export default function ManageSharedGroupOwner(props) {
     return (
@@ -42,7 +39,7 @@ export default function ManageSharedGroupOwner(props) {
                             </Form.Group>
                         </Col>
                         <Col xs={1} className="text-center">
-                            {(props.sharedGroup.length === 0) ? <Button className="btn btn-danger">-</Button> : ''}
+                            {(props.sharedGroup.length === 0) ? <DeleteButton text={"-"}/> : ''}
                         </Col>
                     </Row>
                 )

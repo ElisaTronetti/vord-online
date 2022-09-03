@@ -1,25 +1,27 @@
-import { useState } from 'react'
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import Col from 'react-bootstrap/Col'
-import FloatingLabel from 'react-bootstrap/FloatingLabel'
-import Row from 'react-bootstrap/Row'
+import { useState, useEffect } from 'react'
+import { DeleteButton, AddButton } from '../../../commonComponents/buttons/Buttons'
+import { Form, Col, Row, FloatingLabel } from 'react-bootstrap'
 
 export default function ManageSharedGroupOwner(props) {
     const [inputFields, setInputFields] = useState(props.inputFields)
     const [sharedGroupData, setSharedGroupData] = useState(props.sharedGroupData)
+    const update = props.updateData
+
+    // Added use effect to update the parent state whenever the internal state changes
+    useEffect(() => {
+        update(inputFields, sharedGroupData)
+    }, [inputFields, sharedGroupData, update])
 
     const addInputField = () => {
         setInputFields([...inputFields, {
             email: '',
             role: ''
         }])
-        props.updateData(inputFields, sharedGroupData)
     }
     const removeNewUsers = (index) => {
-        inputFields.splice(index, 1)
-        setInputFields(inputFields)
-        props.updateData(inputFields, sharedGroupData)
+        const rows = [...inputFields]
+        rows.splice(index, 1)
+        setInputFields(rows)
     }
     const removeOldUsers = (index) => {
         sharedGroupData.sharedGroup.splice(index, 1)
@@ -27,14 +29,12 @@ export default function ManageSharedGroupOwner(props) {
             user: sharedGroupData.user,
             sharedGroup: sharedGroupData.sharedGroup
         })
-        props.updateData(inputFields, sharedGroupData)
     }
     const handleNewUsersChange = (index, event) => {
         const { name, value } = event.target
         const list = [...inputFields]
         list[index][name] = value
         setInputFields(list)
-        props.updateData(inputFields, sharedGroupData)
     }
     const handleOldUsersChange = (index, event) => {
         const { name, value } = event.target
@@ -44,7 +44,6 @@ export default function ManageSharedGroupOwner(props) {
             user: sharedGroupData.user,
             sharedGroup: list
         })
-        props.updateData(inputFields, sharedGroupData)
     }
 
     return (
@@ -85,7 +84,7 @@ export default function ManageSharedGroupOwner(props) {
                                 </Form.Group>
                             </Col>
                             <Col xs={1} className="text-center">
-                                <Button className="btn btn-danger" onClick={() => removeOldUsers(index)}>-</Button>
+                                <DeleteButton onClick={() => removeOldUsers(index)} text={'-'}/>
                             </Col>
                         </Row>
                     )
@@ -127,7 +126,7 @@ export default function ManageSharedGroupOwner(props) {
                                     </Form.Group>
                                 </Col>
                                 <Col xs={1} className="text-center">
-                                    <Button className="btn btn-danger" onClick={() => removeNewUsers(index)}>-</Button>
+                                    <DeleteButton onClick={() => removeNewUsers(index)} text={'-'}/>
                                 </Col>
                             </Row>
                         )
@@ -135,7 +134,7 @@ export default function ManageSharedGroupOwner(props) {
                 }
             </div>
             <div>
-                <Button className="btn btn-success" onClick={addInputField}>Add new</Button>
+                <AddButton onClick={addInputField} text={'Add new'}/>
             </div>
         </div>
     )

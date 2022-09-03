@@ -41,7 +41,7 @@ export default function ManageSharedGroupModal(props) {
 
     function modifySharedGroup() {
         const areNewUsersEmpty = inputFields.length > 0 && Object.values(inputFields).every(x => (x.email === '' || x.role === ''))
-        const areOldRolesEmpty = Object.values(sharedGroupData.sharedGroup).every(x => x.role === '')
+        const areOldRolesEmpty = sharedGroupData.sharedGroup.length > 0 && Object.values(sharedGroupData.sharedGroup).every(x => x.role === '')
         if (!areNewUsersEmpty && !areOldRolesEmpty) {
             let alreadyPresentSharedGroup = sharedGroupData.user.concat(sharedGroupData.sharedGroup)
             manageSharedGroup(user, alreadyPresentSharedGroup, inputFields, props.document, props, resetInputFields, dispatch, socket)
