@@ -126,7 +126,10 @@ async function manageSharedGroup(req, res){
 
             //update new and updated members's filesystems
             await Utils.updateUsersFileSystem(sharedGroup, doc)
-
+            
+            //check if the shared group is composed by only one user, and if it is convert the shared document in local document of that user
+            await Utils.checkAndRestoreLocalDocument(docId)
+            
             const result = await Users.findById(new ObjectId(req.body.user._id))
             Responses.OkResponse(res, result)
         }
